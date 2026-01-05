@@ -1,18 +1,24 @@
 import express, { type Application } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { connectDB } from './config/database.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import { seedDefaultCategories } from './utils/seedCategories.js'
 
+// Obtener __dirname en ES modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 // Cargar variables de entorno
-dotenv.config()
+dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
 // Importar rutas (las crearemos después)
-// import authRoutes from './routes/auth';
-// import transactionRoutes from './routes/transactions';
-// import categoryRoutes from './routes/categories';
-// import aiRoutes from './routes/ai';
+import authRoutes from './routes/auth.js'
+import transactionRoutes from './routes/transactions.js'
+import categoryRoutes from './routes/categories.js'
+import aiRoutes from './routes/ai.js'
 
 const app: Application = express()
 const PORT = process.env.PORT || 5000
@@ -38,10 +44,10 @@ app.get('/health', (req, res) => {
 })
 
 // Rutas API (descomentar cuando las crees)
-// app.use('/api/auth', authRoutes);
-// app.use('/api/transactions', transactionRoutes);
-// app.use('/api/categories', categoryRoutes);
-// app.use('/api/ai', aiRoutes);
+app.use('/api/auth', authRoutes)
+app.use('/api/transactions', transactionRoutes)
+app.use('/api/categories', categoryRoutes)
+app.use('/api/ai', aiRoutes)
 
 // Ruta 404
 app.use((req, res) => {
