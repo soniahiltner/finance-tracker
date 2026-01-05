@@ -1,10 +1,10 @@
 import type { Response, NextFunction } from 'express'
-import {type AuthRequest } from '../middleware/auth.js'
-import {type AIQueryRequest } from '../types/ai.types.js'
+import { type AuthRequest } from '../middleware/auth.js'
+import { type AIQueryRequest } from '../types/ai.types.js'
 import { ClaudeService } from '../services/claudeService.js'
 
-// Instancia del servicio (singleton)
-const claudeService = new ClaudeService()
+// Función helper para obtener instancia del servicio
+const getClaudeService = () => new ClaudeService()
 
 // @desc    Consultar al asistente de IA
 // @route   POST /api/ai/query
@@ -17,6 +17,7 @@ export const queryAI = async (
   try {
     const { query } = req.body as AIQueryRequest
     const userId = req.user!.id
+    const claudeService = getClaudeService()
 
     // Validar query
     if (!query || query.trim().length === 0) {
@@ -74,6 +75,7 @@ export const getSuggestions = async (
 ) => {
   try {
     const userId = req.user!.id
+    const claudeService = getClaudeService()
     const suggestions = await claudeService.generateSuggestedQuestions(userId)
 
     res.status(200).json({

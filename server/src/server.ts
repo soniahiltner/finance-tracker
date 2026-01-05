@@ -1,18 +1,11 @@
 import express, { type Application } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import path from 'path'
-import { fileURLToPath } from 'url'
 import { connectDB } from './config/database.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import { seedDefaultCategories } from './utils/seedCategories.js'
 
-// Obtener __dirname en ES modules
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// Cargar variables de entorno
-dotenv.config({ path: path.join(__dirname, '..', '.env') })
+dotenv.config()
 
 // Importar rutas (las crearemos después)
 import authRoutes from './routes/auth.js'
