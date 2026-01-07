@@ -62,7 +62,7 @@ const transactionSchema = new Schema<ITransaction>(
   }
 )
 
-// Indices para queries eficientes
+// Indices para queries eficientes // Disable in production(performance reasons)
 transactionSchema.index({ userId: 1, date: -1 })
 transactionSchema.index({ userId: 1, type: 1, date: -1 })
 transactionSchema.index({ userId: 1, category: 1 })

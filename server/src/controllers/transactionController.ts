@@ -1,4 +1,5 @@
 import type { Response, NextFunction } from 'express'
+import mongoose from 'mongoose'
 import { Transaction } from '../models/index.js'
 import { type AuthRequest } from '../middleware/auth.js'
 import type {
@@ -6,7 +7,6 @@ import type {
   UpdateTransactionRequest,
   TransactionQuery
 } from '../types/transaction.types.js'
-
 
 // @desc    Obtener todas las transacciones del usuario
 // @route   GET /api/transactions
@@ -67,7 +67,6 @@ export const getTransactions = async (
     next(error)
   }
 }
-
 
 // @desc    Obtener una transacción por ID
 // @route   GET /api/transactions/:id
@@ -171,7 +170,6 @@ export const createTransaction = async (
     next(error)
   }
 }
-
 
 // @desc    Actualizar transacción
 // @route   PUT /api/transactions/:id
@@ -303,7 +301,7 @@ export const getTransactionsSummary = async (
     const byCategory = await Transaction.aggregate([
       {
         $match: {
-          userId: userId,
+          userId: new mongoose.Types.ObjectId(userId),
           ...dateFilter
         }
       },
@@ -332,7 +330,7 @@ export const getTransactionsSummary = async (
     const totals = await Transaction.aggregate([
       {
         $match: {
-          userId: userId,
+          userId: new mongoose.Types.ObjectId(userId),
           ...dateFilter
         }
       },
@@ -354,7 +352,7 @@ export const getTransactionsSummary = async (
     const byMonth = await Transaction.aggregate([
       {
         $match: {
-          userId: userId,
+          userId: new mongoose.Types.ObjectId(userId),
           date: { $gte: sixMonthsAgo }
         }
       },
