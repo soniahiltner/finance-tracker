@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import DashboardPage from './pages/DashboardPage'
 import TransactionsPage from './pages/TransactionsPage'
 import AIAssistantPage from './pages/AIAssistantPage'
+import { ThemeProvider } from './context/ThemeContextProvider'
 
 // Componente para rutas protegidas
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
@@ -94,9 +95,11 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <BrowserRouter>
-      <AuthContextProvider>
-        <AppRoutes />
-      </AuthContextProvider>
+      <ThemeProvider>
+        <AuthContextProvider>
+          <AppRoutes />
+        </AuthContextProvider>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
 import { UserPlus } from 'lucide-react'
+import ThemeToggle from '../components/ThemeToggle'
 
 const RegisterPage = () => {
 
@@ -44,28 +45,32 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-linear-to-br from-primary-50 to-blue-50 px-4'>
+    <div className='min-h-screen flex items-center justify-center bg-linear-to-br from-primary-50 to-blue-500 dark:from-gray-900 dark:to-gray-700 px-4 transition-colors'>
+
+      <div className='absolute top-4 right-4'>
+        <ThemeToggle />
+      </div>
       <div className='max-w-md w-full'>
         <div className='text-center mb-8'>
-          <h1 className='text-4xl font-bold text-primary-600 mb-2'>
+          <h1 className='text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2'>
             FinanceTracker
           </h1>
-          <p className='text-gray-600'>
+          <p className='text-gray-600 dark:text-gray-400'>
             Crea tu cuenta y empieza a gestionar tus finanzas
           </p>
         </div>
 
         <div className='card'>
           <div className='flex items-center justify-center mb-6'>
-            <div className='bg-primary-100 p-3 rounded-full'>
-              <UserPlus className='w-8 h-8 text-primary-600' />
+            <div className='bg-primary-100 dark:bg-primary-900/30 p-3 rounded-full'>
+              <UserPlus className='w-8 h-8 text-primary-600 dark:text-primary-400' />
             </div>
           </div>
 
-          <h2 className='text-2xl font-bold text-center mb-6'>Crear Cuenta</h2>
+          <h2 className='text-2xl font-bold text-center mb-6 dark:text-gray-100'>Crear Cuenta</h2>
 
           {error && (
-            <div className='mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm'>
+            <div className='mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg text-sm'>
               {error}
             </div>
           )}
@@ -77,7 +82,7 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor='name'
-                className='block text-sm font-medium text-gray-700 mb-1'
+                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
                 Nombre
               </label>
@@ -95,7 +100,8 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor='email'
-                className='block text-sm font-medium text-gray-700 mb-1'
+                className='block text-sm font-medium text-gray-700
+                dark:text-gray-300 mb-1'
               >
                 Email
               </label>
@@ -113,7 +119,7 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor='password'
-                className='block text-sm font-medium text-gray-700 mb-1'
+                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
                 Contraseña
               </label>
@@ -131,7 +137,7 @@ const RegisterPage = () => {
             <div>
               <label
                 htmlFor='confirmPassword'
-                className='block text-sm font-medium text-gray-700 mb-1'
+                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
                 Confirmar Contraseña
               </label>
@@ -155,11 +161,11 @@ const RegisterPage = () => {
             </button>
           </form>
 
-          <p className='mt-6 text-center text-sm text-gray-600'>
+          <p className='mt-6 text-center text-sm text-gray-600 dark:text-gray-400'>
             ¿Ya tienes cuenta?{' '}
             <Link
               to='/login'
-              className='text-primary-600 font-medium hover:text-primary-700'
+              className='text-primary-600 font-medium hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300'
             >
               Inicia sesión aquí
             </Link>

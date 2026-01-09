@@ -115,18 +115,23 @@ const DashboardPage = () => {
       {/* Header */}
       <div className='flex justify-between items-center'>
         <div>
-          <h1 className='text-3xl font-bold text-gray-900'>Dashboard</h1>
-          <p className='text-gray-600 mt-1'>Resumen de tus finanzas</p>
+          <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
+            Dashboard
+          </h1>
+          <p className='text-gray-600 dark:text-gray-400 mt-1'>
+            Resumen de tus finanzas
+          </p>
         </div>
 
         {/* Filtro de mes */}
         <div className='flex items-center space-x-2'>
-          <Calendar className='w-5 h-5 text-gray-400' />
+          <Calendar className='w-5 h-5 text-gray-400 dark:text-gray-100' />
           <input
             type='month'
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className='input-field w-auto'
+            className='input-field w-auto dark:text-gray-100 cursor-pointer dark:bg-gray-700'
+            id='selected-month'
           />
           {selectedMonth && (
             <button
@@ -156,28 +161,28 @@ const DashboardPage = () => {
         </div>
 
         {/* Ingresos */}
-        <div className='card border-l-4 border-income-500 p-1'>
+        <div className='card border-l-4 border-income-500 p-2'>
           <div className='flex items-center justify-between mb-2'>
             <div className='bg-income-100 p-2 rounded-lg'>
               <TrendingUp className='w-6 h-6 text-income-600' />
             </div>
             <ArrowUpRight className='w-5 h-5 text-income-500' />
           </div>
-          <p className='text-sm text-gray-600'>Ingresos</p>
+          <p className='text-sm text-gray-600 dark:text-gray-400'>Ingresos</p>
           <p className='text-2xl font-bold text-income-600'>
             {formatCurrency(summary.totalIncome)}
           </p>
         </div>
 
         {/* Gastos */}
-        <div className='card border-l-4 border-expense-500 p-1'>
+        <div className='card border-l-4 border-expense-500 p-2'>
           <div className='flex items-center justify-between mb-2'>
             <div className='bg-expense-100 p-2 rounded-lg'>
               <TrendingDown className='w-6 h-6 text-expense-600' />
             </div>
             <ArrowDownRight className='w-5 h-5 text-expense-500' />
           </div>
-          <p className='text-sm text-gray-600'>Gastos</p>
+          <p className='text-sm text-gray-600 dark:text-gray-400'>Gastos</p>
           <p className='text-2xl font-bold text-expense-600'>
             {formatCurrency(summary.totalExpenses)}
           </p>
@@ -214,7 +219,11 @@ const DashboardPage = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''} />
+                <Tooltip
+                  formatter={(value: number | undefined) =>
+                    value !== undefined ? formatCurrency(value) : ''
+                  }
+                />
               </PieChart>
             </ResponsiveContainer>
           ) : (
@@ -235,7 +244,11 @@ const DashboardPage = () => {
               <LineChart data={summary.byMonth}>
                 <XAxis dataKey='month' />
                 <YAxis />
-                <Tooltip formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''} />
+                <Tooltip
+                  formatter={(value: number | undefined) =>
+                    value !== undefined ? formatCurrency(value) : ''
+                  }
+                />
                 <Legend />
                 <Line
                   type='monotone'
@@ -331,7 +344,11 @@ const DashboardPage = () => {
             <BarChart data={summary.byMonth}>
               <XAxis dataKey='month' />
               <YAxis />
-              <Tooltip formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''} />
+              <Tooltip
+                formatter={(value: number | undefined) =>
+                  value !== undefined ? formatCurrency(value) : ''
+                }
+              />
               <Legend />
               <Bar
                 dataKey='income'

@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
 import { LayoutDashboard, Receipt, Bot, LogOut, Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import ThemeToggle from './ThemeToggle'
 
 const Layout = () => {
 
@@ -22,14 +23,14 @@ const Layout = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className='min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors'>
       {/* Header */}
-      <header className='bg-white shadow-sm border-b border-gray-200 sticky top-0 '>
+      <header className='bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center h-16'>
             {/* Logo */}
             <div className='flex items-center'>
-              <h1 className='text-2xl font-bold text-primary-600'>
+              <h1 className='text-2xl font-bold text-primary-600 dark:text-primary-400'>
                 FinanceTracker
               </h1>
             </div>
@@ -45,8 +46,8 @@ const Layout = () => {
                     to={item.href}
                     className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
+                        : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                     }`}
                   >
                     <Icon className='w-4 h-4 mr-2' />
@@ -58,12 +59,13 @@ const Layout = () => {
 
             {/* User Menu */}
             <div className='hidden md:flex items-center space-x-4'>
-              <span className='text-sm text-gray-600'>
+              <ThemeToggle /> {/* ← AÑADIR */}
+              <span className='text-sm text-gray-600 dark:text-gray-300'>
                 Hola, <span className='font-medium'>{user?.name}</span>
               </span>
               <button
                 onClick={handleLogout}
-                className='flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors'
+                className='flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-400 transition-colors'
               >
                 <LogOut className='w-4 h-4 mr-2' />
                 Salir
@@ -73,7 +75,7 @@ const Layout = () => {
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className='md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100'
+              className='md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
             >
               {mobileMenuOpen ? (
                 <X className='w-6 h-6' />
@@ -86,7 +88,7 @@ const Layout = () => {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className='md:hidden border-t border-gray-200'>
+          <div className='md:hidden border-t border-gray-200 dark:border-gray-700'>
             <div className='px-2 pt-2 pb-3 space-y-1'>
               {navigation.map((item) => {
                 const Icon = item.icon
@@ -98,8 +100,8 @@ const Layout = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center px-3 py-2 rounded-lg text-base font-medium ${
                       isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
+                        : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                     }`}
                   >
                     <Icon className='w-5 h-5 mr-3' />
@@ -107,9 +109,15 @@ const Layout = () => {
                   </Link>
                 )
               })}
+              <div className='flex items-center justify-between px-3 py-2'>
+                <span className='text-sm text-gray-600 dark:text-gray-300'>
+                  Tema
+                </span>
+                <ThemeToggle /> {/* ← AÑADIR */}
+              </div>
               <button
                 onClick={handleLogout}
-                className='w-full flex items-center px-3 py-2 rounded-lg text-base font-medium text-gray-600 hover:text-red-600'
+                className='w-full flex items-center px-3 py-2 rounded-lg text-base font-medium text-gray-600 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-400'
               >
                 <LogOut className='w-5 h-5 mr-3' />
                 Salir

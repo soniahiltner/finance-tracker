@@ -117,10 +117,16 @@ const AIAssistantPage = () => {
           <Bot className='w-8 h-8 text-white' />
         </div>
         <div>
-          <h1 className='text-3xl font-bold text-gray-900'>Asistente IA</h1>
-          <p className='text-gray-600'>Pregúntame sobre tus finanzas</p>
+          <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
+            Asistente IA
+          </h1>
+          <p className='text-gray-600 dark:text-gray-400'>
+            Pregúntame sobre tus finanzas
+          </p>
         </div>
       </div>
+
+      <div ref={messagesEndRef} />
 
       {/* Chat Container */}
       <div className='card h-150 flex flex-col'>
@@ -192,8 +198,6 @@ const AIAssistantPage = () => {
               </div>
             </div>
           )}
-
-          <div ref={messagesEndRef} />
         </div>
 
         {/* Suggestions */}
@@ -201,7 +205,7 @@ const AIAssistantPage = () => {
           <div className='border-t border-gray-200 p-4'>
             <div className='flex items-center space-x-2 mb-3'>
               <Sparkles className='w-4 h-4 text-primary-600' />
-              <span className='text-sm font-medium text-gray-700'>
+              <span className='text-sm font-medium text-gray-700 dark:text-gray-400'>
                 Preguntas sugeridas:
               </span>
             </div>
@@ -225,7 +229,9 @@ const AIAssistantPage = () => {
             onSubmit={handleSubmit}
             className='flex space-x-2'
           >
+            <label htmlFor='question' className='sr-only'>Pregunta</label>
             <input
+              id='question'
               type='text'
               value={input}
               onChange={(e) => setInput(e.target.value)}

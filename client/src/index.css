@@ -1,35 +1,61 @@
-@import "tailwindcss";
-
-
+@import 'tailwindcss';
 
 @theme {
   --color-primary-50: #f0f9ff;
   --color-primary-100: #e0f2fe;
+  --color-primary-200: #bae6fd;
+  --color-primary-300: #7dd3fc;
+  --color-primary-400: #38bdf8;
   --color-primary-500: #0ea5e9;
   --color-primary-600: #0284c7;
   --color-primary-700: #0369a1;
+  --color-income-50: #ecfdf5;
   --color-income-100: #d1fae5;
   --color-income-500: #10b981;
   --color-income-600: #059669;
+  --color-income-700: #047857;
+  --color-expense-50: #fef2f2;
   --color-expense-100: #fee2e2;
   --color-expense-500: #ef4444;
   --color-expense-600: #dc2626;
+  --color-expense-700: #b91c1c;
+  --color-gray-750: #27303f;
+}
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+  }
+
+  button {
+    @apply cursor-pointer
+  } 
 }
 
 @layer components {
+
   .btn-primary {
-    border-radius: calc(infinity * 1px);
-    background-color: var(--color-violet-500);
-    padding-inline: --spacing(5);
-    padding-block: --spacing(2);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-white);
-    box-shadow: var(--shadow-md);
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-violet-700);
-      }
-    }
+    @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 
+           transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+           dark:bg-primary-500 dark:hover:bg-primary-600;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 
+           transition-colors dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 
+           focus:ring-primary-500 focus:border-transparent outline-none
+           dark:bg-gray-750 dark:border-gray-500 dark:text-gray-100
+           dark:focus:ring-primary-100;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-sm p-6 border border-gray-100
+           dark:bg-gray-800 dark:border-gray-700;
   }
 }
