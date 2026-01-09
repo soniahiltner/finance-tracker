@@ -113,7 +113,7 @@ const DashboardPage = () => {
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center max-xs:flex-col max-xs:items-start'>
         <div>
           <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
             Dashboard
@@ -124,8 +124,14 @@ const DashboardPage = () => {
         </div>
 
         {/* Filtro de mes */}
-        <div className='flex items-center space-x-2'>
+        <div className='flex items-center space-x-2 max-xs:ms-auto'>
           <Calendar className='w-5 h-5 text-gray-400 dark:text-gray-100' />
+          <label
+            htmlFor='selected-month'
+            className='sr-only'
+          >
+            Seleccionar mes
+          </label>
           <input
             type='month'
             value={selectedMonth}
@@ -211,6 +217,7 @@ const DashboardPage = () => {
                   outerRadius={80}
                   fill='#8884d8'
                   dataKey='value'
+                  
                 >
                   {categoryData.map((entry, index) => (
                     <Cell
@@ -301,7 +308,7 @@ const DashboardPage = () => {
                       <span className='text-sm font-medium'>
                         {cat.category}
                       </span>
-                      <span className='text-sm text-gray-600'>
+                      <span className='text-sm text-gray-500 dark:text-gray-400'>
                         {formatCurrency(cat.total)}
                       </span>
                     </div>
@@ -316,7 +323,7 @@ const DashboardPage = () => {
                     </div>
                   </div>
                 </div>
-                <span className='text-xs text-gray-500 ml-4 min-w-12 text-right'>
+                <span className='text-xs text-gray-500 ml-4 min-w-12 text-right dark:text-gray-400'>
                   {percentage.toFixed(1)}%
                 </span>
               </div>

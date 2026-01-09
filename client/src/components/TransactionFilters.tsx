@@ -32,7 +32,10 @@ export default function TransactionFilters({
 }: TransactionFiltersProps) {
   const [showAdvanced, setShowAdvanced] = useState(false)
 
-  const handleChange = <K extends keyof FilterValues>(key: K, value: FilterValues[K]) => {
+  const handleChange = <K extends keyof FilterValues>(
+    key: K,
+    value: FilterValues[K]
+  ) => {
     onFilterChange({ ...filters, [key]: value })
   }
 
@@ -103,7 +106,10 @@ export default function TransactionFilters({
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
         {/* Búsqueda */}
         <div className='relative'>
-          <label htmlFor='search-input' className='sr-only'>
+          <label
+            htmlFor='search-input'
+            className='sr-only'
+          >
             Buscar por descripción
           </label>
           <input
@@ -125,13 +131,18 @@ export default function TransactionFilters({
         </div>
 
         {/* Tipo */}
-        <label htmlFor='type' className='sr-only'>
+        <label
+          htmlFor='type'
+          className='sr-only'
+        >
           Tipo
         </label>
         <select
           id='type'
           value={filters.type}
-          onChange={(e) => handleChange('type', e.target.value as 'all' | 'income' | 'expense')}
+          onChange={(e) =>
+            handleChange('type', e.target.value as 'all' | 'income' | 'expense')
+          }
           className='input-field'
         >
           <option value='all'>Todos los tipos</option>
@@ -141,13 +152,21 @@ export default function TransactionFilters({
 
         {/* Ordenar */}
         <div className='flex space-x-2'>
-          <label htmlFor='sortBy' className='sr-only'>
+          <label
+            htmlFor='sortBy'
+            className='sr-only'
+          >
             Ordenar por
           </label>
           <select
             id='sortBy'
             value={filters.sortBy}
-            onChange={(e) => handleChange('sortBy', e.target.value as 'date' | 'amount' | 'category')}
+            onChange={(e) =>
+              handleChange(
+                'sortBy',
+                e.target.value as 'date' | 'amount' | 'category'
+              )
+            }
             className='input-field flex-1'
           >
             <option value='date'>Ordenar por Fecha</option>
@@ -183,7 +202,10 @@ export default function TransactionFilters({
           {/* Rango de fechas */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
-              <label htmlFor='startDate' className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              <label
+                htmlFor='startDate'
+                className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+              >
                 <Calendar className='w-4 h-4 mr-2' />
                 Desde
               </label>
@@ -197,7 +219,10 @@ export default function TransactionFilters({
               />
             </div>
             <div>
-              <label htmlFor='endDate' className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              <label
+                htmlFor='endDate'
+                className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+              >
                 <Calendar className='w-4 h-4 mr-2' />
                 Hasta
               </label>
@@ -216,7 +241,10 @@ export default function TransactionFilters({
           {/* Rango de montos */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
-              <label htmlFor='minAmount' className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              <label
+                htmlFor='minAmount'
+                className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+              >
                 <DollarSign className='w-4 h-4 mr-2' />
                 Monto mínimo
               </label>
@@ -231,7 +259,10 @@ export default function TransactionFilters({
               />
             </div>
             <div>
-              <label htmlFor='maxAmount' className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              <label
+                htmlFor='maxAmount'
+                className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+              >
                 <DollarSign className='w-4 h-4 mr-2' />
                 Monto máximo
               </label>
@@ -294,8 +325,11 @@ export default function TransactionFilters({
                     today.getMonth(),
                     1
                   )
-                  handleChange('startDate', format(firstDay, 'yyyy-MM-dd'))
-                  handleChange('endDate', format(today, 'yyyy-MM-dd'))
+                  onFilterChange({
+                    ...filters,
+                    startDate: format(firstDay, 'yyyy-MM-dd'),
+                    endDate: format(today, 'yyyy-MM-dd')
+                  })
                 }}
                 className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
               >
@@ -314,8 +348,11 @@ export default function TransactionFilters({
                     today.getMonth(),
                     0
                   )
-                  handleChange('startDate', format(lastMonth, 'yyyy-MM-dd'))
-                  handleChange('endDate', format(lastDay, 'yyyy-MM-dd'))
+                  onFilterChange({
+                    ...filters,
+                    startDate: format(lastMonth, 'yyyy-MM-dd'),
+                    endDate: format(lastDay, 'yyyy-MM-dd')
+                  })
                 }}
                 className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
               >
@@ -326,8 +363,11 @@ export default function TransactionFilters({
                   const today = new Date()
                   const last30 = new Date(today)
                   last30.setDate(last30.getDate() - 30)
-                  handleChange('startDate', format(last30, 'yyyy-MM-dd'))
-                  handleChange('endDate', format(today, 'yyyy-MM-dd'))
+                  onFilterChange({
+                    ...filters,
+                    startDate: format(last30, 'yyyy-MM-dd'),
+                    endDate: format(today, 'yyyy-MM-dd')
+                  })
                 }}
                 className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
               >
@@ -337,8 +377,11 @@ export default function TransactionFilters({
                 onClick={() => {
                   const today = new Date()
                   const firstDay = new Date(today.getFullYear(), 0, 1)
-                  handleChange('startDate', format(firstDay, 'yyyy-MM-dd'))
-                  handleChange('endDate', format(today, 'yyyy-MM-dd'))
+                  onFilterChange({
+                    ...filters,
+                    startDate: format(firstDay, 'yyyy-MM-dd'),
+                    endDate: format(today, 'yyyy-MM-dd')
+                  })
                 }}
                 className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
               >
