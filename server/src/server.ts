@@ -12,6 +12,8 @@ import authRoutes from './routes/auth.js'
 import transactionRoutes from './routes/transactions.js'
 import categoryRoutes from './routes/categories.js'
 import aiRoutes from './routes/ai.js'
+import savingsGoalRoutes from './routes/savingsGoals.js'
+
 
 const app: Application = express()
 const PORT = process.env.PORT || 5000
@@ -41,6 +43,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/transactions', transactionRoutes)
 app.use('/api/categories', categoryRoutes)
 app.use('/api/ai', aiRoutes)
+app.use('/api/savings-goals', savingsGoalRoutes)
 
 // Ruta 404
 app.use((req, res) => {

@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import DashboardPage from './pages/DashboardPage'
 import TransactionsPage from './pages/TransactionsPage'
 import AIAssistantPage from './pages/AIAssistantPage'
+import SavingsGoalsPage from './pages/SavingsGoalsPage'
 import { ThemeProvider } from './context/ThemeContextProvider'
 
 // Componente para rutas protegidas
@@ -82,6 +83,10 @@ const AppRoutes = () => {
         <Route
           path='ai-assistant'
           element={<AIAssistantPage />}
+        />
+        <Route
+          path='savings-goals'
+          element={<SavingsGoalsPage />}
         />
       </Route>
       <Route

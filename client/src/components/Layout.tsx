@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
-import { LayoutDashboard, Receipt, Bot, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Receipt, Bot, LogOut, Menu, X, Target } from 'lucide-react'
 import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
 
@@ -14,6 +14,7 @@ const Layout = () => {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Transacciones', href: '/transactions', icon: Receipt },
+    { name: 'Metas', href: '/savings-goals', icon: Target },
     { name: 'Asistente IA', href: '/ai-assistant', icon: Bot }
   ]
 

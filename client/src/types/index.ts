@@ -57,3 +57,30 @@ export interface AIQueryResponse {
   answer: string
   timestamp: string
 }
+
+export interface SavingsGoal {
+  _id: string
+  userId: string
+  name: string
+  targetAmount: number
+  currentAmount: number
+  deadline: string
+  category: string
+  color: string
+  icon: string
+  isCompleted: boolean
+  completedAt?: string
+  progress: number
+  daysRemaining: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface GoalsStats {
+  total: number
+  active: number
+  completed: number
+  totalTarget: number
+  totalSaved: number
+  averageProgress: number
+}
