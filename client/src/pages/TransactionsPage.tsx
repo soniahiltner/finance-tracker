@@ -6,6 +6,7 @@ import { Plus, Edit2, Trash2, TrendingUp, TrendingDown, X } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import TransactionFilters, { type FilterValues } from '../components/TransactionFilters'
+import ExportMenu from '../components/ExportMenu'
 
 interface ErrorResponse {
   response?: {
@@ -229,13 +230,28 @@ export default function TransactionsPage() {
             Gestiona tus ingresos y gastos
           </p>
         </div>
-        <button
-          onClick={() => openModal()}
-          className='btn-primary flex items-center'
-        >
-          <Plus className='w-5 h-5 mr-2' />
-          Nueva Transacción
-        </button>
+        <div className='flex space-x-3'>
+          <ExportMenu
+            allTransactions={transactions}
+            filteredTransactions={filteredTransactions}
+            hasFilters={
+              filters.searchTerm !== '' ||
+              filters.type !== 'all' ||
+              filters.categories.length > 0 ||
+              filters.startDate !== '' ||
+              filters.endDate !== '' ||
+              filters.minAmount !== '' ||
+              filters.maxAmount !== ''
+            }
+          />
+          <button
+            onClick={() => openModal()}
+            className='btn-primary flex items-center'
+          >
+            <Plus className='w-5 h-5 mr-2' />
+            Nueva Transacción
+          </button>
+        </div>
       </div>
 
       {/* Filtros avanzados */}
@@ -419,7 +435,10 @@ export default function TransactionsPage() {
 
               {/* Monto */}
               <div>
-                <label htmlFor='amount' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                  htmlFor='amount'
+                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                   Monto *
                 </label>
                 <input
@@ -438,7 +457,10 @@ export default function TransactionsPage() {
 
               {/* Categoría */}
               <div>
-                <label htmlFor='category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                  htmlFor='category'
+                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                   Categoría *
                 </label>
                 <select
@@ -464,7 +486,10 @@ export default function TransactionsPage() {
 
               {/* Descripción */}
               <div>
-                <label htmlFor='description' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                  htmlFor='description'
+                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                   Descripción
                 </label>
                 <textarea
@@ -481,7 +506,10 @@ export default function TransactionsPage() {
 
               {/* Fecha */}
               <div>
-                <label htmlFor='date' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                  htmlFor='date'
+                  className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                   Fecha *
                 </label>
                 <input

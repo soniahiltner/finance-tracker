@@ -21,6 +21,7 @@
   --color-expense-700: #b91c1c;
   --color-gray-750: #27303f;
   --breakpoint-xs: 30rem;
+  --breakpoint-xxs: 23rem;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { transactionService } from '../services/transactionService'
-import type { TransactionSummary } from '../types'
+import type { TransactionSummary, Transaction } from '../types'
+import ExportMenu from '../components/ExportMenu'
 import {
   TrendingUp,
   TrendingDown,
@@ -49,6 +50,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedMonth, setSelectedMonth] = useState<string>('')
+  const [transactions, setTransactions] = useState<Transaction[]>([])
 
   const loadSummary = useCallback(async () => {
     try {
@@ -59,9 +61,15 @@ const DashboardPage = () => {
             year: selectedMonth.split('-')[0]
           }
         : undefined
-      const data = await transactionService.getSummary(filters)
-      setSummary(data)
-      //console.log('Resumen cargado:', data)
+
+      // Obtener summary y transacciones
+      const [summaryData, transData] = await Promise.all([
+        transactionService.getSummary(filters),
+        transactionService.getAll(filters)
+      ])
+
+      setSummary(summaryData)
+      setTransactions(transData)
     } catch (err: unknown) {
       setError(
         err instanceof Error && 'response' in err
@@ -123,30 +131,37 @@ const DashboardPage = () => {
           </p>
         </div>
 
-        {/* Filtro de mes */}
-        <div className='flex items-center space-x-2 max-xs:ms-auto'>
-          <Calendar className='w-5 h-5 text-gray-400 dark:text-gray-100' />
-          <label
-            htmlFor='selected-month'
-            className='sr-only'
-          >
-            Seleccionar mes
-          </label>
-          <input
-            type='month'
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className='input-field w-auto dark:text-gray-100 cursor-pointer dark:bg-gray-700'
-            id='selected-month'
+        <div className='flex items-center space-x-4 max-xs:mt-2 max-xxs:items-start '>
+          <ExportMenu
+            allTransactions={transactions}
+            filteredTransactions={transactions}
+            hasFilters={!!selectedMonth}
           />
-          {selectedMonth && (
-            <button
-              onClick={() => setSelectedMonth('')}
-              className='text-sm text-primary-600 hover:text-primary-700'
+          {/* Filtro de mes */}
+          <div className='flex items-center space-x-2 max-xs:ms-auto max-xxs:flex-col'>
+            <Calendar className='w-5 h-5 text-gray-400 dark:text-gray-100 max-xs:hidden' />
+            <label
+              htmlFor='selected-month'
+              className='sr-only'
             >
-              Ver todo
-            </button>
-          )}
+              Seleccionar mes
+            </label>
+            <input
+              type='month'
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className='input-field w-auto dark:text-gray-100 cursor-pointer dark:bg-gray-700 max-xs:px-1 max-xs:w-40 max-xxs: text-sm'
+              id='selected-month'
+            />
+            {selectedMonth && (
+              <button
+                onClick={() => setSelectedMonth('')}
+                className='text-sm text-primary-600 hover:text-primary-700'
+              >
+                Ver todo
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -217,7 +232,6 @@ const DashboardPage = () => {
                   outerRadius={80}
                   fill='#8884d8'
                   dataKey='value'
-                  
                 >
                   {categoryData.map((entry, index) => (
                     <Cell
