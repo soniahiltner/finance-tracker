@@ -26,41 +26,42 @@ const Layout = () => {
   return (
     <div className='min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors'>
       {/* Header */}
-      <header className='bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center h-16'>
-            {/* Logo */}
-            <div className='flex items-center'>
-              <h1 className='text-2xl font-bold text-primary-600 dark:text-primary-400'>
-                FinanceTracker
-              </h1>
+      <header className='sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors'>
+        <div className='max-w-7xl mx-auto py-1 px-4 sm:px-6 lg:px-8'>
+          <div className='flex justify-between items-center h-20 md:flex-col md:items-start lg:flex-row lg:items-center'>
+            <div className='flex items-center space-x-10'>
+              {/* Logo */}
+              <div className='flex items-center justify-self-start'>
+                <h1 className='text-2xl font-bold text-primary-600 dark:text-primary-400'>
+                  FinanceTracker
+                </h1>
+              </div>
+              {/* Desktop Navigation */}
+              <nav className='hidden md:flex space-x-4'>
+                {navigation.map((item) => {
+                  const Icon = item.icon
+                  const isActive = location.pathname === item.href
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        isActive
+                          ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
+                          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <Icon className='w-4 h-4 mr-2' />
+                      {item.name}
+                    </Link>
+                  )
+                })}
+              </nav>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className='hidden md:flex space-x-4'>
-              {navigation.map((item) => {
-                const Icon = item.icon
-                const isActive = location.pathname === item.href
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
-                        : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <Icon className='w-4 h-4 mr-2' />
-                    {item.name}
-                  </Link>
-                )
-              })}
-            </nav>
-
             {/* User Menu */}
-            <div className='hidden md:flex items-center space-x-4'>
-              <ThemeToggle /> {/* ← AÑADIR */}
+            <div className='hidden md:flex items-center  space-x-4 md:self-end lg:self-auto'>
+              <ThemeToggle />
               <span className='text-sm text-gray-600 dark:text-gray-300'>
                 Hola, <span className='font-medium'>{user?.name}</span>
               </span>

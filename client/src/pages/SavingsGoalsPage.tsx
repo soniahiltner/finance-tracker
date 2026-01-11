@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { savingsGoalService } from '../services/savingsGoalService'
 import type { SavingsGoal, GoalsStats } from '../types'
 import {
@@ -15,6 +15,14 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+
+interface ErrorResponse {
+  response?: {
+    data?: {
+      message?: string
+    }
+  }
+}
 
 const GOAL_CATEGORIES = [
   { name: 'Viajes', icon: 'plane', color: '#ec4899' },
@@ -49,7 +57,7 @@ export default function SavingsGoalsPage() {
 
   const [progressAmount, setProgressAmount] = useState('')
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const [goalsData, statsData] = await Promise.all([
@@ -63,11 +71,11 @@ export default function SavingsGoalsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filter])
 
   useEffect(() => {
     loadData()
-  }, [filter])
+  }, [filter, loadData])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,8 +96,9 @@ export default function SavingsGoalsPage() {
       }
       await loadData()
       closeModal()
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Error al guardar')
+    } catch (error) {
+      const err = error as ErrorResponse
+      alert(err.response?.data?.message || 'Error al guardar')
     }
   }
 
@@ -105,8 +114,9 @@ export default function SavingsGoalsPage() {
       await loadData()
       setShowProgressModal(false)
       setProgressAmount('')
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Error al añadir progreso')
+    } catch (error) {
+      const err = error as ErrorResponse
+      alert(err.response?.data?.message || 'Error al añadir progreso')
     }
   }
 
@@ -116,8 +126,9 @@ export default function SavingsGoalsPage() {
     try {
       await savingsGoalService.delete(id)
       await loadData()
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Error al eliminar')
+    } catch (error) {
+      const err = error as ErrorResponse
+      alert(err.response?.data?.message || 'Error al eliminar')
     }
   }
 

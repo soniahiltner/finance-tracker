@@ -22,7 +22,9 @@ import {
   Tooltip,
   Legend,
   BarChart,
-  Bar
+  Bar,
+  Label,
+  LabelList
 } from 'recharts'
 
 interface ErrorResponse {
@@ -121,7 +123,7 @@ const DashboardPage = () => {
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='flex justify-between items-center max-xs:flex-col max-xs:items-start'>
+      <div className='flex justify-between flex-col items-start sm:flex-row sm:items-center'>
         <div>
           <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
             Dashboard
@@ -131,7 +133,7 @@ const DashboardPage = () => {
           </p>
         </div>
 
-        <div className='flex items-center space-x-4 max-xs:mt-2 max-xxs:items-start '>
+        <div className='flex items-start space-x-4 max-sm:mt-2'>
           <ExportMenu
             allTransactions={transactions}
             filteredTransactions={transactions}
@@ -139,7 +141,7 @@ const DashboardPage = () => {
           />
           {/* Filtro de mes */}
           <div className='flex items-center space-x-2 max-xs:ms-auto max-xxs:flex-col'>
-            <Calendar className='w-5 h-5 text-gray-400 dark:text-gray-100 max-xs:hidden' />
+            <Calendar className='w-5 h-5 text-gray-400 dark:text-gray-100 max-sm:hidden' />
             <label
               htmlFor='selected-month'
               className='sr-only'
@@ -150,7 +152,7 @@ const DashboardPage = () => {
               type='month'
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className='input-field w-auto dark:text-gray-100 cursor-pointer dark:bg-gray-700 max-xs:px-1 max-xs:w-40 max-xxs: text-sm'
+              className='input-field w-auto px-1 dark:text-gray-100 cursor-pointer dark:bg-gray-700 max-xs:px-1 max-xs:w-40 max-xxs: text-sm'
               id='selected-month'
             />
             {selectedMonth && (
@@ -232,6 +234,13 @@ const DashboardPage = () => {
                   outerRadius={80}
                   fill='#8884d8'
                   dataKey='value'
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    paddingTop: '20px',
+                    marginTop: '20px'
+                  }}
+                  paddingAngle={5}
                 >
                   {categoryData.map((entry, index) => (
                     <Cell
@@ -239,6 +248,8 @@ const DashboardPage = () => {
                       fill={entry.color}
                     />
                   ))}
+
+                  <Legend />
                 </Pie>
                 <Tooltip
                   formatter={(value: number | undefined) =>

@@ -69,7 +69,7 @@ export default function ExportMenu({
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='btn-secondary flex items-center max-xs:px-1 max-xs:mr-0 dark:border-gray-300'
+        className='btn-secondary flex items-center px-2 max-xs:px-1 max-xs:mr-0 max-sm:text-sm dark:border-gray-300'
       >
         <Download className='w-5 h-5 mr-2' />
         Exportar

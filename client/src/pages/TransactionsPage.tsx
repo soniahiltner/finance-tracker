@@ -221,7 +221,7 @@ export default function TransactionsPage() {
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center max-sm:flex-col max-sm:items-start'>
         <div>
           <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
             Transacciones
@@ -230,7 +230,7 @@ export default function TransactionsPage() {
             Gestiona tus ingresos y gastos
           </p>
         </div>
-        <div className='flex space-x-3'>
+        <div className='flex space-x-3 max-sm:mt-2'>
           <ExportMenu
             allTransactions={transactions}
             filteredTransactions={filteredTransactions}
@@ -246,7 +246,7 @@ export default function TransactionsPage() {
           />
           <button
             onClick={() => openModal()}
-            className='btn-primary flex items-center'
+            className='btn-primary flex items-center max-sm:px-2 max-sm:text-sm'
           >
             <Plus className='w-5 h-5 mr-2' />
             Nueva Transacción
@@ -290,9 +290,9 @@ export default function TransactionsPage() {
             {filteredTransactions.map((transaction) => (
               <div
                 key={transaction._id}
-                className='flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors border border-gray-100 dark:border-gray-700'
+                className='flex items-center justify-between p-4 max-xxs:p-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors border border-gray-100 dark:border-gray-700'
               >
-                <div className='flex items-center space-x-4 flex-1'>
+                <div className='flex items-center space-x-4 flex-1 max-xs:flex-col max-xs:items-start'>
                   {/* Icono */}
                   <div
                     className={`p-2 rounded-lg ${
@@ -303,11 +303,9 @@ export default function TransactionsPage() {
                   >
                     {transaction.type === 'income' ? (
                       <TrendingUp
-                        className={`w-5 h-5 ${
-                          transaction.type === 'income'
-                            ? 'text-income-600 dark:text-income-400'
-                            : 'text-expense-600 dark:text-expense-400'
-                        }`}
+                        className={
+                          'w-5 h-5 text-income-600 dark:text-income-400'
+                        }
                       />
                     ) : (
                       <TrendingDown className='w-5 h-5 text-expense-600 dark:text-expense-400' />
@@ -339,7 +337,7 @@ export default function TransactionsPage() {
                   {/* Monto */}
                   <div className='text-right'>
                     <p
-                      className={`text-lg font-bold ${
+                      className={`text-sm xs:text-md sm:text-lg font-bold ${
                         transaction.type === 'income'
                           ? 'text-income-600 dark:text-income-400'
                           : 'text-expense-600 dark:text-expense-400'
@@ -352,7 +350,7 @@ export default function TransactionsPage() {
                 </div>
 
                 {/* Acciones */}
-                <div className='flex items-center space-x-2 ml-4'>
+                <div className='flex items-center space-x-2 ml-4 max-xs:ml-0'>
                   <button
                     onClick={() => openModal(transaction)}
                     className='p-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors'

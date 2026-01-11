@@ -281,10 +281,10 @@ export default function TransactionFilters({
           {/* Categorías múltiples */}
           {availableCategories.length > 0 && (
             <div>
-              <label className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              <div className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
                 <Tag className='w-4 h-4 mr-2' />
                 Categorías
-              </label>
+              </div>
               <div className='flex flex-wrap gap-2'>
                 {availableCategories.map((category) => (
                   <button
@@ -313,9 +313,9 @@ export default function TransactionFilters({
 
           {/* Filtros rápidos predefinidos */}
           <div>
-            <label className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block'>
+            <div className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block'>
               Filtros rápidos
-            </label>
+            </div>
             <div className='flex flex-wrap gap-2'>
               <button
                 onClick={() => {
