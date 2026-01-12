@@ -290,7 +290,7 @@ export default function TransactionsPage() {
             {filteredTransactions.map((transaction) => (
               <div
                 key={transaction._id}
-                className='flex items-center justify-between p-4 max-xxs:p-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors border border-gray-100 dark:border-gray-700'
+                className='flex items-center justify-between p-4 max-xxs:p-2 hover:bg-gray-200/30 dark:hover:bg-gray-700/50 rounded-lg transition-colors border border-gray-200 dark:border-gray-700'
               >
                 <div className='flex items-center space-x-4 flex-1 max-xs:flex-col max-xs:items-start'>
                   {/* Icono */}

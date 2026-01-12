@@ -24,9 +24,9 @@ const Layout = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors'>
+    <div className='min-h-screen bg-indigo-100 dark:bg-gray-900 transition-colors'>
       {/* Header */}
-      <header className='sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors'>
+      <header className='sticky top-0 z-50 bg-slate-100 dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors'>
         <div className='max-w-7xl mx-auto py-1 px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center h-16 md:h-20 md:flex-col md:items-start lg:flex-row lg:items-center'>
             <div className='flex items-center space-x-10'>
@@ -80,9 +80,15 @@ const Layout = () => {
               className='md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
             >
               {mobileMenuOpen ? (
-                <X className='w-6 h-6' aria-label='close menu' />
+                <X
+                  className='w-6 h-6'
+                  aria-label='close menu'
+                />
               ) : (
-                <Menu className='w-6 h-6' aria-label='open menu' />
+                <Menu
+                  className='w-6 h-6'
+                  aria-label='open menu'
+                />
               )}
             </button>
           </div>
@@ -130,7 +136,7 @@ const Layout = () => {
       </header>
 
       {/* Main Content */}
-      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-indigo-100 dark:bg-gray-900'>
         <Outlet />
       </main>
     </div>
