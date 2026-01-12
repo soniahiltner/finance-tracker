@@ -1,0 +1,46 @@
+import { Plus } from 'lucide-react'
+import ExportMenu from '../ExportMenu'
+import type { Transaction } from '../../types'
+
+interface TransactionsHeaderProps {
+  allTransactions: Transaction[]
+  filteredTransactions: Transaction[]
+  hasFilters: boolean
+  onNewTransaction: () => void
+}
+
+const TransactionsHeader = ({
+  allTransactions,
+  filteredTransactions,
+  hasFilters,
+  onNewTransaction
+}: TransactionsHeaderProps) => {
+  return (
+    <div className='flex justify-between items-center max-sm:flex-col max-sm:items-start'>
+      <div>
+        <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
+          Transacciones
+        </h1>
+        <p className='text-gray-600 dark:text-gray-400 mt-1'>
+          Gestiona tus ingresos y gastos
+        </p>
+      </div>
+      <div className='flex space-x-3 max-sm:mt-2'>
+        <ExportMenu
+          allTransactions={allTransactions}
+          filteredTransactions={filteredTransactions}
+          hasFilters={hasFilters}
+        />
+        <button
+          onClick={onNewTransaction}
+          className='btn-primary flex items-center max-sm:px-2 max-sm:text-sm'
+        >
+          <Plus className='w-5 h-5 mr-2' />
+          Nueva Transacción
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default TransactionsHeader

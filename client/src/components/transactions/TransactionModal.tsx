@@ -1,0 +1,264 @@
+import { useState, useEffect } from 'react'
+import { X, TrendingUp, TrendingDown } from 'lucide-react'
+import { format } from 'date-fns'
+import type { Transaction, Category } from '../../types'
+
+interface TransactionModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (data: {
+    type: 'income' | 'expense'
+    amount: number
+    category: string
+    description: string
+    date: string
+  }) => Promise<{ success: boolean; error?: string }>
+  transaction?: Transaction | null
+  categories: Category[]
+}
+
+const TransactionModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  transaction,
+  categories
+}: TransactionModalProps) => {
+  const getInitialFormData = () => {
+    if (transaction) {
+      return {
+        type: transaction.type,
+        amount: transaction.amount.toString(),
+        category: transaction.category,
+        description: transaction.description,
+        date: format(new Date(transaction.date), 'yyyy-MM-dd')
+      }
+    }
+    return {
+      type: 'expense' as 'income' | 'expense',
+      amount: '',
+      category: '',
+      description: '',
+      date: format(new Date(), 'yyyy-MM-dd')
+    }
+  }
+
+  const [formData, setFormData] = useState(getInitialFormData())
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(getInitialFormData())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, transaction?._id])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitting(true)
+
+    const result = await onSubmit({
+      ...formData,
+      amount: parseFloat(formData.amount)
+    })
+
+    setSubmitting(false)
+
+    if (result.success) {
+      onClose()
+    } else {
+      alert(result.error || 'Error al guardar')
+    }
+  }
+
+  const formCategories = categories.filter((cat) => cat.type === formData.type)
+
+  if (!isOpen) return null
+
+  return (
+    <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
+      <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6'>
+        <div className='flex items-center justify-between mb-6'>
+          <h2 className='text-2xl font-bold dark:text-gray-100'>
+            {transaction ? 'Editar' : 'Nueva'} Transacción
+          </h2>
+          <button
+            onClick={onClose}
+            className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'
+            disabled={submitting}
+          >
+            <X className='w-5 h-5 dark:text-gray-400' />
+          </button>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className='space-y-4'
+        >
+          {/* Tipo */}
+          <div>
+            <div className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              Tipo
+            </div>
+            <div className='grid grid-cols-2 gap-3'>
+              <button
+                type='button'
+                onClick={() =>
+                  setFormData({ ...formData, type: 'income', category: '' })
+                }
+                className={`p-3 rounded-lg border-2 transition-colors ${
+                  formData.type === 'income'
+                    ? 'border-income-500 bg-income-50 dark:bg-income-900/30 text-income-700 dark:text-income-400'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 dark:text-gray-400'
+                }`}
+                disabled={submitting}
+              >
+                <TrendingUp className='w-5 h-5 mx-auto mb-1' />
+                <span className='text-sm font-medium'>Ingreso</span>
+              </button>
+              <button
+                type='button'
+                onClick={() =>
+                  setFormData({
+                    ...formData,
+                    type: 'expense',
+                    category: ''
+                  })
+                }
+                className={`p-3 rounded-lg border-2 transition-colors ${
+                  formData.type === 'expense'
+                    ? 'border-expense-500 bg-expense-50 dark:bg-expense-900/30 text-expense-700 dark:text-expense-400'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 dark:text-gray-400'
+                }`}
+                disabled={submitting}
+              >
+                <TrendingDown className='w-5 h-5 mx-auto mb-1' />
+                <span className='text-sm font-medium'>Gasto</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Monto */}
+          <div>
+            <label
+              htmlFor='amount'
+              className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+            >
+              Monto *
+            </label>
+            <input
+              id='amount'
+              type='number'
+              step='0.01'
+              value={formData.amount}
+              onChange={(e) =>
+                setFormData({ ...formData, amount: e.target.value })
+              }
+              className='input-field'
+              placeholder='0.00'
+              required
+              disabled={submitting}
+            />
+          </div>
+
+          {/* Categoría */}
+          <div>
+            <label
+              htmlFor='category'
+              className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+            >
+              Categoría *
+            </label>
+            <select
+              id='category'
+              value={formData.category}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
+              className='input-field'
+              required
+              disabled={submitting}
+            >
+              <option value=''>Selecciona una categoría</option>
+              {formCategories.map((cat) => (
+                <option
+                  key={cat._id}
+                  value={cat.name}
+                >
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Descripción */}
+          <div>
+            <label
+              htmlFor='description'
+              className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+            >
+              Descripción
+            </label>
+            <textarea
+              id='description'
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              className='input-field'
+              rows={3}
+              placeholder='Detalles opcionales...'
+              disabled={submitting}
+            />
+          </div>
+
+          {/* Fecha */}
+          <div>
+            <label
+              htmlFor='date'
+              className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+            >
+              Fecha *
+            </label>
+            <input
+              id='date'
+              type='date'
+              value={formData.date}
+              onChange={(e) =>
+                setFormData({ ...formData, date: e.target.value })
+              }
+              className='input-field'
+              required
+              disabled={submitting}
+            />
+          </div>
+
+          {/* Botones */}
+          <div className='flex space-x-3 pt-4'>
+            <button
+              type='button'
+              onClick={onClose}
+              className='flex-1 btn-secondary'
+              disabled={submitting}
+            >
+              Cancelar
+            </button>
+            <button
+              type='submit'
+              className='flex-1 btn-primary'
+              disabled={submitting}
+            >
+              {submitting
+                ? 'Guardando...'
+                : transaction
+                ? 'Actualizar'
+                : 'Crear'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+export default TransactionModal
