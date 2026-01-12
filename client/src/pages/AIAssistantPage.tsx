@@ -174,7 +174,7 @@ const AIAssistantPage = () => {
                       {message.content}
                     </p>
                   </div>
-                  <span className='text-xs text-gray-500 mt-1 block px-2'>
+                  <span className='text-xs text-gray-500 dark:text-gray-400 mt-1 block px-2'>
                     {formatTime(message.timestamp)}
                   </span>
                 </div>
@@ -246,15 +246,15 @@ const AIAssistantPage = () => {
               className='btn-primary flex items-center'
             >
               {loading ? (
-                <Loader2 className='w-5 h-5 animate-spin' />
+                <Loader2 className='w-5 h-5 animate-spin' aria-label='enviando' />
               ) : (
                 <>
-                  <Send className='w-5 h-5' />
+                  <Send className='w-5 h-5' aria-label='enviar' />
                 </>
               )}
             </button>
           </form>
-          <p className='text-xs text-gray-500 mt-2'>
+          <p className='text-xs text-gray-500 dark:text-gray-400 mt-2'>
             {input.length}/500 caracteres
           </p>
         </div>
@@ -263,7 +263,7 @@ const AIAssistantPage = () => {
       {/* Info Cards */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
         <div className='card bg-linear-to-br from-blue-50 to-blue-100 border-blue-200'>
-          <h3 className='font-semibold text-blue-900 mb-2'>💡 Análisis</h3>
+          <h2 className='font-semibold text-blue-900 mb-2'>💡 Análisis</h2>
           <p className='text-sm text-blue-800'>
             Pregunta sobre tus gastos, ingresos y balance para obtener insights
             detallados.
@@ -271,16 +271,16 @@ const AIAssistantPage = () => {
         </div>
 
         <div className='card bg-linear-to-br from-green-50 to-green-100 border-green-200'>
-          <h3 className='font-semibold text-green-900 mb-2'>
+          <h2 className='font-semibold text-green-900 mb-2'>
             📊 Comparaciones
-          </h3>
+          </h2>
           <p className='text-sm text-green-800'>
             Compara tus finanzas entre diferentes períodos y categorías.
           </p>
         </div>
 
         <div className='card bg-linear-to-br from-purple-50 to-purple-100 border-purple-200'>
-          <h3 className='font-semibold text-purple-900 mb-2'>🎯 Consejos</h3>
+          <h2 className='font-semibold text-purple-900 mb-2'>🎯 Consejos</h2>
           <p className='text-sm text-purple-800'>
             Recibe recomendaciones personalizadas para mejorar tu situación
             financiera.
@@ -290,9 +290,9 @@ const AIAssistantPage = () => {
 
       {/* Examples */}
       <div className='card bg-gray-50'>
-        <h3 className='font-semibold text-gray-900 mb-3'>
+        <h2 className='font-semibold text-gray-900 mb-3'>
           Ejemplos de preguntas:
-        </h3>
+        </h2>
         <ul className='space-y-2 text-sm text-gray-700'>
           <li className='flex items-start'>
             <span className='text-primary-600 mr-2'>•</span>
