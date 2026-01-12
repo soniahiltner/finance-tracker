@@ -22,9 +22,7 @@ import {
   Tooltip,
   Legend,
   BarChart,
-  Bar,
-  Label,
-  LabelList
+  Bar
 } from 'recharts'
 
 interface ErrorResponse {
@@ -216,7 +214,7 @@ const DashboardPage = () => {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         {/* Gráfico de categorías (Pie) */}
         <div className='card'>
-          <h3 className='text-lg font-semibold mb-4'>Gastos por Categoría</h3>
+          <h2 className='text-lg font-semibold mb-4'>Gastos por Categoría</h2>
           {categoryData.length > 0 ? (
             <ResponsiveContainer
               width='100%'
@@ -249,7 +247,7 @@ const DashboardPage = () => {
                     />
                   ))}
 
-                  <Legend />
+                  
                 </Pie>
                 <Tooltip
                   formatter={(value: number | undefined) =>
@@ -267,7 +265,7 @@ const DashboardPage = () => {
 
         {/* Evolución mensual (Line) */}
         <div className='card'>
-          <h3 className='text-lg font-semibold mb-4'>Evolución Mensual</h3>
+          <h2 className='text-lg font-semibold mb-4'>Evolución Mensual</h2>
           {summary.byMonth.length > 0 ? (
             <ResponsiveContainer
               width='100%'
@@ -308,7 +306,7 @@ const DashboardPage = () => {
 
       {/* Top categorías - Lista detallada */}
       <div className='card'>
-        <h3 className='text-lg font-semibold mb-4'>Top Categorías</h3>
+        <h2 className='text-lg font-semibold mb-4'>Top Categorías</h2>
         <div className='space-y-3'>
           {summary.byCategory.slice(0, 8).map((cat, index) => {
             const percentage =
@@ -366,9 +364,9 @@ const DashboardPage = () => {
       {/* Comparación por mes (Bar chart) */}
       {summary.byMonth.length > 1 && (
         <div className='card'>
-          <h3 className='text-lg font-semibold mb-4'>
+          <h2 className='text-lg font-semibold mb-4'>
             Comparación Ingresos vs Gastos
-          </h3>
+          </h2>
           <ResponsiveContainer
             width='100%'
             height={300}

@@ -318,16 +318,16 @@ export default function TransactionsPage() {
                       <span className='font-medium dark:text-gray-200'>
                         {transaction.category}
                       </span>
-                      <span className='text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'>
+                      <span className='text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'>
                         {transaction.type === 'income' ? 'Ingreso' : 'Gasto'}
                       </span>
                     </div>
                     {transaction.description && (
-                      <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+                      <p className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
                         {transaction.description}
                       </p>
                     )}
-                    <p className='text-xs text-gray-500 dark:text-gray-500 mt-1'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
                       {format(new Date(transaction.date), "d 'de' MMMM, yyyy", {
                         locale: es
                       })}
@@ -339,7 +339,7 @@ export default function TransactionsPage() {
                     <p
                       className={`text-sm xs:text-md sm:text-lg font-bold ${
                         transaction.type === 'income'
-                          ? 'text-income-600 dark:text-income-400'
+                          ? 'text-income-700 dark:text-income-400'
                           : 'text-expense-600 dark:text-expense-400'
                       }`}
                     >
@@ -354,12 +354,14 @@ export default function TransactionsPage() {
                   <button
                     onClick={() => openModal(transaction)}
                     className='p-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors'
+                    aria-label='editar'
                   >
                     <Edit2 className='w-4 h-4' />
                   </button>
                   <button
                     onClick={() => handleDelete(transaction._id)}
                     className='p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
+                    aria-label='eliminar'
                   >
                     <Trash2 className='w-4 h-4' />
                   </button>
@@ -372,7 +374,7 @@ export default function TransactionsPage() {
 
       {/* Modal de crear/editar */}
       {showModal && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
+        <div className='fixed inset-0 bg-black flex items-center justify-center p-4 z-50'>
           <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6'>
             <div className='flex items-center justify-between mb-6'>
               <h2 className='text-2xl font-bold dark:text-gray-100'>
@@ -392,9 +394,9 @@ export default function TransactionsPage() {
             >
               {/* Tipo */}
               <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                <div className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
                   Tipo
-                </label>
+                </div>
                 <div className='grid grid-cols-2 gap-3'>
                   <button
                     type='button'

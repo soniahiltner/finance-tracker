@@ -76,83 +76,81 @@ export default function ExportMenu({
       </button>
 
       {isOpen && (
-        <div className='fixed inset-0 w-75 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50'>
-          {/* Header */}
-          <div className='flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700'>
-            <div className='flex items-center space-x-2'>
-              <FileSpreadsheet className='w-5 h-5 text-primary-600 dark:text-primary-400' />
-              <span className='font-semibold dark:text-gray-200'>
-                Exportar a CSV
-              </span>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className='p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'
-            >
-              <X className='w-4 h-4 dark:text-gray-400' />
-            </button>
-          </div>
-
-          {/* Opciones */}
-          <div className='p-2'>
-            {/* Todas las transacciones */}
-            <button
-              onClick={() => handleExport('all')}
-              className='w-full flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors text-left'
-            >
-              <FileText className='w-5 h-5 text-gray-600 dark:text-gray-400 mr-3 mt-0.5 shrink-0' />
-              <div>
-                <p className='font-medium text-gray-900 dark:text-gray-100'>
-                  Todas las transacciones
-                </p>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
-                  Exportar {allTransactions.length} transacciones
-                </p>
+        <div className='fixed inset-0 bg-black w-full  flex items-center justify-center p-4 z-50'>
+          <div className='w-75 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50'>
+            {/* Header */}
+            <div className='flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700'>
+              <div className='flex items-center space-x-2'>
+                <FileSpreadsheet className='w-5 h-5 text-primary-600 dark:text-primary-400' />
+                <span className='font-semibold dark:text-gray-200'>
+                  Exportar a CSV
+                </span>
               </div>
-            </button>
-
-            {/* Transacciones filtradas */}
-            {hasFilters && (
               <button
-                onClick={() => handleExport('filtered')}
+                onClick={() => setIsOpen(false)}
+                className='p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'
+              >
+                <X className='w-4 h-4 dark:text-gray-400' />
+              </button>
+            </div>
+            {/* Opciones */}
+            <div className='p-2'>
+              {/* Todas las transacciones */}
+              <button
+                onClick={() => handleExport('all')}
                 className='w-full flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors text-left'
               >
-                <FileText className='w-5 h-5 text-primary-600 dark:text-primary-400 mr-3 mt-0.5 shrink-0' />
+                <FileText className='w-5 h-5 text-gray-600 dark:text-gray-400 mr-3 mt-0.5 shrink-0' />
                 <div>
                   <p className='font-medium text-gray-900 dark:text-gray-100'>
-                    Solo resultados filtrados
+                    Todas las transacciones
                   </p>
                   <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    Exportar {filteredTransactions.length} transacciones con los
-                    filtros aplicados
+                    Exportar {allTransactions.length} transacciones
                   </p>
                 </div>
               </button>
-            )}
-
-            {/* Resumen completo */}
-            <button
-              onClick={() => handleExport('summary')}
-              className='w-full flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors text-left'
-            >
-              <FileSpreadsheet className='w-5 h-5 text-green-600 dark:text-green-400 mr-3 mt-0.5 shrink-0' />
-              <div>
-                <p className='font-medium text-gray-900 dark:text-gray-100'>
-                  Resumen completo
-                </p>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
-                  Incluye estadísticas y todas las transacciones
-                </p>
-              </div>
-            </button>
-          </div>
-
-          {/* Footer con info */}
-          <div className='p-3 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 rounded-b-xl'>
-            <p className='text-xs text-gray-600 dark:text-gray-400'>
-              💡 Los archivos CSV se pueden abrir en Excel, Google Sheets o
-              cualquier aplicación de hojas de cálculo.
-            </p>
+              {/* Transacciones filtradas */}
+              {hasFilters && (
+                <button
+                  onClick={() => handleExport('filtered')}
+                  className='w-full flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors text-left'
+                >
+                  <FileText className='w-5 h-5 text-primary-600 dark:text-primary-400 mr-3 mt-0.5 shrink-0' />
+                  <div>
+                    <p className='font-medium text-gray-900 dark:text-gray-100'>
+                      Solo resultados filtrados
+                    </p>
+                    <p className='text-sm text-gray-600 dark:text-gray-400'>
+                      Exportar {filteredTransactions.length} transacciones con
+                      los filtros aplicados
+                    </p>
+                  </div>
+                </button>
+              )}
+              {/* Resumen completo */}
+              <button
+                onClick={() => handleExport('summary')}
+                className='w-full flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors text-left'
+              >
+                <FileSpreadsheet className='w-5 h-5 text-green-600 dark:text-green-400 mr-3 mt-0.5 shrink-0' />
+                <div>
+                  <p className='font-medium text-gray-900 dark:text-gray-100'>
+                    Resumen completo
+                  </p>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    Incluye estadísticas y todas las transacciones
+                  </p>
+                </div>
+              </button>
+            </div>
+            {/* Footer con info */}
+            <div className='p-3 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 rounded-b-xl'>
+              <p className='text-xs text-gray-600 dark:text-gray-400'>
+                💡 Los archivos CSV se pueden abrir en Excel, Google Sheets o
+                cualquier aplicación de hojas de cálculo.
+              </p>
+            </div>
           </div>
         </div>
       )}

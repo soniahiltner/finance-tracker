@@ -77,24 +77,24 @@ export default function TransactionFilters({
   return (
     <div className='card space-y-4'>
       {/* Header con contador */}
-      <div className='flex items-center justify-between'>
+      <div className='flex items-center justify-between gap-1 max-xs:flex-wrap'>
         <div className='flex items-center space-x-2'>
           <Filter className='w-5 h-5 text-gray-600 dark:text-gray-400' />
           <span className='font-medium dark:text-gray-200'>Filtros</span>
           {hasActiveFilters && (
-            <span className='px-2 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-600 dark:text-primary-500 text-xs rounded-full'>
+            <span className='px-2 py-1 bg-primary-200 dark:bg-primary-700/30 text-primary-900 dark:text-primary-500 text-xs rounded-full'>
               Activos
             </span>
           )}
         </div>
-        <div className='flex items-center space-x-4'>
-          <span className='text-sm text-gray-600 dark:text-gray-400'>
+        <div className='flex items-center space-x-2'>
+          <span className='text-sm text-gray-800 dark:text-gray-400'>
             {filteredCount} de {totalCount} transacciones
           </span>
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className='text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
+              className='text-sm font-medium text-primary-700 dark:text-primary-400 hover:text-primary-600 dark:hover:text-primary-300'
             >
               Limpiar todo
             </button>
@@ -180,7 +180,7 @@ export default function TransactionFilters({
                 filters.sortOrder === 'asc' ? 'desc' : 'asc'
               )
             }
-            className='px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
+            className='px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
           >
             {filters.sortOrder === 'asc' ? '↑' : '↓'}
           </button>
@@ -190,7 +190,7 @@ export default function TransactionFilters({
       {/* Toggle filtros avanzados */}
       <button
         onClick={() => setShowAdvanced(!showAdvanced)}
-        className='flex items-center space-x-2 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
+        className='flex items-center space-x-2 text-sm font-medium text-primary-700 dark:text-primary-400 hover:text-primary-600 dark:hover:text-primary-300'
       >
         <Filter className='w-4 h-4' />
         <span>{showAdvanced ? 'Ocultar' : 'Mostrar'} filtros avanzados</span>

@@ -266,7 +266,7 @@ export default function SavingsGoalsPage() {
             onClick={() => setFilter('all')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filter === 'all'
-                ? 'bg-primary-600 dark:bg-primary-500 text-white'
+                ? 'bg-primary-700 dark:bg-primary-800 text-white'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
@@ -276,7 +276,7 @@ export default function SavingsGoalsPage() {
             onClick={() => setFilter('active')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filter === 'active'
-                ? 'bg-primary-600 dark:bg-primary-500 text-white'
+                ? 'bg-primary-700 dark:bg-primary-800 text-white'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
@@ -286,7 +286,7 @@ export default function SavingsGoalsPage() {
             onClick={() => setFilter('completed')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filter === 'completed'
-                ? 'bg-primary-600 dark:bg-primary-500 text-white'
+                ? 'bg-primary-700 dark:bg-primary-800 text-white'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
@@ -337,9 +337,9 @@ export default function SavingsGoalsPage() {
               {/* Header */}
               <div className='flex items-start justify-between mb-4'>
                 <div className='flex-1'>
-                  <h3 className='font-bold text-lg dark:text-gray-100'>
+                  <h2 className='font-bold text-lg dark:text-gray-100'>
                     {goal.name}
-                  </h3>
+                  </h2>
                   <p className='text-sm text-gray-600 dark:text-gray-400'>
                     {goal.category}
                   </p>
@@ -393,6 +393,7 @@ export default function SavingsGoalsPage() {
                   <button
                     onClick={() => openProgressModal(goal)}
                     className='flex-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg text-sm font-medium hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors'
+                    aria-label='añadir progreso'
                   >
                     Añadir Progreso
                   </button>
@@ -400,12 +401,14 @@ export default function SavingsGoalsPage() {
                 <button
                   onClick={() => openModal(goal)}
                   className='p-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors'
+                  aria-label='editar'
                 >
                   <Edit2 className='w-4 h-4' />
                 </button>
                 <button
                   onClick={() => handleDelete(goal._id)}
                   className='p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
+                  aria-label='eliminar'
                 >
                   <Trash2 className='w-4 h-4' />
                 </button>
@@ -436,10 +439,11 @@ export default function SavingsGoalsPage() {
               className='space-y-4'
             >
               <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='name' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                   Nombre *
                 </label>
                 <input
+                  id='name'
                   type='text'
                   value={formData.name}
                   onChange={(e) =>
@@ -452,12 +456,13 @@ export default function SavingsGoalsPage() {
               </div>
 
               <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                   Categoría *
                 </label>
                 <div className='grid grid-cols-2 gap-2'>
                   {GOAL_CATEGORIES.map((cat) => (
-                    <button
+                    <input
+                      id='category'
                       key={cat.name}
                       type='button'
                       onClick={() =>
@@ -477,19 +482,19 @@ export default function SavingsGoalsPage() {
                         borderColor:
                           formData.category === cat.name ? cat.color : undefined
                       }}
-                    >
-                      {cat.name}
-                    </button>
+                      value={cat.name}
+                    />
                   ))}
                 </div>
               </div>
 
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label htmlFor='targetAmount' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                     Meta (€) *
                   </label>
                   <input
+                    id='targetAmount'
                     type='number'
                     step='0.01'
                     value={formData.targetAmount}
@@ -502,10 +507,11 @@ export default function SavingsGoalsPage() {
                 </div>
 
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label htmlFor='currentAmount' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                     Ahorrado (€)
                   </label>
                   <input
+                    id='currentAmount'
                     type='number'
                     step='0.01'
                     value={formData.currentAmount}
@@ -521,10 +527,11 @@ export default function SavingsGoalsPage() {
               </div>
 
               <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='deadline' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                   Fecha límite *
                 </label>
                 <input
+                  id='deadline'
                   type='date'
                   value={formData.deadline}
                   onChange={(e) =>
@@ -567,6 +574,7 @@ export default function SavingsGoalsPage() {
               <button
                 onClick={() => setShowProgressModal(false)}
                 className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'
+                aria-label='close'
               >
                 <X className='w-5 h-5 dark:text-gray-400' />
               </button>
@@ -593,10 +601,11 @@ export default function SavingsGoalsPage() {
               className='space-y-4'
             >
               <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='progressAmount' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                   Cantidad a añadir (€) *
                 </label>
                 <input
+                  id='progressAmount'
                   type='number'
                   step='0.01'
                   value={progressAmount}

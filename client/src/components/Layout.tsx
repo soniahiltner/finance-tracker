@@ -28,7 +28,7 @@ const Layout = () => {
       {/* Header */}
       <header className='sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors'>
         <div className='max-w-7xl mx-auto py-1 px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center h-20 md:flex-col md:items-start lg:flex-row lg:items-center'>
+          <div className='flex justify-between items-center h-16 md:h-20 md:flex-col md:items-start lg:flex-row lg:items-center'>
             <div className='flex items-center space-x-10'>
               {/* Logo */}
               <div className='flex items-center justify-self-start'>
@@ -60,7 +60,7 @@ const Layout = () => {
             </div>
 
             {/* User Menu */}
-            <div className='hidden md:flex items-center  space-x-4 md:self-end lg:self-auto'>
+            <div className='hidden w-auto md:flex items-center md:gap-x-1  md:ms-auto lg:self-auto'>
               <ThemeToggle />
               <span className='text-sm text-gray-600 dark:text-gray-300'>
                 Hola, <span className='font-medium'>{user?.name}</span>
@@ -80,9 +80,9 @@ const Layout = () => {
               className='md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
             >
               {mobileMenuOpen ? (
-                <X className='w-6 h-6' />
+                <X className='w-6 h-6' aria-label='close menu' />
               ) : (
-                <Menu className='w-6 h-6' />
+                <Menu className='w-6 h-6' aria-label='open menu' />
               )}
             </button>
           </div>
