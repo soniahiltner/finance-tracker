@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { transactionService } from '../services/transactionService'
 import type { TransactionSummary, Transaction } from '../types'
 
@@ -11,45 +12,46 @@ interface ErrorResponse {
 }
 
 export const useDashboardData = (selectedMonth: string) => {
-  const [summary, setSummary] = useState<TransactionSummary | null>(null)
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  const loadData = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError('')
-
-      const filters = selectedMonth
-        ? {
-            month: selectedMonth.split('-')[1],
-            year: selectedMonth.split('-')[0]
-          }
-        : undefined
-
-      const [summaryData, transData] = await Promise.all([
-        transactionService.getSummary(filters),
-        transactionService.getAll(filters)
-      ])
-
-      setSummary(summaryData)
-      setTransactions(transData)
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error && 'response' in err
-          ? (err as ErrorResponse).response?.data?.message ||
-              'Error al cargar resumen'
-          : 'Error al cargar resumen'
-      )
-    } finally {
-      setLoading(false)
+  const filters = useMemo(() => {
+    if (!selectedMonth) return undefined
+    return {
+      month: selectedMonth.split('-')[1],
+      year: selectedMonth.split('-')[0]
     }
   }, [selectedMonth])
 
-  useEffect(() => {
-    loadData()
-  }, [loadData])
+  // Query para el resumen
+  const {
+    data: summary = null,
+    isLoading: summaryLoading,
+    error: summaryError
+  } = useQuery<TransactionSummary>({
+    queryKey: ['dashboard-summary', filters],
+    queryFn: () => transactionService.getSummary(filters)
+  })
 
-  return { summary, transactions, loading, error, refetch: loadData }
+  // Query para las transacciones
+  const {
+    data: transactions = [],
+    isLoading: transactionsLoading,
+    error: transactionsError
+  } = useQuery<Transaction[]>({
+    queryKey: ['dashboard-transactions', filters],
+    queryFn: () => transactionService.getAll(filters)
+  })
+
+  const loading = summaryLoading || transactionsLoading
+  const error =
+    summaryError || transactionsError
+      ? (summaryError as ErrorResponse)?.response?.data?.message ||
+        (transactionsError as ErrorResponse)?.response?.data?.message ||
+        'Error al cargar resumen'
+      : ''
+
+  return {
+    summary,
+    transactions,
+    loading,
+    error
+  }
 }

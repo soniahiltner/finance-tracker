@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useMemo } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { transactionService } from '../services/transactionService'
 import { categoryService } from '../services/categoryService'
-import type { Transaction, Category } from '../types'
 import type { FilterValues } from '../components/transactions/TransactionFilters'
 
 interface ErrorResponse {
@@ -13,9 +13,7 @@ interface ErrorResponse {
 }
 
 export const useTransactions = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [filters, setFilters] = useState<FilterValues>({
     searchTerm: '',
     type: 'all',
@@ -28,25 +26,64 @@ export const useTransactions = () => {
     sortOrder: 'desc'
   })
 
-  const loadData = useCallback(async () => {
-    try {
-      setLoading(true)
-      const [transData, catData] = await Promise.all([
-        transactionService.getAll(),
-        categoryService.getAll()
-      ])
-      setTransactions(transData)
-      setCategories(catData)
-    } catch (error) {
-      console.error('Error loading data:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  // Query para transacciones
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: () => transactionService.getAll()
+  })
 
-  useEffect(() => {
-    loadData()
-  }, [loadData])
+  // Query para categorías
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoryService.getAll()
+  })
+
+  const loading = transactionsLoading || categoriesLoading
+
+  // Mutation para crear transacción
+  const createMutation = useMutation({
+    mutationFn: (data: {
+      type: 'income' | 'expense'
+      amount: number
+      category: string
+      description: string
+      date: string
+    }) => transactionService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
+    }
+  })
+
+  // Mutation para actualizar transacción
+  const updateMutation = useMutation({
+    mutationFn: ({
+      id,
+      data
+    }: {
+      id: string
+      data: {
+        type: 'income' | 'expense'
+        amount: number
+        category: string
+        description: string
+        date: string
+      }
+    }) => transactionService.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
+    }
+  })
+
+  // Mutation para eliminar transacción
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => transactionService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
+    }
+  })
 
   const createTransaction = async (data: {
     type: 'income' | 'expense'
@@ -56,8 +93,7 @@ export const useTransactions = () => {
     date: string
   }) => {
     try {
-      await transactionService.create(data)
-      await loadData()
+      await createMutation.mutateAsync(data)
       return { success: true }
     } catch (error) {
       const err = error as ErrorResponse
@@ -79,8 +115,7 @@ export const useTransactions = () => {
     }
   ) => {
     try {
-      await transactionService.update(id, data)
-      await loadData()
+      await updateMutation.mutateAsync({ id, data })
       return { success: true }
     } catch (error) {
       const err = error as ErrorResponse
@@ -93,8 +128,7 @@ export const useTransactions = () => {
 
   const deleteTransaction = async (id: string) => {
     try {
-      await transactionService.delete(id)
-      await loadData()
+      await deleteMutation.mutateAsync(id)
       return { success: true }
     } catch (error) {
       const err = error as ErrorResponse
@@ -198,6 +232,9 @@ export const useTransactions = () => {
     createTransaction,
     updateTransaction,
     deleteTransaction,
-    refetch: loadData
+    refetch: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
+    }
   }
 }

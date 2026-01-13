@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { aiService } from '../services/aiService'
 
 export interface Message {
@@ -27,13 +28,23 @@ const WELCOME_MESSAGE: Message = {
 export const useAIChat = () => {
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE])
   const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [suggestions, setSuggestions] = useState<string[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    loadSuggestions()
-  }, [])
+  // Query para sugerencias
+  const { data: suggestions = [] } = useQuery<string[]>({
+    queryKey: ['ai-suggestions'],
+    queryFn: () => aiService.getSuggestions(),
+    staleTime: 1000 * 60 * 30 // 30 minutos
+  })
+
+  // Mutation para queries al AI
+  const queryMutation = useMutation({
+    mutationFn: (query: string) => aiService.query(query)
+  })
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   useEffect(() => {
     // Solo hacer scroll cuando la conversación ha comenzado (más de 1 mensaje)
@@ -41,23 +52,10 @@ export const useAIChat = () => {
       scrollToBottom()
     }
   }, [messages])
-
-  const loadSuggestions = async () => {
-    try {
-      const data = await aiService.getSuggestions()
-      setSuggestions(data)
-    } catch (error) {
-      console.error('Error loading suggestions:', error)
-    }
-  }
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || loading) return
+    if (!input.trim() || queryMutation.isPending) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -67,11 +65,11 @@ export const useAIChat = () => {
     }
 
     setMessages((prev) => [...prev, userMessage])
+    const queryText = input.trim()
     setInput('')
-    setLoading(true)
 
     try {
-      const response = await aiService.query(input.trim())
+      const response = await queryMutation.mutateAsync(queryText)
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -92,8 +90,6 @@ export const useAIChat = () => {
         timestamp: new Date()
       }
       setMessages((prev) => [...prev, errorMessage])
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -105,7 +101,7 @@ export const useAIChat = () => {
     messages,
     input,
     setInput,
-    loading,
+    loading: queryMutation.isPending,
     suggestions,
     messagesEndRef,
     handleSubmit,
