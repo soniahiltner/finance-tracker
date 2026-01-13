@@ -18,8 +18,7 @@ export default function SavingsGoalsPage() {
     updateGoal,
     deleteGoal,
     addProgress,
-    loading,
-    error
+    loading
   } = useSavingsGoals()
 
   // Estado local
@@ -46,14 +45,23 @@ export default function SavingsGoalsPage() {
     setShowProgressModal(true)
   }
 
-  const handleSubmit = async (goalData: Partial<SavingsGoal>) => {
-    const success = editingGoal
+  const handleSubmit = async (goalData: {
+    name: string
+    targetAmount: number
+    currentAmount: number
+    deadline: string
+    category: string
+    color: string
+    icon: string
+  }) => {
+    const result = editingGoal
       ? await updateGoal(editingGoal._id, goalData)
       : await createGoal(goalData)
 
-    if (success) {
+    if (result.success) {
       closeModal()
     }
+    return result
   }
 
   const handleDelete = async (id: string) => {
@@ -64,26 +72,20 @@ export default function SavingsGoalsPage() {
 
   const handleAddProgress = async (amount: number) => {
     if (selectedGoal) {
-      const success = await addProgress(selectedGoal._id, amount)
-      if (success) {
+      const result = await addProgress(selectedGoal._id, amount)
+      if (result.success) {
         setShowProgressModal(false)
         setSelectedGoal(null)
       }
+      return result
     }
+    return { success: false, error: 'No hay meta seleccionada' }
   }
 
   if (loading) {
     return (
       <div className='flex items-center justify-center h-64'>
         <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600' />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className='card bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'>
-        <p className='text-red-600 dark:text-red-400'>{error}</p>
       </div>
     )
   }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Category } from '../types'
+import type { Category } from '../../types'
 import { Filter, X, Calendar, DollarSign, Tag } from 'lucide-react'
 import { format } from 'date-fns'
 
