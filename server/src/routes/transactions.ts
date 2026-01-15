@@ -8,6 +8,14 @@ import {
   getTransactionsSummary
 } from '../controllers/transactionController.js'
 import { protect } from '../middleware/auth.js'
+import { validate } from '../middleware/validate.js'
+import {
+  createTransactionSchema,
+  updateTransactionSchema,
+  deleteTransactionSchema,
+  getTransactionSchema,
+  transactionQuerySchema
+} from '../validation/schemas.js'
 
 const router = express.Router()
 
@@ -15,14 +23,17 @@ const router = express.Router()
 router.use(protect)
 
 // IMPORTANTE: /summary debe ir ANTES de /:id
-router.get('/summary', getTransactionsSummary)
+router.get('/summary', validate(transactionQuerySchema), getTransactionsSummary)
 
-router.route('/').get(getTransactions).post(createTransaction)
+router
+  .route('/')
+  .get(validate(transactionQuerySchema), getTransactions)
+  .post(validate(createTransactionSchema), createTransaction)
 
 router
   .route('/:id')
-  .get(getTransaction)
-  .put(updateTransaction)
-  .delete(deleteTransaction)
+  .get(validate(getTransactionSchema), getTransaction)
+  .put(validate(updateTransactionSchema), updateTransaction)
+  .delete(validate(deleteTransactionSchema), deleteTransaction)
 
 export default router

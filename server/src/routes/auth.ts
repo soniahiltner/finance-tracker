@@ -7,12 +7,14 @@ import {
   changePassword
 } from '../controllers/authController.js'
 import { protect } from '../middleware/auth.js'
+import { validate } from '../middleware/validate.js'
+import { registerSchema, loginSchema } from '../validation/schemas.js'
 
 const router = express.Router()
 
 // Rutas públicas
-router.post('/register', register)
-router.post('/login', login)
+router.post('/register', validate(registerSchema), register)
+router.post('/login', validate(loginSchema), login)
 
 // Rutas protegidas
 router.get('/me', protect, getMe)

@@ -16,22 +16,6 @@ export const register = async (
   try {
     const { email, password, name } = req.body
 
-    // Validar campos requeridos
-    if (!email || !password || !name) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide email, password and name'
-      })
-    }
-
-    // Validar longitud de password
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password must be at least 6 characters'
-      })
-    }
-
     // Verificar si el usuario ya existe
     const userExists = await User.findOne({ email })
 
@@ -137,8 +121,6 @@ export const login = async (
   }
 }
 
-
-
 // @desc    Obtener usuario actual
 // @route   GET /api/auth/me
 // @access  Private
@@ -223,7 +205,6 @@ export const updateProfile = async (
   }
 }
 
-
 // @desc    Cambiar password
 // @route   PUT /api/auth/password
 // @access  Private
@@ -281,5 +262,3 @@ export const changePassword = async (
     next(error)
   }
 }
-
-

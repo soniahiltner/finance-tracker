@@ -1,31 +1,67 @@
 import express, { type Application } from 'express'
 import cors from 'cors'
+import helmet from 'helmet'
 import dotenv from 'dotenv'
 import { connectDB } from './config/database.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import { seedDefaultCategories } from './utils/seedCategories.js'
+import { apiLimiter, authLimiter, aiLimiter } from './middleware/rateLimiter.js'
+import logger from './config/logger.js'
 
 dotenv.config()
 
-// Importar rutas (las crearemos después)
+// Importar rutas
 import authRoutes from './routes/auth.js'
 import transactionRoutes from './routes/transactions.js'
 import categoryRoutes from './routes/categories.js'
 import aiRoutes from './routes/ai.js'
 import savingsGoalRoutes from './routes/savingsGoals.js'
 
-
 const app: Application = express()
 const PORT = process.env.PORT || 5000
 
-// Middlewares
-app.use(cors())
+// Seguridad con Helmet
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:']
+      }
+    },
+    crossOriginEmbedderPolicy: false
+  })
+)
+
+// Configuración CORS segura
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173', 'http://localhost:4173'] // Dev y preview
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Permitir requests sin origin (mobile apps, curl, etc.)
+      if (!origin) return callback(null, true)
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('No permitido por CORS'))
+      }
+    },
+    credentials: true,
+    optionsSuccessStatus: 200
+  })
+)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Logger simple para desarrollo
+// Logger middleware
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`)
+  logger.info(`${req.method} ${req.path}`)
   next()
 })
 
@@ -38,12 +74,12 @@ app.get('/health', (req, res) => {
   })
 })
 
-// Rutas API (descomentar cuando las crees)
-app.use('/api/auth', authRoutes)
-app.use('/api/transactions', transactionRoutes)
-app.use('/api/categories', categoryRoutes)
-app.use('/api/ai', aiRoutes)
-app.use('/api/savings-goals', savingsGoalRoutes)
+// Rutas API con rate limiting
+app.use('/api/auth', authLimiter, authRoutes)
+app.use('/api/transactions', apiLimiter, transactionRoutes)
+app.use('/api/categories', apiLimiter, categoryRoutes)
+app.use('/api/ai', aiLimiter, aiRoutes)
+app.use('/api/savings-goals', apiLimiter, savingsGoalRoutes)
 
 // Ruta 404
 app.use((req, res) => {
@@ -67,12 +103,12 @@ const startServer = async () => {
 
     // Iniciar servidor
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`)
-      console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`)
-      console.log(`📡 Health check: http://localhost:${PORT}/health`)
+      logger.info(`🚀 Server running on port ${PORT}`)
+      logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`)
+      logger.info(`📡 Health check: http://localhost:${PORT}/health`)
     })
   } catch (error) {
-    console.error('Failed to start server:', error)
+    logger.error('Failed to start server:', error)
     process.exit(1)
   }
 }
