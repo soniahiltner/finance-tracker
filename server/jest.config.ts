@@ -4,7 +4,8 @@ export default {
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.test.ts'],
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1'
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^winston$': '<rootDir>/src/__mocks__/winston.ts'
   },
   transform: {
     '^.+\\.tsx?$': [
@@ -13,7 +14,8 @@ export default {
         useESM: true,
         tsconfig: {
           module: 'ESNext',
-          moduleResolution: 'node'
+          moduleResolution: 'node',
+          esModuleInterop: true
         }
       }
     ]

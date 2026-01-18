@@ -3,7 +3,7 @@ import { z } from 'zod'
 // Auth schemas
 export const registerSchema = z.object({
   body: z.object({
-    email: z.string().email('Email inválido').min(1, 'Email es requerido'),
+    email: z.email('Email inválido').min(1, 'Email es requerido'),
     password: z
       .string()
       .min(6, 'La contraseña debe tener al menos 6 caracteres')
@@ -17,7 +17,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
   body: z.object({
-    email: z.string().email('Email inválido').min(1, 'Email es requerido'),
+    email: z.email('Email inválido').min(1, 'Email es requerido'),
     password: z.string().min(1, 'Contraseña es requerida')
   })
 })
@@ -26,7 +26,7 @@ export const loginSchema = z.object({
 export const createTransactionSchema = z.object({
   body: z.object({
     type: z.enum(['income', 'expense'], {
-      errorMap: () => ({ message: 'El tipo debe ser income o expense' })
+      message: 'El tipo debe ser income o expense'
     }),
     amount: z
       .number()
@@ -37,10 +37,7 @@ export const createTransactionSchema = z.object({
       .string()
       .max(500, 'La descripción es demasiado larga')
       .optional(),
-    date: z
-      .string()
-      .datetime({ message: 'Formato de fecha inválido' })
-      .or(z.date())
+    date: z.iso.datetime({ message: 'Formato de fecha inválido' }).or(z.date())
   })
 })
 
@@ -191,7 +188,7 @@ export const createCategorySchema = z.object({
       .min(1, 'El nombre es requerido')
       .max(50, 'El nombre es demasiado largo'),
     type: z.enum(['income', 'expense'], {
-      errorMap: () => ({ message: 'El tipo debe ser income o expense' })
+      message: 'El tipo debe ser income o expense'
     }),
     icon: z.string().max(50, 'Nombre de ícono demasiado largo').optional(),
     color: z
@@ -222,5 +219,26 @@ export const updateCategorySchema = z.object({
 export const deleteCategorySchema = z.object({
   params: z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'ID de categoría inválido')
+  })
+})
+
+export const updateProfileSchema = z.object({
+  body: z.object({
+    name: z
+      .string()
+      .min(2, 'El nombre debe tener al menos 2 caracteres')
+      .max(100, 'El nombre es demasiado largo')
+      .optional(),
+    email: z.email('Email inválido').optional()
+  })
+})
+
+export const changePasswordSchema = z.object({
+  body: z.object({
+    currentPassword: z.string().min(1, 'Contraseña actual es requerida'),
+    newPassword: z
+      .string()
+      .min(6, 'La nueva contraseña debe tener al menos 6 caracteres')
+      .max(100, 'La nueva contraseña es demasiado larga')
   })
 })
