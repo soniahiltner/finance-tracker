@@ -7,6 +7,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './config/queryClient'
 
 // Lazy loading de páginas para code splitting
+const LandingPage = lazy(() => import('./pages/LandingPage'))
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage'))
 const Layout = lazy(() => import('./components/Layout'))
@@ -64,15 +65,35 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
     <Suspense fallback={<PageLoader />}>{children}</Suspense>
   ) : (
     <Navigate
-      to='/dashboard'
+      to='/app/dashboard'
       replace
     />
   )
 }
 
 const AppRoutes = () => {
+  const { user, loading } = useAuth()
+
   return (
     <Routes>
+      <Route
+        path='/'
+        element={
+          loading ? (
+            <PageLoader />
+          ) : user ? (
+            <Navigate
+              to='/dashboard'
+              replace
+            />
+          ) : (
+            <Suspense fallback={<PageLoader />}>
+              <LandingPage />
+            </Suspense>
+          )
+        }
+      />
+
       <Route
         path='/login'
         element={
@@ -91,7 +112,7 @@ const AppRoutes = () => {
       />
 
       <Route
-        path='/'
+        path='/app'
         element={
           <PrivateRoute>
             <Layout />
@@ -100,7 +121,7 @@ const AppRoutes = () => {
       >
         <Route
           index
-          element={<Navigate to='/dashboard' />}
+          element={<Navigate to='/app/dashboard' />}
         />
         <Route
           path='dashboard'
@@ -119,6 +140,45 @@ const AppRoutes = () => {
           element={<SavingsGoalsPage />}
         />
       </Route>
+
+      {/* Redirect old routes for backwards compatibility */}
+      <Route
+        path='/dashboard'
+        element={
+          <Navigate
+            to='/app/dashboard'
+            replace
+          />
+        }
+      />
+      <Route
+        path='/transactions'
+        element={
+          <Navigate
+            to='/app/transactions'
+            replace
+          />
+        }
+      />
+      <Route
+        path='/ai-assistant'
+        element={
+          <Navigate
+            to='/app/ai-assistant'
+            replace
+          />
+        }
+      />
+      <Route
+        path='/savings-goals'
+        element={
+          <Navigate
+            to='/app/savings-goals'
+            replace
+          />
+        }
+      />
+
       <Route
         path='*'
         element={<Navigate to='/' />}
