@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X, TrendingUp, TrendingDown } from 'lucide-react'
 import { format } from 'date-fns'
+import { VoiceInput } from './VoiceInput'
 import type { Transaction, Category } from '../../types'
 
 interface TransactionModalProps {
@@ -45,13 +46,32 @@ const TransactionModal = ({
 
   const [formData, setFormData] = useState(getInitialFormData())
   const [submitting, setSubmitting] = useState(false)
+  const [showVoiceInput, setShowVoiceInput] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
       setFormData(getInitialFormData())
+      setShowVoiceInput(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, transaction?._id])
+
+  const handleVoiceTranscript = (data: {
+    type: 'income' | 'expense'
+    amount: number
+    description: string
+    category: string
+    date: string
+  }) => {
+    setFormData({
+      type: data.type,
+      amount: data.amount.toString(),
+      category: data.category,
+      description: data.description,
+      date: data.date
+    })
+    setShowVoiceInput(false)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -95,6 +115,24 @@ const TransactionModal = ({
           onSubmit={handleSubmit}
           className='space-y-4'
         >
+          {/* Entrada por voz */}
+          {!transaction && (
+            <div>
+              <button
+                type='button'
+                onClick={() => setShowVoiceInput(!showVoiceInput)}
+                className='text-sm text-blue-600 dark:text-blue-400 hover:underline mb-2'
+              >
+                {showVoiceInput ? 'Ocultar' : 'Usar'} entrada por voz
+              </button>
+              {showVoiceInput && (
+                <div className='p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg'>
+                  <VoiceInput onTranscriptProcessed={handleVoiceTranscript} />
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Tipo */}
           <div>
             <div className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
@@ -251,8 +289,8 @@ const TransactionModal = ({
               {submitting
                 ? 'Guardando...'
                 : transaction
-                ? 'Actualizar'
-                : 'Crear'}
+                  ? 'Actualizar'
+                  : 'Crear'}
             </button>
           </div>
         </form>

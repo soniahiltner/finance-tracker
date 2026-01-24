@@ -103,85 +103,11 @@ const LandingPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className='bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm border-t border-white/20 dark:border-gray-700/50 py-8'>
-        <div className='max-w-6xl mx-auto px-4'>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mb-6'>
-            {/* About */}
-            <div>
-              <h4 className='text-white dark:text-gray-200 font-semibold mb-3'>
-                Finance Tracker
-              </h4>
-              <p className='text-white/80 dark:text-gray-400 text-sm'>
-                Una herramienta moderna para gestionar tus finanzas personales
-                con el poder de la inteligencia artificial.
-              </p>
-            </div>
-
-            {/* Links */}
-            <div>
-              <h4 className='text-white dark:text-gray-200 font-semibold mb-3'>
-                Enlaces Rápidos
-              </h4>
-              <ul className='space-y-2 text-sm'>
-                <li>
-                  <Link
-                    to='/login'
-                    className='text-white/80 dark:text-gray-400 hover:text-white dark:hover:text-gray-200 transition-colors'
-                  >
-                    Iniciar Sesión
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to='/register'
-                    className='text-white/80 dark:text-gray-400 hover:text-white dark:hover:text-gray-200 transition-colors'
-                  >
-                    Crear Cuenta
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h4 className='text-white dark:text-gray-200 font-semibold mb-3'>
-                Información
-              </h4>
-              <p className='text-white/80 dark:text-gray-400 text-sm'>
-                © {new Date().getFullYear()} Finance Tracker
-                <br />
-                Todos los derechos reservados
-              </p>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className='pt-6 border-t border-white/20 dark:border-gray-700/50'>
-            <div className='flex flex-col sm:flex-row justify-between items-center gap-4 text-white/70 dark:text-gray-500 text-sm'>
-              <p>Gestiona tus finanzas de manera inteligente</p>
-              <div className='flex gap-4'>
-                <a
-                  href='#'
-                  className='hover:text-white dark:hover:text-gray-300 transition-colors'
-                >
-                  Privacidad
-                </a>
-                <a
-                  href='#'
-                  className='hover:text-white dark:hover:text-gray-300 transition-colors'
-                >
-                  Términos
-                </a>
-                <a
-                  href='#'
-                  className='hover:text-white dark:hover:text-gray-300 transition-colors'
-                >
-                  Contacto
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+      <footer className='bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm border-t border-white/20 dark:border-gray-700/50 py-8 text-center'>
+        <p className='text-white/80 dark:text-gray-400 text-sm font-medium'>
+          © {new Date().getFullYear()} FinanceTracker. Todos los derechos
+          reservados.
+        </p>
       </footer>
     </div>
   )

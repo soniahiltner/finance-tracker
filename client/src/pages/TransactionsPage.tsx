@@ -4,6 +4,7 @@ import TransactionFilters from '../components/transactions/TransactionFilters'
 import TransactionsHeader from '../components/transactions/TransactionsHeader'
 import TransactionList from '../components/transactions/TransactionList'
 import TransactionModal from '../components/transactions/TransactionModal'
+import { ImportDocumentModal } from '../components/transactions/ImportDocumentModal'
 import type { Transaction } from '../types'
 
 export default function TransactionsPage() {
@@ -21,6 +22,7 @@ export default function TransactionsPage() {
   } = useTransactions()
 
   const [showModal, setShowModal] = useState(false)
+  const [showImportModal, setShowImportModal] = useState(false)
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null)
 
@@ -69,6 +71,7 @@ export default function TransactionsPage() {
         filteredTransactions={filteredTransactions}
         hasFilters={hasActiveFilters}
         onNewTransaction={() => openModal()}
+        onImportDocument={() => setShowImportModal(true)}
       />
 
       {/* Filtros avanzados */}
@@ -96,6 +99,12 @@ export default function TransactionsPage() {
         onSubmit={handleSubmit}
         transaction={editingTransaction}
         categories={categories}
+      />
+
+      {/* Modal de importación de documentos */}
+      <ImportDocumentModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
       />
     </div>
   )

@@ -17,6 +17,8 @@
   "type": "module",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
+    "@types/multer": "^2.0.0",
+    "@types/papaparse": "^5.5.2",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
@@ -26,7 +28,11 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.1",
+    "multer": "^2.0.2",
+    "papaparse": "^5.5.3",
+    "pdf-parse": "^2.4.5",
     "winston": "^3.19.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.3.5"
   },
   "devDependencies": {

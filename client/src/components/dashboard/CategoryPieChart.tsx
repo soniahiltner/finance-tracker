@@ -17,9 +17,9 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
     return (
       <div className='card'>
         <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-          Gastos por Categoría
+          Categorías de gastos e ingresos
         </h2>
-        <p className='text-center text-gray-500 py-8'>No hay datos de gastos</p>
+        <p className='text-center text-gray-500 py-8'>No hay datos</p>
       </div>
     )
   }
@@ -27,7 +27,7 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
   return (
     <div className='card'>
       <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-        Gastos por Categoría
+        Categorías de gastos e ingresos
       </h2>
       <ResponsiveContainer
         width='100%'

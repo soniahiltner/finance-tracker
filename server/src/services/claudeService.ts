@@ -248,4 +248,32 @@ EJEMPLOS DE PREGUNTAS QUE PUEDES RESPONDER:
 
     return suggestions.slice(0, 5)
   }
+
+  /**
+   * Consulta directa a Claude sin contexto financiero (para procesamiento de voz, etc.)
+   */
+  async queryRaw(prompt: string): Promise<string> {
+    try {
+      const response = await this.client.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      })
+
+      const content = response.content[0]
+      if (content?.type === 'text') {
+        return content.text
+      }
+
+      throw new Error('Unexpected response format from Claude')
+    } catch (error: any) {
+      console.error('Claude API error:', error)
+      throw new Error('Failed to get response from AI assistant')
+    }
+  }
 }

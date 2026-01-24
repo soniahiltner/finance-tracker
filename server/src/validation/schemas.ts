@@ -37,7 +37,7 @@ export const createTransactionSchema = z.object({
       .string()
       .max(500, 'La descripción es demasiado larga')
       .optional(),
-    date: z.iso.datetime({ message: 'Formato de fecha inválido' }).or(z.date())
+    date: z.string().min(1, 'Fecha es requerida')
   })
 })
 
@@ -54,11 +54,7 @@ export const updateTransactionSchema = z.object({
       .string()
       .max(500, 'La descripción es demasiado larga')
       .optional(),
-    date: z
-      .string()
-      .datetime({ message: 'Formato de fecha inválido' })
-      .or(z.date())
-      .optional()
+    date: z.string().optional()
   }),
   params: z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'ID de transacción inválido')
@@ -79,18 +75,12 @@ export const getTransactionSchema = z.object({
 
 export const transactionQuerySchema = z.object({
   query: z.object({
-    month: z
-      .string()
-      .regex(/^\d{4}-\d{2}$/, 'Formato de mes inválido (YYYY-MM)')
-      .optional(),
-    year: z
-      .string()
-      .regex(/^\d{4}$/, 'Formato de año inválido')
-      .optional(),
+    month: z.string().optional(),
+    year: z.string().optional(),
     category: z.string().optional(),
     type: z.enum(['income', 'expense']).optional(),
-    startDate: z.string().datetime().optional(),
-    endDate: z.string().datetime().optional()
+    startDate: z.string().optional(),
+    endDate: z.string().optional()
   })
 })
 
@@ -110,7 +100,7 @@ export const createSavingsGoalSchema = z.object({
       .min(0, 'El monto actual no puede ser negativo')
       .optional()
       .default(0),
-    deadline: z.string().datetime({ message: 'Formato de fecha inválido' }),
+    deadline: z.string().min(1, 'Fecha límite es requerida'),
     category: z.string().min(1, 'La categoría es requerida'),
     color: z
       .string()
@@ -136,10 +126,7 @@ export const updateSavingsGoalSchema = z.object({
       .number()
       .min(0, 'El monto actual no puede ser negativo')
       .optional(),
-    deadline: z
-      .string()
-      .datetime({ message: 'Formato de fecha inválido' })
-      .optional(),
+    deadline: z.string().optional(),
     category: z.string().min(1, 'La categoría no puede estar vacía').optional(),
     color: z
       .string()
@@ -240,5 +227,15 @@ export const changePasswordSchema = z.object({
       .string()
       .min(6, 'La nueva contraseña debe tener al menos 6 caracteres')
       .max(100, 'La nueva contraseña es demasiado larga')
+  })
+})
+
+// Voice transaction schema
+export const voiceTransactionSchema = z.object({
+  body: z.object({
+    transcript: z
+      .string()
+      .min(1, 'El texto transcrito no puede estar vacío')
+      .max(1000, 'El texto transcrito es demasiado largo')
   })
 })

@@ -19,7 +19,7 @@ const MonthFilter = ({ selectedMonth, onMonthChange }: MonthFilterProps) => {
         type='month'
         value={selectedMonth}
         onChange={(e) => onMonthChange(e.target.value)}
-        className='input-field w-auto px-1 dark:text-gray-100 cursor-pointer dark:bg-gray-700 max-xs:px-1 max-xs:w-40 max-xxs: text-sm'
+        className='input-field w-auto px-1 cursor-pointer max-xs:px-1 max-xs:w-40 max-xxs: text-sm'
         id='selected-month'
       />
       {selectedMonth && (

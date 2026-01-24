@@ -1,8 +1,14 @@
 import express from 'express'
-import { queryAI, getSuggestions } from '../controllers/aiController.js'
+import {
+  queryAI,
+  getSuggestions,
+  importDocument,
+  processVoiceTransaction
+} from '../controllers/aiController.js'
 import { protect } from '../middleware/auth.js'
 import { validate } from '../middleware/validate.js'
-import { aiChatSchema } from '../validation/schemas.js'
+import { aiChatSchema, voiceTransactionSchema } from '../validation/schemas.js'
+import { upload, handleMulterError } from '../middleware/upload.js'
 
 const router = express.Router()
 
@@ -11,5 +17,16 @@ router.use(protect)
 
 router.post('/query', validate(aiChatSchema), queryAI)
 router.get('/suggestions', getSuggestions)
+router.post(
+  '/import-document',
+  upload.single('file'),
+  handleMulterError,
+  importDocument
+)
+router.post(
+  '/voice-transaction',
+  validate(voiceTransactionSchema),
+  processVoiceTransaction
+)
 
 export default router

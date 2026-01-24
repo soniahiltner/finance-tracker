@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react'
+import { Plus, FileUp } from 'lucide-react'
 import ExportMenu from '../ExportMenu'
 import type { Transaction } from '../../types'
 
@@ -7,13 +7,15 @@ interface TransactionsHeaderProps {
   filteredTransactions: Transaction[]
   hasFilters: boolean
   onNewTransaction: () => void
+  onImportDocument?: () => void
 }
 
 const TransactionsHeader = ({
   allTransactions,
   filteredTransactions,
   hasFilters,
-  onNewTransaction
+  onNewTransaction,
+  onImportDocument
 }: TransactionsHeaderProps) => {
   return (
     <div className='flex justify-between items-center max-sm:flex-col max-sm:items-start'>
@@ -31,12 +33,23 @@ const TransactionsHeader = ({
           filteredTransactions={filteredTransactions}
           hasFilters={hasFilters}
         />
+        {onImportDocument && (
+          <button
+            onClick={onImportDocument}
+            className='btn-secondary flex items-center max-sm:px-2 max-sm:text-sm'
+            title='Importar desde documento'
+          >
+            <FileUp className='w-5 h-5 mr-2' />
+            <span className='max-sm:hidden'>Importar</span>
+          </button>
+        )}
         <button
           onClick={onNewTransaction}
           className='btn-primary flex items-center max-sm:px-2 max-sm:text-sm'
         >
           <Plus className='w-5 h-5 mr-2' />
-          Nueva Transacción
+          <span className='max-sm:hidden'>Nueva Transacción</span>
+          <span className='sm:hidden'>Nueva</span>
         </button>
       </div>
     </div>
