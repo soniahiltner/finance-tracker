@@ -166,26 +166,27 @@ IMPORTANTE: Responde SOLO con el JSON, sin texto adicional antes o después.`
     }
 
     try {
-      const prompt = `Analiza estas transacciones y asigna la categoría más apropiada de la lista disponible:
+      const prompt = `Analiza estas transacciones y asigna la categoría más apropiada de la lista disponible.
 
 Transacciones:
-${transactions.map((t, i) => `${i + 1}. ${t.description} - ${t.amount}€`).join('\n')}
+${transactions.map((t, i) => `${i}. ${t.description} - ${t.amount}€`).join('\n')}
 
 Categorías disponibles:
 ${availableCategories.join(', ')}
 
-Responde ÚNICAMENTE con un JSON válido en este formato:
+IMPORTANTE: 
+- Responde SOLO con JSON válido, sin texto adicional
+- No uses trailing commas
+- El índice debe ser el número de la transacción (empezando en 0)
+- El category debe ser EXACTAMENTE uno de los nombres disponibles
+
+Formato JSON:
 {
   "categorizations": [
-    {
-      "index": 0,
-      "category": "nombre_categoria"
-    }
+    {"index": 0, "category": "Food & Dining"},
+    {"index": 1, "category": "Transport"}
   ]
-}
-
-Usa el índice de la transacción (empezando en 0) y el nombre exacto de la categoría.
-IMPORTANTE: Responde SOLO con el JSON, sin texto adicional.`
+}`
 
       const message = await this.client.messages.create({
         model: 'claude-sonnet-4-20250514',
@@ -202,12 +203,39 @@ IMPORTANTE: Responde SOLO con el JSON, sin texto adicional.`
       const responseText =
         firstContent && firstContent.type === 'text' ? firstContent.text : ''
 
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/)
+      // Intentar extraer JSON del response de forma más robusta
+      let jsonMatch = responseText.match(/\{[\s\S]*\}/)
       if (!jsonMatch) {
+        console.warn('⚠️ No se encontró JSON en la respuesta de IA')
         return transactions
       }
 
-      const result = JSON.parse(jsonMatch[0])
+      let result
+      try {
+        // Limpiar el JSON antes de parsear
+        let jsonStr = jsonMatch[0]
+
+        // Eliminar trailing commas que pueden causar errores
+        jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1')
+
+        result = JSON.parse(jsonStr)
+      } catch (error) {
+        console.warn('⚠️ Error parseando JSON de IA:', error)
+        // Intentar extraer solo el array de categorizations
+        const arrayMatch = responseText.match(/\[[\s\S]*?\]/g)
+        if (arrayMatch) {
+          try {
+            const categorizations = JSON.parse(arrayMatch[0])
+            result = { categorizations }
+          } catch {
+            console.warn('⚠️ No se pudo parsear categorizations')
+            return transactions
+          }
+        } else {
+          return transactions
+        }
+      }
+
       const categorizations = result.categorizations || []
 
       // Aplicar categorizaciones

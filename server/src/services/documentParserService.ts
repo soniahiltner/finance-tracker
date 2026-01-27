@@ -1,9 +1,6 @@
-import { createRequire } from 'module'
 import xlsx from 'xlsx'
 import Papa from 'papaparse'
 import { PDFParse } from 'pdf-parse'
-
-const require = createRequire(import.meta.url)
 
 export interface ParsedTransaction {
   date: string
@@ -203,16 +200,14 @@ class DocumentParserService {
 
     console.log(`📋 Analizando ${lines.length} líneas de texto...`)
 
+    // Patrón para detectar montos (negativos y positivos) - buscar TODOS
+    const amountPattern = /(-?\d{1,3}(?:[.,]\d{3})*[.,]\d{2})/g
+
     // Patrones mejorados para detectar transacciones
     const datePatterns = [
       /\b(\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4})\b/, // DD/MM/YYYY o DD-MM-YYYY
       /\b(\d{4}[-\/]\d{1,2}[-\/]\d{1,2})\b/, // YYYY-MM-DD
       /\b(\d{1,2}\s+(?:ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)\w*\s+\d{2,4})\b/i // 15 enero 2024
-    ]
-
-    const amountPatterns = [
-      /[€$]?\s*(-?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s*[€$]?/, // Con símbolos opcionales
-      /(-?\d+[.,]\d{2})\b/ // Formato simple con decimales
     ]
 
     let matchedLines = 0
@@ -234,57 +229,42 @@ class DocumentParserService {
 
       if (!dateStr) continue
 
-      let amountMatch = null
-      let amount = NaN
+      // Encontrar TODOS los montos en la línea
+      const amounts = Array.from(line.matchAll(amountPattern))
 
-      // Intentar cada patrón de monto
-      for (const pattern of amountPatterns) {
-        amountMatch = line.match(pattern)
-        if (amountMatch && amountMatch[1]) {
-          amount = this.parseAmount(amountMatch[1])
-          if (!isNaN(amount)) break
-        }
+      if (amounts.length === 0) continue
+
+      // El importe suele ser el penúltimo número (el último suele ser el saldo)
+      // Si solo hay un número, ese es el importe
+      const amountMatch =
+        amounts.length > 1 ? amounts[amounts.length - 2] : amounts[0]
+      if (!amountMatch || !amountMatch[1]) continue
+
+      const amount = this.parseAmount(amountMatch[1])
+      if (isNaN(amount)) continue
+
+      matchedLines++
+
+      // Extraer descripción: texto entre la fecha y el primer monto
+      const dateEndPos = (dateMatch?.index ?? 0) + (dateMatch?.[0]?.length ?? 0)
+      const firstAmountPos = amounts[0]?.index ?? line.length
+
+      let description = line.substring(dateEndPos, firstAmountPos).trim()
+
+      // Limpiar descripción de categorías bancarias comunes
+      description = this.cleanBankDescription(description)
+
+      // Si después de limpiar la descripción queda muy corta, usar el texto original parcial
+      if (description.length < 3) {
+        description = 'Transacción importada'
       }
 
-      if (dateMatch && amountMatch && !isNaN(amount) && dateStr) {
-        matchedLines++
-
-        // Extraer descripción (texto entre fecha y monto)
-        let description = line
-          .replace(dateMatch[0], '')
-          .replace(amountMatch[0], '')
-          .trim()
-
-        // Limpiar descripción de categorías del banco
-        // Eliminar patrones comunes de categorización bancaria
-        description = description
-          .replace(
-            /^(Compras|Otros gastos|Ingresos|Transferencias|Pagos|Recibos)\s+/i,
-            ''
-          )
-          .replace(
-            /\s+(Compras|Otros gastos|Ingresos|Transferencias|Pagos|Recibos)\s*\([^)]+\)/gi,
-            ''
-          )
-          .replace(/\s+\([^)]+\)\s+/g, ' ') // Eliminar texto entre paréntesis
-          .replace(/Pago en\s+/i, '')
-          .replace(/Recibo\s+/i, '')
-          .replace(/Transferencia\s+(de|a)\s+/i, '')
-          .replace(/\s+/g, ' ') // Normalizar espacios
-          .trim()
-
-        // Si después de limpiar la descripción queda muy corta, usar el texto original parcial
-        if (description.length < 3) {
-          description = 'Transacción importada'
-        }
-
-        transactions.push({
-          date: dateStr,
-          amount: Math.abs(amount),
-          description: description.substring(0, 200),
-          type: this.inferType(line, amount)
-        })
-      }
+      transactions.push({
+        date: dateStr,
+        amount: Math.abs(amount),
+        description: description.substring(0, 200),
+        type: this.inferType(line, amount)
+      })
     }
 
     console.log(
@@ -292,6 +272,34 @@ class DocumentParserService {
     )
 
     return transactions
+  }
+
+  /**
+   * Limpia descripciones de categorías y textos bancarios innecesarios
+   */
+  private cleanBankDescription(description: string): string {
+    return (
+      description
+        // Eliminar categorías y subcategorías bancarias
+        .replace(
+          /(Compras|Otros gastos|Ingresos|Transferencias|Pagos|Recibos|Retiradas|Abonos)\s+/gi,
+          ''
+        )
+        .replace(
+          /\s+(Compras|Otros gastos|Ingresos|Transferencias|Pagos|Recibos)\s*\([^)]+\)/gi,
+          ''
+        )
+        // Eliminar texto entre paréntesis genérico
+        .replace(/(\s+)?\([^)]+\)\s*/g, ' ')
+        // Eliminar prefijos comunes
+        .replace(
+          /(Pago en|Recibo|Recibo de|Transferencia a|Transferencia de|Cargo|Abono)\s+/gi,
+          ''
+        )
+        // Normalizar espacios múltiples
+        .replace(/\s+/g, ' ')
+        .trim()
+    )
   }
 
   /**
@@ -595,37 +603,51 @@ class DocumentParserService {
    */
   private normalizeDate(dateStr: string): string {
     try {
-      let normalizedDate: Date
-
       // Formato: DD/MM/YYYY o DD-MM-YYYY
       if (/\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4}/.test(dateStr)) {
         const parts = dateStr.split(/[-\/]/)
         const day = parseInt(parts[0]!, 10)
-        const month = parseInt(parts[1]!, 10) - 1
+        const month = parseInt(parts[1]!, 10)
         const year = parseInt(parts[2]!, 10)
         const fullYear = year < 100 ? 2000 + year : year
-        normalizedDate = new Date(fullYear, month, day)
+
+        // Formatear directamente a YYYY-MM-DD sin crear objeto Date
+        // para evitar problemas de zona horaria
+        return `${fullYear}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
       }
-      // Formato: YYYY-MM-DD
+      // Formato: YYYY-MM-DD (ya está en el formato correcto)
       else if (/\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/.test(dateStr)) {
-        normalizedDate = new Date(dateStr)
+        const parts = dateStr.split(/[-\/]/)
+        const year = parts[0]!
+        const month = parts[1]!.padStart(2, '0')
+        const day = parts[2]!.padStart(2, '0')
+        return `${year}-${month}-${day}`
       }
       // Formato Excel serial date
       else if (!isNaN(Number(dateStr)) && Number(dateStr) > 1000) {
         const excelDate = parseFloat(dateStr)
-        normalizedDate = new Date((excelDate - 25569) * 86400 * 1000)
+        // Convertir a fecha UTC para evitar problemas de zona horaria
+        const date = new Date((excelDate - 25569) * 86400 * 1000)
+        const year = date.getUTCFullYear()
+        const month = (date.getUTCMonth() + 1).toString().padStart(2, '0')
+        const day = date.getUTCDate().toString().padStart(2, '0')
+        return `${year}-${month}-${day}`
       }
       // Otros formatos
       else {
-        normalizedDate = new Date(dateStr)
+        const normalizedDate = new Date(dateStr)
+        if (isNaN(normalizedDate.getTime())) {
+          console.warn('⚠️ Fecha inválida:', dateStr)
+          return ''
+        }
+        // Usar UTC para evitar cambios de día por zona horaria
+        const year = normalizedDate.getUTCFullYear()
+        const month = (normalizedDate.getUTCMonth() + 1)
+          .toString()
+          .padStart(2, '0')
+        const day = normalizedDate.getUTCDate().toString().padStart(2, '0')
+        return `${year}-${month}-${day}`
       }
-
-      if (isNaN(normalizedDate.getTime())) {
-        console.warn('⚠️ Fecha inválida:', dateStr)
-        return ''
-      }
-
-      return normalizedDate.toISOString().split('T')[0]!
     } catch (error) {
       console.warn('⚠️ Error normalizando fecha:', dateStr, error)
       return ''
@@ -682,6 +704,7 @@ class DocumentParserService {
       'deposito',
       'abono',
       'nomina',
+      'pension',
       'transferencia recibida'
     ]
     const expenseKeywords = [
@@ -689,6 +712,8 @@ class DocumentParserService {
       'compra',
       'cargo',
       'retiro',
+      'gasto',
+      'recibo',
       'transferencia enviada'
     ]
 
@@ -714,6 +739,7 @@ class DocumentParserService {
       'Food & Dining': [
         'restaurante',
         'comida',
+        'alimentacion',
         'supermercado',
         'mercadona',
         'carrefour',
@@ -739,6 +765,7 @@ class DocumentParserService {
         'panaderia',
         'pasteleria',
         'fruteria',
+        'frutas',
         'carniceria'
       ],
       Shopping: [
@@ -774,6 +801,7 @@ class DocumentParserService {
         'shell',
         'galp',
         'transporte',
+        'vehiculo',
         'taxi',
         'uber',
         'cabify',
@@ -816,7 +844,10 @@ class DocumentParserService {
         'hipoteca',
         'comunidad',
         'ibi',
-        'basura'
+        'basura',
+        'tv',
+        'hogar',
+        'seguro'
       ],
       Entertainment: [
         'cine',
@@ -864,7 +895,7 @@ class DocumentParserService {
         'formacion',
         'matricula'
       ],
-      Salary: ['nomina', 'salario', 'sueldo', 'paga'],
+      Salary: ['nomina', 'salario', 'sueldo', 'paga', 'pension'],
       Freelance: ['freelance', 'autonomo', 'honorarios', 'proyecto'],
       Investments: ['dividendo', 'interes', 'inversion', 'beneficio']
     }

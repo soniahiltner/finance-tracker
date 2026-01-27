@@ -6,6 +6,7 @@ import { documentParserService } from '../services/documentParserService.js'
 import { ocrService } from '../services/ocrService.js'
 import { Category } from '../models/index.js'
 import path from 'path'
+import { defaultCategories } from '../config/defaultCategories.js'
 
 // Función helper para obtener instancia del servicio
 const getClaudeService = () => new ClaudeService()
@@ -173,8 +174,11 @@ export const importDocument = async (
     }
 
     // Obtener categorías disponibles para auto-categorización
-    const categories = await Category.find({ userId }).select('name')
-    const categoryNames = categories.map((c) => c.name)
+    const defaultCategoriesNames = defaultCategories.map((c) => c.name)
+    const UserCategories = await Category.find({ userId }).select('name')
+    const categoryNames = UserCategories.map((c) => c.name).concat(
+      defaultCategoriesNames
+    )
 
     // Auto-categorizar transacciones
     let transactions = parseResult.transactions

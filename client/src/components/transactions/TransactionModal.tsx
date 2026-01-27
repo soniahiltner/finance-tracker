@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { X, TrendingUp, TrendingDown } from 'lucide-react'
+import { X, TrendingUp, TrendingDown, Plus } from 'lucide-react'
 import { format } from 'date-fns'
+import { useQueryClient } from '@tanstack/react-query'
 import { VoiceInput } from './VoiceInput'
+import { categoryService } from '../../services/categoryService'
 import type { Transaction, Category } from '../../types'
 
 interface TransactionModalProps {
@@ -44,17 +46,49 @@ const TransactionModal = ({
     }
   }
 
+  const queryClient = useQueryClient()
   const [formData, setFormData] = useState(getInitialFormData())
   const [submitting, setSubmitting] = useState(false)
   const [showVoiceInput, setShowVoiceInput] = useState(false)
+  const [showNewCategory, setShowNewCategory] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState('')
+  const [creatingCategory, setCreatingCategory] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
       setFormData(getInitialFormData())
       setShowVoiceInput(false)
+      setShowNewCategory(false)
+      setNewCategoryName('')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, transaction?._id])
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) return
+
+    setCreatingCategory(true)
+    try {
+      await categoryService.create({
+        name: newCategoryName.trim(),
+        type: formData.type,
+        icon: 'tag',
+        color: formData.type === 'income' ? '#10b981' : '#ef4444'
+      })
+      //Invalidar el cache para que React Query recargue las categorías
+      await queryClient.invalidateQueries({ queryKey: ['categories'] })
+
+      // 
+      // La categoría se creó, ahora seleccionarla
+      setFormData({ ...formData, category: newCategoryName.trim() })
+      setShowNewCategory(false)
+      setNewCategoryName('')
+    } catch (error) {
+      alert(`Error al crear la categoría: ${error}`)
+    } finally {
+      setCreatingCategory(false)
+    }
+  }
 
   const handleVoiceTranscript = (data: {
     type: 'income' | 'expense'
@@ -207,26 +241,72 @@ const TransactionModal = ({
             >
               Categoría *
             </label>
-            <select
-              id='category'
-              value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              className='input-field'
-              required
-              disabled={submitting}
-            >
-              <option value=''>Selecciona una categoría</option>
-              {formCategories.map((cat) => (
-                <option
-                  key={cat._id}
-                  value={cat.name}
+            {showNewCategory ? (
+              <div className='space-y-2'>
+                <input
+                  type='text'
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  placeholder='Nombre de la nueva categoría'
+                  className='input-field'
+                  disabled={creatingCategory}
+                  autoFocus
+                />
+                <div className='flex gap-2'>
+                  <button
+                    type='button'
+                    onClick={handleCreateCategory}
+                    disabled={!newCategoryName.trim() || creatingCategory}
+                    className='flex-1 px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium'
+                  >
+                    {creatingCategory ? 'Creando...' : 'Crear'}
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setShowNewCategory(false)
+                      setNewCategoryName('')
+                    }}
+                    disabled={creatingCategory}
+                    className='px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium'
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className='flex gap-2'>
+                <select
+                  id='category'
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
+                  className='input-field flex-1'
+                  required
+                  disabled={submitting}
                 >
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+                  <option value=''>Selecciona una categoría</option>
+                  {formCategories.map((cat) => (
+                    <option
+                      key={cat._id}
+                      value={cat.name}
+                    >
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type='button'
+                  onClick={() => setShowNewCategory(true)}
+                  className='px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors'
+                  title='Crear nueva categoría'
+                  disabled={submitting}
+                >
+                  <Plus className='w-5 h-5' />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Descripción */}

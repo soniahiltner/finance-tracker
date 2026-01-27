@@ -51,6 +51,7 @@ export const useTransactions = () => {
     }) => transactionService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
     }
   })
@@ -72,6 +73,7 @@ export const useTransactions = () => {
     }) => transactionService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
     }
   })
