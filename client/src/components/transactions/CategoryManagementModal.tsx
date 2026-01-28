@@ -1,5 +1,13 @@
-import { useState } from 'react'
-import { X, Edit2, Trash2, Save, XCircle, Lock } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import {
+  X,
+  Edit2,
+  Trash2,
+  Save,
+  XCircle,
+  Lock,
+  AlertCircle
+} from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { categoryService } from '../../services/categoryService'
 import ConfirmModal from '../ConfirmModal'
@@ -24,6 +32,19 @@ export default function CategoryManagementModal({
     id: string
     name: string
   } | null>(null)
+  const [deleteError, setDeleteError] = useState('')
+  const [editError, setEditError] = useState('')
+
+  // Limpiar errores cuando el modal se cierra
+  useEffect(() => {
+    if (!isOpen) {
+      setDeleteError('')
+      setEditError('')
+      setCategoryToDelete(null)
+      setEditingId(null)
+      setEditingName('')
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -36,12 +57,16 @@ export default function CategoryManagementModal({
     if (!editingName.trim()) return
 
     try {
+      setEditError('')
       await categoryService.update(id, { name: editingName.trim() })
       await queryClient.invalidateQueries({ queryKey: ['categories'] })
       setEditingId(null)
       setEditingName('')
     } catch (error) {
-      alert(`Error al actualizar la categoría: ${error}`)
+      const err = error as { response?: { data?: { message?: string } } }
+      const message =
+        err?.response?.data?.message || 'Error al actualizar la categoría'
+      setEditError(message)
     }
   }
 
@@ -58,6 +83,7 @@ export default function CategoryManagementModal({
     if (!categoryToDelete) return
 
     setDeleting(categoryToDelete.id)
+    setDeleteError('')
     try {
       await categoryService.delete(categoryToDelete.id)
       await queryClient.invalidateQueries({ queryKey: ['categories'] })
@@ -67,7 +93,9 @@ export default function CategoryManagementModal({
       const err = error as { response?: { data?: { message?: string } } }
       const message =
         err?.response?.data?.message || 'Error al eliminar la categoría'
-      alert(message)
+      setDeleteError(message)
+      // Cerrar el modal de confirmación pero mantener el mensaje de error visible
+      setCategoryToDelete(null)
     } finally {
       setDeleting(null)
     }
@@ -95,6 +123,41 @@ export default function CategoryManagementModal({
             <X className='w-6 h-6' />
           </button>
         </div>
+
+        {/* Error Alert */}
+        {deleteError && (
+          <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
+            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5' />
+            <div className='flex-1'>
+              <p className='text-sm text-red-600 dark:text-red-400'>
+                {deleteError}
+              </p>
+            </div>
+            <button
+              onClick={() => setDeleteError('')}
+              className='text-red-400 hover:text-red-600 dark:hover:text-red-300'
+            >
+              <X className='w-4 h-4' />
+            </button>
+          </div>
+        )}
+
+        {editError && (
+          <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
+            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5' />
+            <div className='flex-1'>
+              <p className='text-sm text-red-600 dark:text-red-400'>
+                {editError}
+              </p>
+            </div>
+            <button
+              onClick={() => setEditError('')}
+              className='text-red-400 hover:text-red-600 dark:hover:text-red-300'
+            >
+              <X className='w-4 h-4' />
+            </button>
+          </div>
+        )}
 
         {/* Content */}
         <div className='flex-1 overflow-y-auto p-6 space-y-6'>

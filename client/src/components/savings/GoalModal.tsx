@@ -112,13 +112,14 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
               placeholder='ej: Viaje a Japón'
               required
               disabled={submitting}
+              autoComplete='off'
             />
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+            <h3 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
               Categoría *
-            </label>
+            </h3>
             <div className='grid grid-cols-2 gap-2'>
               {GOAL_CATEGORIES.map((cat) => (
                 <button

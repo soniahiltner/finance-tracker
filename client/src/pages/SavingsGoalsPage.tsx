@@ -7,6 +7,7 @@ import GoalFilters from '../components/savings/GoalFilters'
 import GoalCard from '../components/savings/GoalCard'
 import GoalModal from '../components/savings/GoalModal'
 import ProgressModal from '../components/savings/ProgressModal'
+import ConfirmModal from '../components/ConfirmModal'
 
 export default function SavingsGoalsPage() {
   const {
@@ -26,6 +27,9 @@ export default function SavingsGoalsPage() {
   const [showProgressModal, setShowProgressModal] = useState(false)
   const [editingGoal, setEditingGoal] = useState<SavingsGoal | null>(null)
   const [selectedGoal, setSelectedGoal] = useState<SavingsGoal | null>(null)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [goalToDelete, setGoalToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Handlers
   const openModal = (goal?: SavingsGoal) => {
@@ -65,8 +69,20 @@ export default function SavingsGoalsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('¿Estás seguro de eliminar esta meta?')) {
-      await deleteGoal(id)
+    setGoalToDelete(id)
+    setShowDeleteConfirm(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (goalToDelete) {
+      setIsDeleting(true)
+      try {
+        await deleteGoal(goalToDelete)
+        setShowDeleteConfirm(false)
+        setGoalToDelete(null)
+      } finally {
+        setIsDeleting(false)
+      }
     }
   }
 
@@ -166,6 +182,22 @@ export default function SavingsGoalsPage() {
         onClose={() => setShowProgressModal(false)}
         onSubmit={handleAddProgress}
         goal={selectedGoal}
+      />
+
+      {/* Modal Confirmar Eliminación */}
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        title='Eliminar Meta'
+        message='¿Estás seguro de que deseas eliminar esta meta? Esta acción no se puede deshacer.'
+        confirmText='Eliminar'
+        cancelText='Cancelar'
+        variant='danger'
+        loading={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onClose={() => {
+          setShowDeleteConfirm(false)
+          setGoalToDelete(null)
+        }}
       />
     </div>
   )

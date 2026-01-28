@@ -15,9 +15,7 @@ interface GoalCardProps {
 const GoalCard = memo(
   ({ goal, onEdit, onDelete, onAddProgress }: GoalCardProps) => {
     const handleDelete = () => {
-      if (confirm('¿Estás seguro de eliminar esta meta?')) {
-        onDelete(goal._id)
-      }
+      onDelete(goal._id)
     }
 
     return (
