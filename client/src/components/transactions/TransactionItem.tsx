@@ -14,9 +14,7 @@ interface TransactionItemProps {
 const TransactionItem = memo(
   ({ transaction, onEdit, onDelete }: TransactionItemProps) => {
     const handleDelete = () => {
-      if (confirm('¿Estás seguro de eliminar esta transacción?')) {
-        onDelete(transaction._id)
-      }
+      onDelete(transaction._id)
     }
 
     return (

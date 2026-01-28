@@ -5,6 +5,7 @@ import TransactionsHeader from '../components/transactions/TransactionsHeader'
 import TransactionList from '../components/transactions/TransactionList'
 import TransactionModal from '../components/transactions/TransactionModal'
 import { ImportDocumentModal } from '../components/transactions/ImportDocumentModal'
+import ConfirmModal from '../components/ConfirmModal'
 import type { Transaction } from '../types'
 
 export default function TransactionsPage() {
@@ -24,6 +25,8 @@ export default function TransactionsPage() {
   const [showModal, setShowModal] = useState(false)
   const [showImportModal, setShowImportModal] = useState(false)
   const [editingTransaction, setEditingTransaction] =
+    useState<Transaction | null>(null)
+  const [transactionToDelete, setTransactionToDelete] =
     useState<Transaction | null>(null)
 
   const openModal = (transaction?: Transaction) => {
@@ -49,8 +52,21 @@ export default function TransactionsPage() {
     return await createTransaction(data)
   }
 
-  const handleDelete = async (id: string) => {
-    await deleteTransaction(id)
+  const handleDelete = (id: string) => {
+    const transaction = transactions.find((t) => t._id === id)
+    if (transaction) {
+      setTransactionToDelete(transaction)
+    }
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!transactionToDelete) return
+    await deleteTransaction(transactionToDelete._id)
+    setTransactionToDelete(null)
+  }
+
+  const handleCancelDelete = () => {
+    setTransactionToDelete(null)
   }
 
   if (loading) {
@@ -105,6 +121,18 @@ export default function TransactionsPage() {
       <ImportDocumentModal
         isOpen={showImportModal}
         onClose={() => setShowImportModal(false)}
+      />
+
+      {/* Modal de confirmación de eliminación */}
+      <ConfirmModal
+        isOpen={!!transactionToDelete}
+        title='Eliminar transacción'
+        message={`¿Estás seguro de que quieres eliminar esta transacción de ${transactionToDelete?.category} por ${transactionToDelete?.amount}€?`}
+        confirmText='Eliminar'
+        cancelText='Cancelar'
+        variant='danger'
+        onConfirm={handleConfirmDelete}
+        onClose={handleCancelDelete}
       />
     </div>
   )
