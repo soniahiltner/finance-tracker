@@ -9,6 +9,7 @@ interface AuthField {
   type: string
   placeholder: string
   value: string
+  autoComplete: string
   onChange: (value: string) => void
 }
 
@@ -68,7 +69,9 @@ const AuthForm = ({
         err && typeof err === 'object' && 'response' in err
           ? (err as { response?: { data?: { message?: string } } }).response
               ?.data?.message
-          : undefined
+          : err instanceof Error
+            ? err.message
+            : 'Error en la operación'
       setError(errorMessage || 'Error en la operación')
     } finally {
       setLoading(false)
@@ -126,6 +129,7 @@ const AuthForm = ({
                   className='input-field'
                   placeholder={field.placeholder}
                   required
+                  autoComplete={field.autoComplete}
                 />
               </div>
             ))}

@@ -31,6 +31,7 @@ const RegisterPage = () => {
       type: 'text',
       placeholder: 'Tu nombre',
       value: name,
+      autoComplete: 'on',
       onChange: setName
     },
     {
@@ -39,6 +40,7 @@ const RegisterPage = () => {
       type: 'email',
       placeholder: 'tu@email.com',
       value: email,
+      autoComplete: 'on',
       onChange: setEmail
     },
     {
@@ -47,6 +49,7 @@ const RegisterPage = () => {
       type: 'password',
       placeholder: '••••••••',
       value: password,
+      autoComplete: 'off',
       onChange: setPassword
     },
     {
@@ -55,6 +58,7 @@ const RegisterPage = () => {
       type: 'password',
       placeholder: '••••••••',
       value: confirmPassword,
+      autoComplete: 'off',
       onChange: setConfirmPassword
     }
   ]

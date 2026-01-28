@@ -39,7 +39,7 @@ const LandingPage = () => {
   ]
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-primary-50 to-blue-500 dark:from-gray-900 dark:to-gray-800 flex flex-col'>
+    <div className='min-h-screen bg-linear-to-br from-primary-50 to-blue-500 dark:from-gray-900 dark:to-gray-700 flex flex-col'>
       {/* Theme Toggle */}
       <div className='absolute top-4 right-4'>
         <ThemeToggle />
@@ -50,7 +50,7 @@ const LandingPage = () => {
         <div className='max-w-6xl w-full'>
           {/* Hero Section */}
           <div className='text-center mb-16'>
-            <h1 className='text-5xl md:text-6xl font-bold text-primary-600 dark:text-gray-100 mb-4'>
+            <h1 className='text-5xl md:text-6xl font-bold text-primary-600 dark:text-primary-400 mb-4'>
               FinanceTracker
             </h1>
             <p className='text-xl font-medium md:text-2xl text-gray-700 dark:text-gray-400 mb-8'>

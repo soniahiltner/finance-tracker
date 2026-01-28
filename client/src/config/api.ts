@@ -27,11 +27,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Solo redirigir si es 401 y no estamos en una ruta de autenticación
     if (error.response?.status === 401) {
-      // Token inválido o expirado
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
+      const currentPath = window.location.pathname
+      const isAuthRoute =
+        currentPath === '/login' || currentPath === '/register'
+
+      if (!isAuthRoute) {
+        // Token inválido o expirado - logout necesario
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

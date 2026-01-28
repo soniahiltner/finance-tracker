@@ -19,6 +19,7 @@ const LoginPage = () => {
       type: 'email',
       placeholder: 'tu@email.com',
       value: email,
+      autoComplete: 'on',
       onChange: setEmail
     },
     {
@@ -27,6 +28,7 @@ const LoginPage = () => {
       type: 'password',
       placeholder: '••••••••',
       value: password,
+      autoComplete: 'off',
       onChange: setPassword
     }
   ]
