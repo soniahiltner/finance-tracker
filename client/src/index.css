@@ -70,7 +70,7 @@
   }
   
   .card {
-    @apply bg-slate-50 rounded-xl shadow-sm p-6 border border-gray-100
+    @apply bg-slate-50 rounded-xl shadow-sm p-2 xs:p-6 border border-gray-100
            dark:bg-gray-800 dark:border-gray-700 ;
   }
 }

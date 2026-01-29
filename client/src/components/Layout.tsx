@@ -29,7 +29,7 @@ const Layout = () => {
       <header className='sticky top-0 z-50 bg-slate-100 dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors'>
         <div className='max-w-7xl mx-auto py-1 px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center h-16 md:h-20 md:flex-col md:items-start lg:flex-row lg:items-center'>
-            <div className='flex items-center space-x-10'>
+            <div className='flex items-center space-x-8'>
               {/* Logo */}
               <div className='flex items-center justify-self-start'>
                 <h1 className='text-2xl font-bold text-primary-600 dark:text-primary-400'>
@@ -37,7 +37,7 @@ const Layout = () => {
                 </h1>
               </div>
               {/* Desktop Navigation */}
-              <nav className='hidden md:flex space-x-4'>
+              <nav className='hidden md:flex space-x-3'>
                 {navigation.map((item) => {
                   const Icon = item.icon
                   const isActive = location.pathname === item.href

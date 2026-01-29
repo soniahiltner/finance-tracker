@@ -14,7 +14,7 @@ const AIAssistantPage = () => {
     setInput,
     loading,
     suggestions,
-    messagesEndRef,
+    //messagesEndRef,
     handleSubmit,
     handleSuggestionClick
   } = useAIChat()
@@ -39,18 +39,20 @@ const AIAssistantPage = () => {
       
 
       {/* Chat Container */}
-      <div className='card h-150 flex flex-col'>
+      <div className='card p-0  flex flex-col'>
         {/* Messages Area */}
+        
         <div className='flex-1 overflow-y-auto space-y-4 p-4'>
+          {/* <div  ref={messagesEndRef} /> */}
           {messages.map((message) => (
             <ChatMessage
               key={message.id}
               message={message}
             />
           ))}
-
+      
           {loading && <LoadingIndicator />}
-          <div ref={messagesEndRef}/>
+          
         </div>
 
         {/* Suggestions */}
@@ -60,6 +62,8 @@ const AIAssistantPage = () => {
             onSuggestionClick={handleSuggestionClick}
           />
         )}
+        
+        
 
         {/* Input Area */}
         <ChatInput
@@ -68,6 +72,7 @@ const AIAssistantPage = () => {
           loading={loading}
           onSubmit={handleSubmit}
         />
+        
       </div>
 
       {/* Info Cards */}

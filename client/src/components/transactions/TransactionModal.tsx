@@ -78,7 +78,7 @@ const TransactionModal = ({
       //Invalidar el cache para que React Query recargue las categorías
       await queryClient.invalidateQueries({ queryKey: ['categories'] })
 
-      // 
+      //
       // La categoría se creó, ahora seleccionarla
       setFormData({ ...formData, category: newCategoryName.trim() })
       setShowNewCategory(false)
@@ -161,7 +161,10 @@ const TransactionModal = ({
               </button>
               {showVoiceInput && (
                 <div className='p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg'>
-                  <VoiceInput onTranscriptProcessed={handleVoiceTranscript} />
+                  <VoiceInput
+                    onTranscriptProcessed={handleVoiceTranscript}
+                    availableCategories={categories}
+                  />
                 </div>
               )}
             </div>

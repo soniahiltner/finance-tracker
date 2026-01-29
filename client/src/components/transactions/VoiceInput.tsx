@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Mic, Square, Loader2, AlertCircle } from 'lucide-react'
 
 // Declaraciones de tipos para Web Speech API
@@ -20,6 +20,7 @@ interface SpeechRecognition extends EventTarget {
   start(): void
   stop(): void
   abort(): void
+  onstart: (() => void) | null
   onresult: ((event: SpeechRecognitionEvent) => void) | null
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null
   onend: (() => void) | null
@@ -40,130 +41,341 @@ interface VoiceInputProps {
     category: string
     date: string
   }) => void
+  availableCategories?: Array<{ _id: string; name: string; type: string }>
 }
 
-export const VoiceInput = ({ onTranscriptProcessed }: VoiceInputProps) => {
+export const VoiceInput = ({
+  onTranscriptProcessed,
+  availableCategories = []
+}: VoiceInputProps) => {
   const [isRecording, setIsRecording] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
   const [transcript, setTranscript] = useState('')
+  const [isSupported, setIsSupported] = useState(false)
 
   const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const processingRef = useRef(false)
 
-  const processTranscript = async (text: string) => {
-    setIsProcessing(true)
-    setError('')
+  const processTranscript = useCallback(
+    async (text: string) => {
+      // Evitar procesamiento duplicado
+      if (processingRef.current) return
+      processingRef.current = true
 
-    try {
-      // Aquí iría la lógica para procesar el texto y extraer la información
-      // Por ahora, un ejemplo básico
-      const lowerText = text.toLowerCase()
-      
-      // Detectar tipo
-      const type = lowerText.includes('ingreso') || lowerText.includes('cobré') || lowerText.includes('nómina') 
-        ? 'income' 
-        : 'expense'
+      setIsProcessing(true)
+      setError('')
 
-      // Extraer cantidad (buscar números)
-      const amountMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:euros?|€)?/)
-      const amount = amountMatch ? parseFloat(amountMatch[1].replace(',', '.')) : 0
+      try {
+        const lowerText = text.toLowerCase()
 
-      // Extraer fecha
-      const today = new Date().toISOString().split('T')[0]
-      let date = today
-      if (lowerText.includes('ayer')) {
-        const yesterday = new Date()
-        yesterday.setDate(yesterday.getDate() - 1)
-        date = yesterday.toISOString().split('T')[0]
+        // Detectar tipo
+        const type =
+          lowerText.includes('ingreso') ||
+          lowerText.includes('cobré') ||
+          lowerText.includes('nómina')
+            ? 'income'
+            : 'expense'
+
+        // Extraer cantidad (buscar números)
+        const amountMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:euros?|€)?/)
+        const amount = amountMatch
+          ? parseFloat(amountMatch[1].replace(',', '.'))
+          : 0
+
+        // Extraer fecha
+        const today = new Date().toISOString().split('T')[0]
+        let date = today
+        if (lowerText.includes('ayer')) {
+          const yesterday = new Date()
+          yesterday.setDate(yesterday.getDate() - 1)
+          date = yesterday.toISOString().split('T')[0]
+        }
+
+        // Función para encontrar la categoría más probable
+        const findCategory = (): string => {
+          // Palabras clave en español para cada tipo de categoría inglesa
+          const categoryKeywords: Record<string, string[]> = {
+            'Food & Dining': [
+              'supermercado',
+              'comida',
+              'alimentación',
+              'compra',
+              'mercado',
+              'carrefour',
+              'aldi',
+              'frutas',
+              'verduras',
+              'pan',
+              'leche',
+              'carne',
+              'groceries',
+              'food'
+            ],
+            Shopping: [
+              'compra',
+              'tienda',
+              'ropa',
+              'zapatos',
+              'zara',
+              'h&m',
+              'adidas',
+              'nike',
+              'shopping',
+              'clothes'
+            ],
+            Transport: [
+              'gasolina',
+              'combustible',
+              'gasolinera',
+              'carburante',
+              'diesel',
+              'metro',
+              'transporte',
+              'taxi',
+              'uber',
+              'autobús',
+              'tren',
+              'carretera',
+              'fuel',
+              'car'
+            ],
+            Salary: [
+              'nómina',
+              'salario',
+              'sueldo',
+              'paga',
+              'ingreso',
+              'cobré',
+              'salary',
+              'wage'
+            ],
+            'Bills & Utilities': [
+              'factura',
+              'luz',
+              'agua',
+              'gas',
+              'teléfono',
+              'electricidad',
+              'servicios',
+              'utilities',
+              'bills'
+            ],
+            Entertainment: [
+              'cine',
+              'película',
+              'teatro',
+              'entrada',
+              'concierto',
+              'entretenimiento',
+              'películas',
+              'cines',
+              'movies',
+              'entertainment'
+            ],
+            Healthcare: [
+              'médico',
+              'medicina',
+              'farmacia',
+              'doctor',
+              'hospital',
+              'salud',
+              'health',
+              'medical'
+            ],
+            Education: [
+              'estudio',
+              'educación',
+              'escuela',
+              'libro',
+              'curso',
+              'clase',
+              'education',
+              'school'
+            ],
+            Investments: [
+              'inversión',
+              'bolsa',
+              'acciones',
+              'investment',
+              'stock'
+            ],
+            Freelance: ['freelance', 'trabajo', 'proyecto']
+          }
+
+          // Buscar en las categorías disponibles
+          for (const cat of availableCategories) {
+            const catLowerName = cat.name.toLowerCase()
+            const keywords = categoryKeywords[cat.name] || []
+
+            // Si encontramos una palabra clave
+            for (const keyword of keywords) {
+              if (lowerText.includes(keyword)) {
+                return cat.name
+              }
+            }
+
+            // Si el nombre de la categoría aparece en el texto
+            if (lowerText.includes(catLowerName)) {
+              return cat.name
+            }
+          }
+
+          // Si no encontramos categoría, intentar devolver "Other" (expenses u income según el tipo)
+          const otherCategory = availableCategories.find(
+            (cat) =>
+              cat.name.toLowerCase().includes('other') && cat.type === type
+          )
+          if (otherCategory) return otherCategory.name
+
+          // Si aún no hay, devolver la primera disponible del tipo correcto
+          const sameTypeCategory = availableCategories.find(
+            (cat) => cat.type === type
+          )
+          return (
+            sameTypeCategory?.name ||
+            (availableCategories.length > 0
+              ? availableCategories[0].name
+              : 'Other')
+          )
+        }
+
+        const category = findCategory()
+
+        onTranscriptProcessed({
+          type,
+          amount,
+          description: text,
+          category,
+          date
+        })
+      } catch (err) {
+        console.error('Error processing transcript:', err)
+        setError('Error al procesar la transcripción')
+      } finally {
+        setIsProcessing(false)
+        processingRef.current = false
       }
+    },
+    [onTranscriptProcessed, availableCategories]
+  )
 
-      // Categoría básica
-      let category = 'Otros'
-      if (lowerText.includes('supermercado') || lowerText.includes('comida')) category = 'Alimentación'
-      if (lowerText.includes('restaurante')) category = 'Restaurantes'
-      if (lowerText.includes('gasolina') || lowerText.includes('combustible')) category = 'Transporte'
-      if (lowerText.includes('nómina') || lowerText.includes('salario')) category = 'Salario'
-
-      onTranscriptProcessed({
-        type,
-        amount,
-        description: text,
-        category,
-        date
-      })
-    } catch (err) {
-      console.error('Error processing transcript:', err)
-      setError('Error al procesar la transcripción')
-    } finally {
-      setIsProcessing(false)
-    }
-  }
-
-  // Verificar si el navegador soporta Web Speech API
-  const SpeechRecognition =
-    (
-      window as Window & {
-        SpeechRecognition?: typeof window.SpeechRecognition
-        webkitSpeechRecognition?: typeof window.SpeechRecognition
-      }
-    ).SpeechRecognition ||
-    (
-      window as Window & {
-        SpeechRecognition?: typeof window.SpeechRecognition
-        webkitSpeechRecognition?: typeof window.SpeechRecognition
-      }
-    ).webkitSpeechRecognition
-
-  const isSupported = !!SpeechRecognition
-
+  // Inicializar el reconocimiento de voz
   useEffect(() => {
-    if (!SpeechRecognition) {
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition
+
+    if (!SpeechRecognitionAPI) {
+      setIsSupported(false)
       return
     }
 
-    const recognition = new SpeechRecognition()
-    recognition.lang = 'es-ES'
-    recognition.continuous = false
-    recognition.interimResults = false
-    recognition.maxAlternatives = 1
+    try {
+      setIsSupported(true)
+      const recognition = new SpeechRecognitionAPI()
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcriptText = event.results[0][0].transcript
-      setTranscript(transcriptText)
-      processTranscript(transcriptText)
-    }
+      recognition.lang = 'es-ES'
+      recognition.continuous = true
+      recognition.interimResults = true
+      recognition.maxAlternatives = 1
 
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error('Speech recognition error:', event.error)
-      setIsRecording(false)
+      let finalTranscript = ''
+      let interimTranscript = ''
 
-      switch (event.error) {
-        case 'no-speech':
-          setError('No se detectó voz. Intenta de nuevo.')
-          break
-        case 'audio-capture':
-          setError('No se puede acceder al micrófono. Verifica los permisos.')
-          break
-        case 'not-allowed':
-          setError('Permiso de micrófono denegado.')
-          break
-        default:
-          setError(`Error de reconocimiento: ${event.error}`)
+      recognition.onstart = () => {
+        setError('')
+        setTranscript('')
       }
-    }
 
-    recognition.onend = () => {
-      setIsRecording(false)
-    }
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        // Procesar todos los resultados
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcriptPart = event.results[i][0].transcript
 
-    recognitionRef.current = recognition
+          if (event.results[i].isFinal) {
+            finalTranscript += transcriptPart + ' '
+          } else {
+            interimTranscript += transcriptPart
+          }
+        }
+
+        // Mostrar el resultado provisional o final
+        const currentTranscript = finalTranscript || interimTranscript
+        setTranscript(currentTranscript)
+
+        // Solo procesar cuando hay un resultado final
+        if (finalTranscript) {
+          processTranscript(finalTranscript.trim())
+          finalTranscript = ''
+          interimTranscript = ''
+        }
+      }
+
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+        // Ignorar el error 'aborted' que ocurre cuando se para la grabación normalmente
+        if (event.error === 'aborted') {
+          return
+        }
+
+        console.error('Speech recognition error:', event.error)
+
+        switch (event.error) {
+          case 'no-speech':
+            setError('Esperando entrada de voz...')
+            // No detener la grabación, solo mostrar un mensaje
+            break
+          case 'audio-capture':
+            setError('No se puede acceder al micrófono. Verifica los permisos.')
+            setIsRecording(false)
+            break
+          case 'not-allowed':
+            setError('Permiso de micrófono denegado.')
+            setIsRecording(false)
+            break
+          default:
+            setError(`Error de reconocimiento: ${event.error}`)
+            setIsRecording(false)
+        }
+      }
+
+      recognition.onend = () => {
+        // Si aún queremos grabar y existe la referencia, reiniciar automáticamente
+        const isStillRecording = (window as unknown as Record<string, unknown>)
+          .__isRecordingActive
+        if (isStillRecording && recognitionRef.current) {
+          try {
+            recognitionRef.current.start()
+          } catch {
+            console.log('Recognition already started or other state issue')
+            ;(
+              window as unknown as Record<string, unknown>
+            ).__isRecordingActive = false
+          }
+        } else {
+          // Si no queremos seguir grabando, actualizar el estado
+          setIsRecording(false)
+        }
+      }
+
+      recognitionRef.current = recognition
+    } catch (err) {
+      console.error('Error initializing speech recognition:', err)
+      setIsSupported(false)
+    }
 
     return () => {
+      // Limpiar cuando el componente se desmonta
+      ;(window as unknown as Record<string, unknown>).__isRecordingActive =
+        false
       if (recognitionRef.current) {
-        recognitionRef.current.abort()
+        try {
+          recognitionRef.current.abort()
+        } catch (err) {
+          console.log('Error during cleanup:', err)
+        }
       }
     }
-  }, [SpeechRecognition])
+  }, [processTranscript])
 
   const startRecording = () => {
     if (!isSupported || !recognitionRef.current) return
@@ -171,6 +383,9 @@ export const VoiceInput = ({ onTranscriptProcessed }: VoiceInputProps) => {
     setError('')
     setTranscript('')
     setIsRecording(true)
+    processingRef.current = false
+    // Flag global para que onend sepa que debe reiniciar
+    ;(window as unknown as Record<string, unknown>).__isRecordingActive = true
 
     try {
       recognitionRef.current.start()
@@ -178,21 +393,53 @@ export const VoiceInput = ({ onTranscriptProcessed }: VoiceInputProps) => {
       console.error('Error starting recognition:', err)
       setError('Error al iniciar el reconocimiento de voz')
       setIsRecording(false)
+      ;(window as unknown as Record<string, unknown>).__isRecordingActive =
+        false
     }
   }
 
   const stopRecording = () => {
-    if (recognitionRef.current && isRecording) {
-      recognitionRef.current.stop()
+    ;(window as unknown as Record<string, unknown>).__isRecordingActive = false
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop()
+      } catch (err) {
+        console.log('Error stopping recognition:', err)
+      }
     }
+    setIsRecording(false)
   }
+
+  // Limpiar cuando se para la grabación
+  useEffect(() => {
+    if (!isRecording) {
+      ;(window as unknown as Record<string, unknown>).__isRecordingActive =
+        false
+    }
+  }, [isRecording])
+
+  // Limpiar cuando el componente se desmonta
+  useEffect(() => {
+    return () => {
+      ;(window as unknown as Record<string, unknown>).__isRecordingActive =
+        false
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort()
+        } catch (err) {
+          console.log('Error cleaning up recognition:', err)
+        }
+      }
+    }
+  }, [])
 
   if (!isSupported) {
     return (
       <div className='flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 rounded-lg text-sm'>
         <AlertCircle size={16} />
         <span>
-          Tu navegador no soporta reconocimiento de voz. Usa Chrome, Edge o Safari.
+          Tu navegador no soporta reconocimiento de voz. Usa Chrome, Edge o
+          Safari.
         </span>
       </div>
     )
