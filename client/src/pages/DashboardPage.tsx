@@ -20,6 +20,7 @@ const DashboardPage = () => {
     return summary.byCategory.slice(0, 6).map((cat, index) => ({
       name: cat.category,
       value: cat.total,
+      type: cat.type,
       color: CHART_COLORS[index % CHART_COLORS.length]
     }))
   }, [summary])

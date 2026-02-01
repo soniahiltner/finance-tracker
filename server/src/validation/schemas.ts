@@ -176,10 +176,10 @@ export const deleteSavingsGoalSchema = z.object({
 // AI Chat schema
 export const aiChatSchema = z.object({
   body: z.object({
-    message: z
+    query: z
       .string()
-      .min(1, 'El mensaje no puede estar vacío')
-      .max(2000, 'El mensaje es demasiado largo')
+      .min(1, 'La consulta no puede estar vacía')
+      .max(500, 'La consulta es demasiado larga')
   })
 })
 

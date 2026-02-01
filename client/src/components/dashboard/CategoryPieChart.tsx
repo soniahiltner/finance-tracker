@@ -1,9 +1,18 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
+import { useState, useEffect } from 'react'
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend
+} from 'recharts'
 
 interface CategoryData {
   name: string
   value: number
   color: string
+  type: 'income' | 'expense'
   [key: string]: string | number
 }
 
@@ -13,11 +22,28 @@ interface CategoryPieChartProps {
 }
 
 const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
+  const [activeTab, setActiveTab] = useState<'expense' | 'income'>('expense')
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+  // Detectar si es pantalla pequeña
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 550)
+    }
+
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
+
+  // Filtrar datos según el tab activo
+  const filteredData = data.filter((item) => item.type === activeTab)
+
   if (data.length === 0) {
     return (
       <div className='card'>
         <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-          Categorías de gastos e ingresos
+          Categorías
         </h2>
         <p className='text-center text-gray-500 py-8'>No hay datos</p>
       </div>
@@ -26,48 +52,93 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
 
   return (
     <div className='card'>
-      <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-        Categorías de gastos e ingresos
-      </h2>
-      <ResponsiveContainer
-        width='100%'
-        height={300}
-      >
-        <PieChart>
-          <Pie
-            data={data}
-            cx='50%'
-            cy='50%'
-            labelLine={false}
-            label={({ name, percent }) =>
-              `${name}: ${(percent ? percent * 100 : 0).toFixed(0)}%`
-            }
-            outerRadius={80}
-            fill='#8884d8'
-            dataKey='value'
-            style={{
-              fontSize: '12px',
-              fontWeight: 'bold',
-              paddingTop: '20px',
-              marginTop: '20px'
-            }}
-            paddingAngle={5}
+      <div className='flex items-center justify-between mb-4'>
+        <h2 className='text-lg font-semibold dark:text-gray-100'>Categorías</h2>
+
+        {/* Toggle Button */}
+        <div className='inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-1'>
+          <button
+            onClick={() => setActiveTab('expense')}
+            className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+              activeTab === 'expense'
+                ? 'bg-expense-700 text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+            }`}
           >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={entry.color}
+            Gastos
+          </button>
+          <button
+            onClick={() => setActiveTab('income')}
+            className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+              activeTab === 'income'
+                ? 'bg-income-700 text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+            }`}
+          >
+            Ingresos
+          </button>
+        </div>
+      </div>
+
+      {filteredData.length === 0 ? (
+        <p className='text-center text-gray-500 py-8'>
+          No hay {activeTab === 'expense' ? 'gastos' : 'ingresos'} en este
+          período
+        </p>
+      ) : (
+        <ResponsiveContainer
+          width='100%'
+          height={300}
+        >
+          <PieChart>
+            <Pie
+              data={filteredData}
+              cx='50%'
+              cy='50%'
+              labelLine={false}
+              label={
+                isSmallScreen
+                  ? false
+                  : ({ name, percent }) =>
+                      `${name}: ${(percent ? percent * 100 : 0).toFixed(0)}%`
+              }
+              outerRadius={isSmallScreen ? 70 : 80}
+              fill='#8884d8'
+              dataKey='value'
+              style={{
+                fontSize: '12px',
+                fontWeight: 'bold'
+              }}
+              paddingAngle={5}
+            >
+              {filteredData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                />
+              ))}
+            </Pie>
+            {isSmallScreen ? (
+              <Legend
+                verticalAlign='bottom'
+                height={36}
+                iconType='circle'
+                wrapperStyle={{
+                  fontSize: '12px',
+                  paddingTop: '10px'
+                }}
               />
-            ))}
-          </Pie>
-          <Tooltip
-            formatter={(value: number | undefined) =>
-              value !== undefined ? formatCurrency(value) : ''
-            }
-            itemStyle={{ fontWeight: 'bold' }}
-          />
-        </PieChart>
-      </ResponsiveContainer>
+            ) : (
+              <Tooltip
+                formatter={(value: number | undefined) =>
+                  value !== undefined ? formatCurrency(value) : ''
+                }
+                itemStyle={{ fontWeight: 'bold' }}
+              />
+            )}
+          </PieChart>
+        </ResponsiveContainer>
+      )}
     </div>
   )
 }

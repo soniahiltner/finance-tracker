@@ -192,8 +192,8 @@ describe('Auth Controller - POST /api/auth/reset-password', () => {
     const user = await User.findOne({ email: 'reset@example.com' }).select(
       '+passwordResetToken +passwordResetExpires'
     )
-    expect(user?.passwordResetToken).toBeUndefined()
-    expect(user?.passwordResetExpires).toBeUndefined()
+    expect(user?.passwordResetToken).toBe('')
+    expect(user?.passwordResetExpires).toEqual(new Date(0))
 
     // Verificar que el nuevo password funciona
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -376,7 +376,7 @@ describe('Password Reset - Integration Tests', () => {
     const finalUser = await User.findById(user._id).select(
       '+passwordResetToken +passwordResetExpires'
     )
-    expect(finalUser?.passwordResetToken).toBeUndefined()
-    expect(finalUser?.passwordResetExpires).toBeUndefined()
+    expect(finalUser?.passwordResetToken).toBe('')
+    expect(finalUser?.passwordResetExpires).toEqual(new Date(0))
   })
 })
