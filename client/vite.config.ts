@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -25,5 +26,10 @@ export default defineConfig({
   // Optimización de dependencias
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router', '@tanstack/react-query']
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.ts'
   }
 })

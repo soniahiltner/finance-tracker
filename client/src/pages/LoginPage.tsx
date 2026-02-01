@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { LogIn } from 'lucide-react'
 import AuthForm from '../components/auth/AuthForm'
+import { Link } from 'react-router'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -46,6 +47,14 @@ const LoginPage = () => {
       linkHref='/register'
       linkLabel='Regístrate aquí'
       onSubmit={handleSubmit}
+      footerContent={
+        <Link
+          to='/forgot-password'
+          className='text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300'
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
+      }
     />
   )
 }

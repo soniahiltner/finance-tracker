@@ -10,6 +10,8 @@ import { queryClient } from './config/queryClient'
 const LandingPage = lazy(() => import('./pages/LandingPage'))
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage'))
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 const Layout = lazy(() => import('./components/Layout'))
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
 const TransactionsPage = lazy(() => import('./pages/TransactionsPage'))
@@ -107,6 +109,22 @@ const AppRoutes = () => {
         element={
           <PublicRoute>
             <RegisterPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path='/forgot-password'
+        element={
+          <PublicRoute>
+            <ForgotPasswordPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path='/reset-password'
+        element={
+          <PublicRoute>
+            <ResetPasswordPage />
           </PublicRoute>
         }
       />

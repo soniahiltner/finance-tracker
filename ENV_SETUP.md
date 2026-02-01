@@ -9,6 +9,12 @@ JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
 NODE_ENV=development
 ALLOWED_ORIGINS=http://localhost:5173,http://localhost:4173
+CLIENT_URL=http://localhost:5173
+MAILTRAP_HOST=sandbox.smtp.mailtrap.io
+MAILTRAP_PORT=2525
+MAILTRAP_USER=your_mailtrap_user
+MAILTRAP_PASS=your_mailtrap_pass
+EMAIL_FROM=Finance Tracker <no-reply@finance-tracker.com>
 ```
 
 ## Producción
@@ -23,6 +29,12 @@ ALLOWED_ORIGINS=http://localhost:5173,http://localhost:4173
 | `ANTHROPIC_API_KEY` | API key de Anthropic Claude                        | `sk-ant-api03-...`                                            |
 | `NODE_ENV`          | Entorno de ejecución                               | `production`                                                  |
 | `ALLOWED_ORIGINS`   | Orígenes permitidos para CORS (separados por coma) | `https://tu-app.com,https://www.tu-app.com`                   |
+| `CLIENT_URL`        | URL base del frontend (para links de reset)        | `https://tu-app.com`                                          |
+| `MAILTRAP_HOST`     | Host SMTP de Mailtrap                              | `sandbox.smtp.mailtrap.io`                                    |
+| `MAILTRAP_PORT`     | Puerto SMTP de Mailtrap                            | `2525`                                                        |
+| `MAILTRAP_USER`     | Usuario SMTP de Mailtrap                           | `user_123`                                                    |
+| `MAILTRAP_PASS`     | Password SMTP de Mailtrap                          | `pass_123`                                                    |
+| `EMAIL_FROM`        | Remitente de emails                                | `Finance Tracker <no-reply@finance-tracker.com>`              |
 
 ### Seguridad en Producción
 
@@ -41,6 +53,12 @@ MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/finance-tracker
 JWT_SECRET=tu_clave_super_secreta_generada_aleatoriamente_aqui
 ANTHROPIC_API_KEY=sk-ant-api03-tu-key-aqui
 ALLOWED_ORIGINS=https://tu-app.vercel.app,https://www.tu-app.com
+CLIENT_URL=https://tu-app.vercel.app
+MAILTRAP_HOST=sandbox.smtp.mailtrap.io
+MAILTRAP_PORT=2525
+MAILTRAP_USER=tu_usuario_mailtrap
+MAILTRAP_PASS=tu_password_mailtrap
+EMAIL_FROM=Finance Tracker <no-reply@finance-tracker.com>
 PORT=5000
 ```
 

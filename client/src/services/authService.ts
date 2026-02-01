@@ -28,6 +28,32 @@ export const authService = {
     return response.data.user
   },
 
+  async forgotPassword(
+    email: string
+  ): Promise<{ success: boolean; message: string }> {
+    const response = await api.post<{ success: boolean; message: string }>(
+      '/auth/forgot-password',
+      {
+        email
+      }
+    )
+    return response.data
+  },
+
+  async resetPassword(
+    token: string,
+    newPassword: string
+  ): Promise<{ success: boolean; message: string }> {
+    const response = await api.post<{ success: boolean; message: string }>(
+      '/auth/reset-password',
+      {
+        token,
+        newPassword
+      }
+    )
+    return response.data
+  },
+
   logout() {
     localStorage.removeItem('token')
     localStorage.removeItem('user')

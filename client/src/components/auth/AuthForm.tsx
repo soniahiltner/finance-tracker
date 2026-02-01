@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import type { LucideIcon } from 'lucide-react'
 import ThemeToggle from '../ThemeToggle'
+import type { ReactNode } from 'react'
 
 interface AuthField {
   id: string
@@ -26,6 +27,7 @@ interface AuthFormProps {
   linkLabel: string
   onSubmit: () => Promise<void>
   validate?: () => string | null
+  footerContent?: ReactNode
 }
 
 const AuthForm = ({
@@ -40,7 +42,8 @@ const AuthForm = ({
   linkHref,
   linkLabel,
   onSubmit,
-  validate
+  validate,
+  footerContent
 }: AuthFormProps) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -143,7 +146,13 @@ const AuthForm = ({
             </button>
           </form>
 
-          <p className='mt-6 text-center text-sm text-gray-600 dark:text-gray-400'>
+          {footerContent && (
+            <div className='mt-6 text-center text-sm text-gray-600 dark:text-gray-400'>
+              {footerContent}
+            </div>
+          )}
+
+          <p className='mt-4 text-center text-sm text-gray-600 dark:text-gray-400'>
             {linkText}{' '}
             <Link
               to={linkHref}

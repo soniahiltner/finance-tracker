@@ -127,7 +127,7 @@ export default function CategoryManagementModal({
         {/* Error Alert */}
         {deleteError && (
           <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
-            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5' />
+            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5' />
             <div className='flex-1'>
               <p className='text-sm text-red-600 dark:text-red-400'>
                 {deleteError}
@@ -144,7 +144,7 @@ export default function CategoryManagementModal({
 
         {editError && (
           <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
-            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5' />
+            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5' />
             <div className='flex-1'>
               <p className='text-sm text-red-600 dark:text-red-400'>
                 {editError}
@@ -160,7 +160,15 @@ export default function CategoryManagementModal({
         )}
 
         {/* Content */}
-        <div className='flex-1 overflow-y-auto p-6 space-y-6'>
+        <div
+          className='flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:w-3
+ [&::-webkit-scrollbar-track]:rounded
+  [&::-webkit-scrollbar-track]:bg-slate-200
+  [&::-webkit-scrollbar-thumb]:rounded
+  [&::-webkit-scrollbar-thumb]:bg-slate-400
+  dark:[&::-webkit-scrollbar-track]:bg-gray-800
+  dark:[&::-webkit-scrollbar-thumb]:bg-gray-600'
+        >
           {/* Categorías de Ingresos */}
           <div>
             <h3 className='text-lg font-medium text-green-600 dark:text-green-400 mb-3'>

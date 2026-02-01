@@ -1,8 +1,10 @@
 import type { Request, Response, NextFunction } from 'express'
+import crypto from 'crypto'
 import { User } from '../models/index.js'
 import { generateToken } from '../utils/generateToken.js'
 import type { RegisterRequest, LoginRequest } from '../types/auth.types.js'
 import { type AuthRequest } from '../middleware/auth.js'
+import { sendPasswordResetEmail } from '../services/emailService.js'
 
 // @desc    Registrar nuevo usuario
 // @route   POST /api/auth/register
@@ -117,6 +119,119 @@ export const login = async (
     })
   } catch (error) {
     console.error('Login error:', error)
+    next(error)
+  }
+}
+
+// @desc    Solicitar reset de password
+// @route   POST /api/auth/forgot-password
+// @access  Public
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email es requerido'
+      })
+    }
+
+    const user = await User.findOne({ email })
+
+    // Responder siempre OK para evitar enumeración
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message:
+          'Si el email existe, enviaremos un enlace para restablecer la contraseña.'
+      })
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex')
+
+    user.passwordResetToken = hashedToken
+    user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000) // 1 hora
+    await user.save()
+
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173'
+    const resetUrl = `${clientUrl}/reset-password?token=${resetToken}`
+
+    await sendPasswordResetEmail({
+      to: user.email,
+      name: user.name,
+      resetUrl
+    })
+
+    res.status(200).json({
+      success: true,
+      message:
+        'Si el email existe, enviaremos un enlace para restablecer la contraseña.'
+    })
+  } catch (error) {
+    console.error('ForgotPassword error:', error)
+    next(error)
+  }
+}
+
+// @desc    Resetear password
+// @route   POST /api/auth/reset-password
+// @access  Public
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { token, newPassword } = req.body
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token y nueva contraseña son requeridos'
+      })
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'La nueva contraseña debe tener al menos 6 caracteres'
+      })
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: new Date() }
+    }).select('+password')
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token inválido o expirado'
+      })
+    }
+
+    user.password = newPassword
+    user.passwordResetToken = ''
+    user.passwordResetExpires = new Date(0)
+    await user.save()
+
+    res.status(200).json({
+      success: true,
+      message: 'Contraseña actualizada correctamente'
+    })
+  } catch (error) {
+    console.error('ResetPassword error:', error)
     next(error)
   }
 }

@@ -22,6 +22,22 @@ export const loginSchema = z.object({
   })
 })
 
+export const forgotPasswordSchema = z.object({
+  body: z.object({
+    email: z.email('Email inválido').min(1, 'Email es requerido')
+  })
+})
+
+export const resetPasswordSchema = z.object({
+  body: z.object({
+    token: z.string().min(1, 'Token es requerido'),
+    newPassword: z
+      .string()
+      .min(6, 'La nueva contraseña debe tener al menos 6 caracteres')
+      .max(100, 'La nueva contraseña es demasiado larga')
+  })
+})
+
 // Transaction schemas
 export const createTransactionSchema = z.object({
   body: z.object({
