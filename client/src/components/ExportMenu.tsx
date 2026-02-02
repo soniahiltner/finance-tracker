@@ -17,7 +17,7 @@ export default function ExportMenu({
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  // Cerrar menú al hacer clic fuera
+  // Cerrar menú al hacer clic fuera o con Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -25,12 +25,20 @@ export default function ExportMenu({
       }
     }
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false)
+      }
+    }
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleKeyDown)
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isOpen])
 
@@ -63,10 +71,7 @@ export default function ExportMenu({
   }
 
   return (
-    <div
-      className='relative'
-      ref={menuRef}
-    >
+    <div className='relative'>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className='btn-secondary flex items-center px-2 max-xs:px-1 max-xs:mr-0 max-sm:text-sm dark:border-gray-300'
@@ -77,7 +82,10 @@ export default function ExportMenu({
 
       {isOpen && (
         <div className='fixed inset-0 bg-black w-full  flex items-center justify-center p-4 z-50'>
-          <div className='w-75 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50'>
+          <div
+            ref={menuRef}
+            className='w-75 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50'
+          >
             {/* Header */}
             <div className='flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700'>
               <div className='flex items-center space-x-2'>
