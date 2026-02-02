@@ -3,6 +3,7 @@ import { useAuth } from './hooks/useAuth'
 import { AuthContextProvider } from './context/AuthContextProvider'
 import { Route, Routes, Navigate, BrowserRouter } from 'react-router'
 import { ThemeProvider } from './context/ThemeContextProvider'
+import { LanguageProvider } from './context/LanguageContextProvider'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './config/queryClient'
 
@@ -211,7 +212,9 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthContextProvider>
-            <AppRoutes />
+            <LanguageProvider>
+              <AppRoutes />
+            </LanguageProvider>
           </AuthContextProvider>
         </ThemeProvider>
         {/* DevTools solo en desarrollo, no afecta bundle de producción */}

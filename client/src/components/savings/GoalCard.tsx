@@ -4,6 +4,8 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { formatCurrency } from '../../utils/formatters'
 import type { SavingsGoal } from '../../types'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateGoalCategory } from '../../constants/categoryTranslations'
 
 interface GoalCardProps {
   goal: SavingsGoal
@@ -14,6 +16,7 @@ interface GoalCardProps {
 
 const GoalCard = memo(
   ({ goal, onEdit, onDelete, onAddProgress }: GoalCardProps) => {
+    const { language } = useLanguage()
     const handleDelete = () => {
       onDelete(goal._id)
     }
@@ -42,7 +45,7 @@ const GoalCard = memo(
               {goal.name}
             </h2>
             <p className='text-sm text-gray-600 dark:text-gray-400'>
-              {goal.category}
+              {translateGoalCategory(goal.category, language)}
             </p>
           </div>
         </div>

@@ -7,6 +7,8 @@ import {
   Tooltip,
   Legend
 } from 'recharts'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateCategory } from '../../constants/categoryTranslations'
 
 interface CategoryData {
   name: string
@@ -22,6 +24,7 @@ interface CategoryPieChartProps {
 }
 
 const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
+  const { language } = useLanguage()
   const [activeTab, setActiveTab] = useState<'expense' | 'income'>('expense')
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
@@ -100,7 +103,7 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
                 isSmallScreen
                   ? false
                   : ({ name, percent }) =>
-                      `${name}: ${(percent ? percent * 100 : 0).toFixed(0)}%`
+                      `${translateCategory(name || '', language)}: ${(percent ? percent * 100 : 0).toFixed(0)}%`
               }
               outerRadius={isSmallScreen ? 70 : 80}
               fill='#8884d8'

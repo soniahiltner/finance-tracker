@@ -57,5 +57,13 @@ export const authService = {
   logout() {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+  },
+
+  async updateProfile(user: Partial<User>): Promise<User> {
+    const response = await api.put<{ success: boolean; user: User }>(
+      '/auth/profile',
+      user
+    )
+    return response.data.user
   }
 }

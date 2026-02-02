@@ -1,4 +1,6 @@
 import { memo } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateCategory } from '../../constants/categoryTranslations'
 
 interface CategoryItem {
   category: string
@@ -22,6 +24,8 @@ const CategoryList = memo(
     formatCurrency,
     colors
   }: CategoryListProps) => {
+    const { language } = useLanguage()
+
     if (categories.length === 0) {
       return (
         <div className='card'>
@@ -60,7 +64,7 @@ const CategoryList = memo(
                   <div className='flex-1'>
                     <div className='flex items-center justify-between mb-1'>
                       <span className='text-sm font-medium dark:text-gray-100'>
-                        {cat.category}
+                        {translateCategory(cat.category, language)}
                       </span>
                       <span className='text-sm text-gray-500 dark:text-gray-400'>
                         {formatCurrency(cat.total)}

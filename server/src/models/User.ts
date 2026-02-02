@@ -6,6 +6,7 @@ export interface IUser extends Document {
   email: string
   password: string
   name: string
+  language: 'es' | 'en'
   createdAt: Date
   updatedAt: Date
   passwordResetToken?: string
@@ -34,6 +35,11 @@ const userSchema = new Schema<IUser>(
       required: [true, 'Name is required'],
       trim: true,
       maxlength: [50, 'Name cannot exceed 50 characters']
+    },
+    language: {
+      type: String,
+      enum: ['es', 'en'],
+      default: 'es'
     },
     passwordResetToken: {
       type: String,

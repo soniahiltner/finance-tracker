@@ -3,6 +3,8 @@ import type { Category } from '../../types'
 import { Filter, X, Calendar, DollarSign, Tag, Settings } from 'lucide-react'
 import { format } from 'date-fns'
 import CategoryManagementModal from './CategoryManagementModal'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateCategory } from '../../constants/categoryTranslations'
 
 export interface FilterValues {
   searchTerm: string
@@ -33,6 +35,7 @@ export default function TransactionFilters({
 }: TransactionFiltersProps) {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const { language } = useLanguage()
 
   const handleChange = <K extends keyof FilterValues>(
     key: K,
@@ -310,7 +313,7 @@ export default function TransactionFilters({
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border-2 border-transparent'
                       }`}
                     >
-                      {category.name}
+                      {translateCategory(category.name, language)}
                     </button>
                   ))}
                 </div>
@@ -436,7 +439,7 @@ export default function TransactionFilters({
                 key={cat}
                 className='inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-700 dark:text-primary-300 rounded-full text-sm'
               >
-                {cat}
+                {translateCategory(cat, language)}
                 <button
                   onClick={() => handleCategoryToggle(cat)}
                   className='ml-2 hover:text-primary-900 dark:hover:text-primary-100'

@@ -43,7 +43,8 @@ export const register = async (
       user: {
         id: user._id.toString(),
         email: user.email,
-        name: user.name
+        name: user.name,
+        language: user.language
       },
       token
     })
@@ -113,7 +114,8 @@ export const login = async (
       user: {
         id: user._id.toString(),
         email: user.email,
-        name: user.name
+        name: user.name,
+        language: user.language
       },
       token
     })
@@ -261,6 +263,7 @@ export const getMe = async (
         id: user._id.toString(),
         email: user.email,
         name: user.name,
+        language: user.language,
         createdAt: user.createdAt
       }
     })
@@ -279,7 +282,7 @@ export const updateProfile = async (
   next: NextFunction
 ) => {
   try {
-    const { name, email } = req.body
+    const { name, email, language } = req.body
 
     const user = await User.findById(req.user!.id)
 
@@ -303,6 +306,9 @@ export const updateProfile = async (
       }
       user.email = email
     }
+    if (language && (language === 'es' || language === 'en')) {
+      user.language = language
+    }
 
     await user.save()
 
@@ -311,7 +317,8 @@ export const updateProfile = async (
       user: {
         id: user._id.toString(),
         email: user.email,
-        name: user.name
+        name: user.name,
+        language: user.language
       }
     })
   } catch (error) {

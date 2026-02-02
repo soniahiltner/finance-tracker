@@ -12,6 +12,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { categoryService } from '../../services/categoryService'
 import ConfirmModal from '../ConfirmModal'
 import type { Category } from '../../types'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateCategory } from '../../constants/categoryTranslations'
 
 interface CategoryManagementModalProps {
   isOpen: boolean
@@ -24,6 +26,7 @@ export default function CategoryManagementModal({
   onClose,
   categories
 }: CategoryManagementModalProps) {
+  const { language } = useLanguage()
   const queryClient = useQueryClient()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
@@ -187,6 +190,7 @@ export default function CategoryManagementModal({
                   handleDelete={handleDelete}
                   deleting={deleting}
                   setEditingName={setEditingName}
+                  language={language}
                 />
               ))}
             </div>
@@ -210,6 +214,7 @@ export default function CategoryManagementModal({
                   handleDelete={handleDelete}
                   deleting={deleting}
                   setEditingName={setEditingName}
+                  language={language}
                 />
               ))}
             </div>
@@ -253,6 +258,7 @@ type CategoryItemProps = {
   handleDelete: (id: string, name: string) => void
   deleting: string | null
   setEditingName: (name: string) => void
+  language: 'es' | 'en'
 }
 
 function CategoryItem({
@@ -264,7 +270,8 @@ function CategoryItem({
   handleCancelEdit,
   handleDelete,
   deleting,
-  setEditingName
+  setEditingName,
+  language
 }: CategoryItemProps) {
   return (
     <div className='flex items-center justify-between p-3 bg-gray-100/75 dark:bg-gray-700/50 rounded-lg'>
@@ -302,7 +309,7 @@ function CategoryItem({
         <>
           <div className='flex items-center space-x-2'>
             <span className='text-gray-900 dark:text-gray-100'>
-              {category.name}
+              {translateCategory(category.name, language)}
             </span>
             {category.isDefault && (
               <span

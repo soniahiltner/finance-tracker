@@ -5,6 +5,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { VoiceInput } from './VoiceInput'
 import { categoryService } from '../../services/categoryService'
 import type { Transaction, Category } from '../../types'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateCategory } from '../../constants/categoryTranslations'
 
 interface TransactionModalProps {
   isOpen: boolean
@@ -27,6 +29,7 @@ const TransactionModal = ({
   transaction,
   categories
 }: TransactionModalProps) => {
+  const { language } = useLanguage()
   const getInitialFormData = () => {
     if (transaction) {
       return {
@@ -295,7 +298,7 @@ const TransactionModal = ({
                       key={cat._id}
                       value={cat.name}
                     >
-                      {cat.name}
+                      {translateCategory(cat.name, language)}
                     </option>
                   ))}
                 </select>

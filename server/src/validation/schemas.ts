@@ -232,7 +232,10 @@ export const updateProfileSchema = z.object({
       .min(2, 'El nombre debe tener al menos 2 caracteres')
       .max(100, 'El nombre es demasiado largo')
       .optional(),
-    email: z.email('Email inválido').optional()
+    email: z.email('Email inválido').optional(),
+    language: z.enum(['es', 'en'], {
+      message: 'El idioma debe ser es o en'
+    }).optional()
   })
 })
 

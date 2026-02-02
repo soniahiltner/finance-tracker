@@ -1,11 +1,19 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
-import { LayoutDashboard, Receipt, Bot, LogOut, Menu, X, Target } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Receipt,
+  Bot,
+  LogOut,
+  Menu,
+  X,
+  Target
+} from 'lucide-react'
 import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
+import LanguageSelector from './LanguageSelector'
 
 const Layout = () => {
-
   const { user, logout } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
@@ -62,7 +70,8 @@ const Layout = () => {
             {/* User Menu */}
             <div className='hidden w-auto md:flex items-center md:gap-x-1  md:ms-auto lg:self-auto'>
               <ThemeToggle />
-              <span className='text-sm text-gray-600 dark:text-gray-300'>
+              <LanguageSelector />
+              <span className='text-sm pl-1 text-gray-600 dark:text-gray-300'>
                 Hola, <span className='font-medium'>{user?.name}</span>
               </span>
               <button
@@ -117,11 +126,17 @@ const Layout = () => {
                   </Link>
                 )
               })}
-              <div className='flex items-center justify-between px-3 py-2'>
+              <div className='flex items-center justify-between px-3 py-2 space-x-3'>
                 <span className='text-sm text-gray-600 dark:text-gray-300'>
                   Tema
                 </span>
-                <ThemeToggle /> {/* ← AÑADIR */}
+                <ThemeToggle />
+              </div>
+              <div className='flex items-center justify-between px-3 py-2'>
+                <span className='text-sm text-gray-600 dark:text-gray-300'>
+                  Idioma
+                </span>
+                <LanguageSelector />
               </div>
               <button
                 onClick={handleLogout}

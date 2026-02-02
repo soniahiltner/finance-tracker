@@ -43,9 +43,31 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     setToken(null)
   }
 
+  const updateUserLanguage = async (language: 'es' | 'en') => {
+    if (!user) return
+
+    // Actualizar en el servidor
+    const updatedUser = await authService.updateProfile({
+      ...user,
+      language
+    })
+
+    // Actualizar estado local
+    setUser(updatedUser)
+    localStorage.setItem('user', JSON.stringify(updatedUser))
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, token, loading, login, register, logout }}
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        register,
+        logout,
+        updateUserLanguage
+      }}
     >
       {children}
     </AuthContext.Provider>

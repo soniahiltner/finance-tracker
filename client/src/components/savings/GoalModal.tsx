@@ -3,6 +3,8 @@ import { X } from 'lucide-react'
 import { format } from 'date-fns'
 import type { SavingsGoal } from '../../types'
 import { GOAL_CATEGORIES } from '../../constants/goalCategories'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateGoalCategory } from '../../constants/categoryTranslations'
 
 interface GoalModalProps {
   isOpen: boolean
@@ -20,6 +22,7 @@ interface GoalModalProps {
 }
 
 const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
+  const { language } = useLanguage()
   const getInitialFormData = () => {
     if (goal) {
       return {
@@ -144,7 +147,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
                   }}
                   disabled={submitting}
                 >
-                  {cat.name}
+                  {translateGoalCategory(cat.name, language)}
                 </button>
               ))}
             </div>

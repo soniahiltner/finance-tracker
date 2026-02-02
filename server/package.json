@@ -9,7 +9,8 @@
     "start": "node dist/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "clean:categories": "tsx src/utils/cleanCategories.ts"
   },
   "keywords": [],
   "author": "Sonia Hiltner",
