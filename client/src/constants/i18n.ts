@@ -27,6 +27,7 @@ export interface I18nStrings {
   success: string
   noData: string
   back: string
+  updating: string
 
   // Dashboard
   balance: string
@@ -38,6 +39,14 @@ export interface I18nStrings {
   spendingByCategory: string
   monthlyEvolution: string
   selectMonth: string
+  viewAll: string
+  thereIsNot: string
+  duringThisPeriod: string
+  noMonthlyData: string
+  topCategories: string
+  thereAreNoTransactionsYet: string
+  startAddingSome: string
+  incomeVsExpensesComparison: string
 
   // Transactions
   myTransactions: string
@@ -53,6 +62,7 @@ export interface I18nStrings {
   confirmDelete: string
   deleteConfirmation: string
   allTransactions: string
+  transactionss: string
   expense: string
   revenue: string
   noTransactions: string
@@ -90,19 +100,36 @@ export interface I18nStrings {
   email: string
   password: string
   name: string
+  yourName: string
   confirmPassword: string
   forgotPassword: string
   resetPassword: string
   sendResetLink: string
+  sendingLink: string
   createNewPassword: string
   newPassword: string
   confirmNewPassword: string
+  updatePassword: string
   rememberMe: string
   dontHaveAccount: string
   alreadyHaveAccount: string
   createAccount: string
+  emailRequired: string
   invalidCredentials: string
   emailAlreadyExists: string
+  loggingIn: string
+  registering: string
+  noAccount: string
+  registerHere: string
+  loginHere: string
+  backToLogin: string
+
+  // Subtitles / Headings
+  manageYourFinancesWithAI: string
+  createAccountAndStartManagingYourFinances: string
+  regainAccessToYourAccount: string
+  createANewPassword: string
+  summaryOfYourFinances: string
 
   // Settings / Profile
   profile: string
@@ -115,11 +142,19 @@ export interface I18nStrings {
   changePassword: string
   currentPassword: string
   deleteAccount: string
+  hello: string
+  theme: string
 
   // Export
+  export: string
   exportData: string
   exportAsCSV: string
   exportAsPDF: string
+  filteredResultsOnly: string
+  withFiltersApplied: string
+  fullSummary: string
+  includesStatisticsAndAllTransactions: string
+  csvFilesCanBeOpenedInExcelGoogleSheetsOrAnySpreadsheetApp: string
 
   // Messages
   savedSuccessfully: string
@@ -158,6 +193,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     success: 'Éxito',
     noData: 'Sin datos',
     back: 'Volver',
+    updating: 'Actualizando...',
 
     // Dashboard
     balance: 'Balance',
@@ -169,6 +205,14 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     spendingByCategory: 'Gasto por Categoría',
     monthlyEvolution: 'Evolución Mensual',
     selectMonth: 'Seleccionar Mes',
+    viewAll: 'Ver todo',
+    thereIsNot: 'No hay',
+    duringThisPeriod: 'durante este período',
+    noMonthlyData: 'Sin datos mensuales',
+    topCategories: 'Top Categorías',
+    thereAreNoTransactionsYet: 'No hay transacciones aún.',
+    startAddingSome: '¡Empieza a agregar!',
+    incomeVsExpensesComparison: 'Comparación Ingresos vs Gastos',
 
     // Transactions
     myTransactions: 'Mis Transacciones',
@@ -184,6 +228,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     confirmDelete: '¿Estás seguro?',
     deleteConfirmation: '¿Realmente deseas eliminar esta transacción?',
     allTransactions: 'Todas las Transacciones',
+    transactionss: 'transacciones',
     expense: 'Gasto',
     revenue: 'Ingreso',
     noTransactions: 'Sin transacciones',
@@ -221,19 +266,37 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     email: 'Email',
     password: 'Contraseña',
     name: 'Nombre',
+    yourName: 'Tu Nombre',
     confirmPassword: 'Confirmar Contraseña',
     forgotPassword: 'Olvidé mi Contraseña',
     resetPassword: 'Restablecer Contraseña',
-    sendResetLink: 'Enviar Enlace de Restablecimiento',
+    sendResetLink: 'Enviar Enlace',
+    sendingLink: 'Enviando...',
     createNewPassword: 'Crear Nueva Contraseña',
     newPassword: 'Nueva Contraseña',
     confirmNewPassword: 'Confirmar Nueva Contraseña',
+    updatePassword: 'Actualizar Contraseña',
     rememberMe: 'Recuérdame',
     dontHaveAccount: '¿No tienes cuenta?',
     alreadyHaveAccount: '¿Ya tienes cuenta?',
     createAccount: 'Crear Cuenta',
+    emailRequired: 'Email es requerido',
     invalidCredentials: 'Credenciales inválidas',
     emailAlreadyExists: 'El email ya existe',
+    loggingIn: 'Iniciando sesión...',
+    registering: 'Creando cuenta...',
+    noAccount: '¿No tienes una cuenta?',
+    registerHere: 'Regístrate aquí',
+    loginHere: 'Inicia sesión aquí',
+    backToLogin: 'Volver al login',
+
+    // Subtitles / Headings
+    manageYourFinancesWithAI: 'Gestiona tus finanzas con IA',
+    createAccountAndStartManagingYourFinances:
+      'Crea tu cuenta y empieza a gestionar tus finanzas',
+    regainAccessToYourAccount: 'Recupera el acceso a tu cuenta',
+    createANewPassword: 'Crea una nueva contraseña',
+    summaryOfYourFinances: 'Resumen de tus finanzas',
 
     // Settings / Profile
     profile: 'Perfil',
@@ -246,11 +309,20 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     changePassword: 'Cambiar Contraseña',
     currentPassword: 'Contraseña Actual',
     deleteAccount: 'Eliminar Cuenta',
+    hello: 'Hola',
+    theme: 'Tema',
 
     // Export
+    export: 'Exportar',
     exportData: 'Exportar Datos',
     exportAsCSV: 'Exportar como CSV',
     exportAsPDF: 'Exportar como PDF',
+    filteredResultsOnly: 'Solo resultados filtrados',
+    withFiltersApplied: 'con los filtros aplicados',
+    fullSummary: 'Resumen Completo',
+    includesStatisticsAndAllTransactions: 'Incluye estadísticas y todas las transacciones',
+    csvFilesCanBeOpenedInExcelGoogleSheetsOrAnySpreadsheetApp:
+      'Los archivos CSV se pueden abrir en Excel, Google Sheets o cualquier aplicación de hojas de cálculo',
 
     // Messages
     savedSuccessfully: 'Guardado exitosamente',
@@ -288,6 +360,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     success: 'Success',
     noData: 'No data',
     back: 'Back',
+    updating: 'Updating...',
 
     // Dashboard
     balance: 'Balance',
@@ -299,6 +372,14 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     spendingByCategory: 'Spending by Category',
     monthlyEvolution: 'Monthly Evolution',
     selectMonth: 'Select Month',
+    viewAll: 'View All',
+    thereIsNot: 'There is not',
+    duringThisPeriod: 'during this period',
+    noMonthlyData: 'No monthly data',
+    topCategories: 'Top Categories',
+    thereAreNoTransactionsYet: 'There are no transactions yet.',
+    startAddingSome: 'Start adding some!',
+    incomeVsExpensesComparison: 'Income vs Expenses Comparison',
 
     // Transactions
     myTransactions: 'My Transactions',
@@ -314,6 +395,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     confirmDelete: 'Are you sure?',
     deleteConfirmation: 'Do you really want to delete this transaction?',
     allTransactions: 'All Transactions',
+    transactionss: 'transactions',
     expense: 'Expense',
     revenue: 'Income',
     noTransactions: 'No transactions',
@@ -351,19 +433,37 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     email: 'Email',
     password: 'Password',
     name: 'Name',
+    yourName: 'Your Name',
     confirmPassword: 'Confirm Password',
     forgotPassword: 'Forgot Password?',
     resetPassword: 'Reset Password',
     sendResetLink: 'Send Reset Link',
+    sendingLink: 'Sending...',
     createNewPassword: 'Create New Password',
     newPassword: 'New Password',
     confirmNewPassword: 'Confirm New Password',
+    updatePassword: 'Update Password',
     rememberMe: 'Remember me',
     dontHaveAccount: "Don't have an account?",
     alreadyHaveAccount: 'Already have an account?',
     createAccount: 'Create Account',
+    emailRequired: 'Email is required',
     invalidCredentials: 'Invalid credentials',
     emailAlreadyExists: 'Email already exists',
+    loggingIn: 'Logging in...',
+    registering: 'Registering...',
+    noAccount: "Don't have an account?",
+    registerHere: 'Register here',
+    loginHere: 'Login here',
+    backToLogin: 'Back to login',
+
+    // Subtitles / Headings
+    manageYourFinancesWithAI: 'Manage your finances with AI',
+    createAccountAndStartManagingYourFinances:
+      'Create an account and start managing your finances',
+    regainAccessToYourAccount: 'Regain access to your account',
+    createANewPassword: 'Create a new password',
+    summaryOfYourFinances: 'Summary of your finances',
 
     // Settings / Profile
     profile: 'Profile',
@@ -376,11 +476,22 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     changePassword: 'Change Password',
     currentPassword: 'Current Password',
     deleteAccount: 'Delete Account',
+    hello: 'Hello',
+    theme: 'Theme',
 
     // Export
+    export: 'Export',
     exportData: 'Export Data',
     exportAsCSV: 'Export as CSV',
     exportAsPDF: 'Export as PDF',
+    filteredResultsOnly: 'Filtered results only',
+    withFiltersApplied: 'with filters applied',
+    fullSummary: 'Full Summary',
+    includesStatisticsAndAllTransactions: 'Includes statistics and all transactions',
+    csvFilesCanBeOpenedInExcelGoogleSheetsOrAnySpreadsheetApp:
+      'CSV files can be opened in Excel, Google Sheets, or any spreadsheet app',
+    
+    // Calendar
 
     // Messages
     savedSuccessfully: 'Saved successfully',

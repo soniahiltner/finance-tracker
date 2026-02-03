@@ -7,6 +7,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface MonthlyData {
   month: string
@@ -23,13 +24,15 @@ const MonthlyEvolutionChart = ({
   data,
   formatCurrency
 }: MonthlyEvolutionChartProps) => {
+
+  const { t } = useTranslation()
   if (data.length === 0) {
     return (
       <div className='card'>
         <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-          Evolución Mensual
+          {t.monthlyEvolution}
         </h2>
-        <p className='text-center text-gray-500 py-8'>No hay datos mensuales</p>
+        <p className='text-center text-gray-500 py-8'>{t.noMonthlyData}</p>
       </div>
     )
   }
@@ -37,7 +40,7 @@ const MonthlyEvolutionChart = ({
   return (
     <div className='card'>
       <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-        Evolución Mensual
+        {t.monthlyEvolution}
       </h2>
       <ResponsiveContainer
         width='100%'
@@ -59,14 +62,14 @@ const MonthlyEvolutionChart = ({
             dataKey='income'
             stroke='#10b981'
             strokeWidth={2}
-            name='Ingresos'
+            name={t.income}
           />
           <Line
             type='monotone'
             dataKey='expenses'
             stroke='#ef4444'
             strokeWidth={2}
-            name='Gastos'
+            name={t.expenses}
           />
         </LineChart>
       </ResponsiveContainer>

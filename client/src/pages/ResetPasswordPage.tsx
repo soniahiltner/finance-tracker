@@ -3,6 +3,7 @@ import { KeyRound } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router'
 import ThemeToggle from '../components/ThemeToggle'
 import { authService } from '../services/authService'
+import { useTranslation } from '../hooks/useTranslation'
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams()
@@ -13,6 +14,8 @@ const ResetPasswordPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  const { t } = useTranslation()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,7 +69,7 @@ const ResetPasswordPage = () => {
             FinanceTracker
           </h1>
           <p className='text-gray-600 dark:text-gray-400'>
-            Crea una nueva contraseña
+            {t.createANewPassword}
           </p>
         </div>
 
@@ -78,7 +81,7 @@ const ResetPasswordPage = () => {
           </div>
 
           <h2 className='text-2xl font-bold text-center mb-6 dark:text-gray-100'>
-            Restablecer contraseña
+            {t.resetPassword}
           </h2>
 
           {error && (
@@ -102,7 +105,7 @@ const ResetPasswordPage = () => {
                 htmlFor='password'
                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
-                Nueva contraseña
+                {t.newPassword}
               </label>
               <input
                 id='password'
@@ -121,7 +124,7 @@ const ResetPasswordPage = () => {
                 htmlFor='confirmPassword'
                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
-                Confirmar contraseña
+                {t.confirmPassword}
               </label>
               <input
                 id='confirmPassword'
@@ -140,7 +143,7 @@ const ResetPasswordPage = () => {
               disabled={loading}
               className='w-full btn-primary'
             >
-              {loading ? 'Actualizando...' : 'Actualizar contraseña'}
+              {loading ? t.updating : t.updatePassword}
             </button>
           </form>
 
@@ -149,7 +152,7 @@ const ResetPasswordPage = () => {
               to='/login'
               className='text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300'
             >
-              Volver al login
+              {t.backToLogin}
             </Link>
           </p>
         </div>

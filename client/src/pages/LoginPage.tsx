@@ -3,8 +3,10 @@ import { useAuth } from '../hooks/useAuth'
 import { LogIn } from 'lucide-react'
 import AuthForm from '../components/auth/AuthForm'
 import { Link } from 'react-router'
+import { useTranslation } from '../hooks/useTranslation'
 
 const LoginPage = () => {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { login } = useAuth()
@@ -16,7 +18,7 @@ const LoginPage = () => {
   const fields = [
     {
       id: 'email',
-      label: 'Email',
+      label: t.email,
       type: 'email',
       placeholder: 'tu@email.com',
       value: email,
@@ -25,7 +27,7 @@ const LoginPage = () => {
     },
     {
       id: 'password',
-      label: 'Contraseña',
+      label: t.password,
       type: 'password',
       placeholder: '••••••••',
       value: password,
@@ -37,22 +39,22 @@ const LoginPage = () => {
   return (
     <AuthForm
       title='FinanceTracker'
-      subtitle='Gestiona tus finanzas con IA'
-      formTitle='Iniciar Sesión'
+      subtitle={t.manageYourFinancesWithAI}
+      formTitle={t.login}
       icon={LogIn}
       fields={fields}
-      submitText='Iniciar Sesión'
-      loadingText='Iniciando...'
-      linkText='¿No tienes cuenta?'
+      submitText={t.login}
+      loadingText={t.loggingIn}
+      linkText={t.noAccount}
       linkHref='/register'
-      linkLabel='Regístrate aquí'
+      linkLabel={t.registerHere}
       onSubmit={handleSubmit}
       footerContent={
         <Link
           to='/forgot-password'
           className='text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300'
         >
-          ¿Olvidaste tu contraseña?
+          {t.forgotPassword}
         </Link>
       }
     />

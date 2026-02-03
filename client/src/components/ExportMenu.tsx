@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Download, FileText, FileSpreadsheet, X } from 'lucide-react'
 import type { Transaction } from '../types'
 import { CSVExporter } from '../utils/csvExport'
+import { useTranslation } from '../hooks/useTranslation'
 
 interface ExportMenuProps {
   allTransactions: Transaction[]
@@ -16,6 +17,7 @@ export default function ExportMenu({
 }: ExportMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
 
   // Cerrar menú al hacer clic fuera o con Escape
   useEffect(() => {
@@ -77,7 +79,7 @@ export default function ExportMenu({
         className='btn-secondary flex items-center px-2 max-xs:px-1 max-xs:mr-0 max-sm:text-sm dark:border-gray-300'
       >
         <Download className='w-5 h-5 mr-2' />
-        Exportar
+        {t.export}
       </button>
 
       {isOpen && (
@@ -111,10 +113,10 @@ export default function ExportMenu({
                 <FileText className='w-5 h-5 text-gray-600 dark:text-gray-400 mr-3 mt-0.5 shrink-0' />
                 <div>
                   <p className='font-medium text-gray-900 dark:text-gray-100'>
-                    Todas las transacciones
+                    {t.allTransactions}
                   </p>
                   <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    Exportar {allTransactions.length} transacciones
+                    {t.export} {allTransactions.length} {t.transactionss}
                   </p>
                 </div>
               </button>
@@ -127,11 +129,10 @@ export default function ExportMenu({
                   <FileText className='w-5 h-5 text-primary-600 dark:text-primary-400 mr-3 mt-0.5 shrink-0' />
                   <div>
                     <p className='font-medium text-gray-900 dark:text-gray-100'>
-                      Solo resultados filtrados
+                      {t.filteredResultsOnly}
                     </p>
                     <p className='text-sm text-gray-600 dark:text-gray-400'>
-                      Exportar {filteredTransactions.length} transacciones con
-                      los filtros aplicados
+                      {t.export} {filteredTransactions.length} {t.transactionss} {t.withFiltersApplied}
                     </p>
                   </div>
                 </button>
@@ -144,10 +145,10 @@ export default function ExportMenu({
                 <FileSpreadsheet className='w-5 h-5 text-green-600 dark:text-green-400 mr-3 mt-0.5 shrink-0' />
                 <div>
                   <p className='font-medium text-gray-900 dark:text-gray-100'>
-                    Resumen completo
+                    {t.fullSummary}
                   </p>
                   <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    Incluye estadísticas y todas las transacciones
+                    {t.includesStatisticsAndAllTransactions}
                   </p>
                 </div>
               </button>
@@ -155,7 +156,7 @@ export default function ExportMenu({
             {/* Footer con info */}
             <div className='p-3 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 rounded-b-xl'>
               <p className='text-xs text-gray-600 dark:text-gray-400'>
-                💡 Los archivos CSV se pueden abrir en Excel, Google Sheets o
+                💡 {t.csvFilesCanBeOpenedInExcelGoogleSheetsOrAnySpreadsheetApp}
                 cualquier aplicación de hojas de cálculo.
               </p>
             </div>

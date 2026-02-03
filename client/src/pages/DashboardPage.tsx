@@ -8,11 +8,13 @@ import CategoryPieChart from '../components/dashboard/CategoryPieChart'
 import MonthlyEvolutionChart from '../components/dashboard/MonthlyEvolutionChart'
 import ComparisonBarChart from '../components/dashboard/ComparisonBarChart'
 import CategoryList from '../components/dashboard/CategoryList'
+import { useTranslation } from '../hooks/useTranslation'
 
 const DashboardPage = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>('')
   const { summary, transactions, loading, error } =
     useDashboardData(selectedMonth)
+  const { t } = useTranslation()
 
   // Memoizar datos procesados para el gráfico de pastel
   const categoryData = useMemo(() => {
@@ -28,7 +30,7 @@ const DashboardPage = () => {
   if (loading) {
     return (
       <div className='flex items-center justify-center h-64'>
-        <h1 className='text-lg text-gray-600'>Cargando...</h1>
+        <h1 className='text-lg text-gray-600'>{t.loading}</h1>
       </div>
     )
   }
@@ -55,22 +57,22 @@ const DashboardPage = () => {
       {/* Cards de resumen */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
         <StatCard
-          title='Balance'
+          title={t.balance}
           value={formatCurrency(summary.balance)}
           icon={Wallet}
-          subtitle={summary.balance >= 0 ? 'Superávit' : 'Déficit'}
+          subtitle={summary.balance >= 0 ? t.surplus : t.deficit}
           variant='primary'
         />
 
         <StatCard
-          title='Ingresos'
+          title={t.income}
           value={formatCurrency(summary.totalIncome)}
           icon={TrendingUp}
           variant='income'
         />
 
         <StatCard
-          title='Gastos'
+          title={t.expenses}
           value={formatCurrency(summary.totalExpenses)}
           icon={TrendingDown}
           variant='expense'

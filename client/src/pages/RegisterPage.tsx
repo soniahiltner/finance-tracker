@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { UserPlus } from 'lucide-react'
 import AuthForm from '../components/auth/AuthForm'
+import { useTranslation } from '../hooks/useTranslation'
 
 const RegisterPage = () => {
   const [name, setName] = useState('')
@@ -9,6 +10,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const { register } = useAuth()
+  const { t } = useTranslation()
 
   const handleSubmit = async () => {
     await register(email, password, name)
@@ -27,16 +29,16 @@ const RegisterPage = () => {
   const fields = [
     {
       id: 'name',
-      label: 'Nombre',
+      label: t.name,
       type: 'text',
-      placeholder: 'Tu nombre',
+      placeholder: t.yourName,
       value: name,
       autoComplete: 'on',
       onChange: setName
     },
     {
       id: 'email',
-      label: 'Email',
+      label: t.email,
       type: 'email',
       placeholder: 'tu@email.com',
       value: email,
@@ -45,7 +47,7 @@ const RegisterPage = () => {
     },
     {
       id: 'password',
-      label: 'Contraseña',
+      label: t.password,
       type: 'password',
       placeholder: '••••••••',
       value: password,
@@ -54,7 +56,7 @@ const RegisterPage = () => {
     },
     {
       id: 'confirmPassword',
-      label: 'Confirmar Contraseña',
+      label: t.confirmPassword,
       type: 'password',
       placeholder: '••••••••',
       value: confirmPassword,
@@ -66,15 +68,15 @@ const RegisterPage = () => {
   return (
     <AuthForm
       title='FinanceTracker'
-      subtitle='Crea tu cuenta y empieza a gestionar tus finanzas'
-      formTitle='Crear Cuenta'
+      subtitle={t.createAccountAndStartManagingYourFinances}
+      formTitle={t.createAccount}
       icon={UserPlus}
       fields={fields}
-      submitText='Crear Cuenta'
-      loadingText='Creando cuenta...'
-      linkText='¿Ya tienes cuenta?'
+      submitText={t.createAccount}
+      loadingText={t.registering}
+      linkText={t.alreadyHaveAccount}
       linkHref='/login'
-      linkLabel='Inicia sesión aquí'
+      linkLabel={t.loginHere}
       onSubmit={handleSubmit}
       validate={validate}
     />

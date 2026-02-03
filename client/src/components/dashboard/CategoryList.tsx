@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateCategory } from '../../constants/categoryTranslations'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface CategoryItem {
   category: string
@@ -25,15 +26,16 @@ const CategoryList = memo(
     colors
   }: CategoryListProps) => {
     const { language } = useLanguage()
+    const { t } = useTranslation()
 
     if (categories.length === 0) {
       return (
         <div className='card'>
           <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-            Top Categorías
+            {t.topCategories}
           </h2>
           <p className='text-center text-gray-500 py-8'>
-            No hay transacciones aún. ¡Empieza a agregar!
+            {t.thereAreNoTransactionsYet} {t.startAddingSome}
           </p>
         </div>
       )
@@ -42,7 +44,7 @@ const CategoryList = memo(
     return (
       <div className='card'>
         <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-          Top Categorías
+          {t.topCategories}
         </h2>
         <div className='space-y-3'>
           {categories.slice(0, 8).map((cat, index) => {

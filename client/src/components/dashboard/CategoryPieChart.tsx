@@ -9,6 +9,7 @@ import {
 } from 'recharts'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateCategory } from '../../constants/categoryTranslations'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface CategoryData {
   name: string
@@ -27,6 +28,7 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
   const { language } = useLanguage()
   const [activeTab, setActiveTab] = useState<'expense' | 'income'>('expense')
   const [isSmallScreen, setIsSmallScreen] = useState(false)
+  const { t } = useTranslation()
 
   // Detectar si es pantalla pequeña
   useEffect(() => {
@@ -46,9 +48,9 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
     return (
       <div className='card'>
         <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-          Categorías
+          {t.categories}
         </h2>
-        <p className='text-center text-gray-500 py-8'>No hay datos</p>
+        <p className='text-center text-gray-500 py-8'>{t.noData}</p>
       </div>
     )
   }
@@ -56,7 +58,9 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
   return (
     <div className='card'>
       <div className='flex items-center justify-between mb-4'>
-        <h2 className='text-lg font-semibold dark:text-gray-100'>Categorías</h2>
+        <h2 className='text-lg font-semibold dark:text-gray-100'>
+          {t.categories}
+        </h2>
 
         {/* Toggle Button */}
         <div className='inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-1'>
@@ -68,7 +72,7 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
             }`}
           >
-            Gastos
+            {t.expenses}
           </button>
           <button
             onClick={() => setActiveTab('income')}
@@ -78,15 +82,14 @@ const CategoryPieChart = ({ data, formatCurrency }: CategoryPieChartProps) => {
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
             }`}
           >
-            Ingresos
+            {t.income}
           </button>
         </div>
       </div>
 
       {filteredData.length === 0 ? (
         <p className='text-center text-gray-500 py-8'>
-          No hay {activeTab === 'expense' ? 'gastos' : 'ingresos'} en este
-          período
+          {t.thereIsNot} {activeTab === 'expense' ? t.expenses.toLowerCase() : t.income.toLowerCase()} {t.duringThisPeriod}
         </p>
       ) : (
         <ResponsiveContainer

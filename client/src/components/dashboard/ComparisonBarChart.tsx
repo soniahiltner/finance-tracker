@@ -7,6 +7,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface MonthlyData {
   month: string
@@ -23,12 +24,14 @@ const ComparisonBarChart = ({
   data,
   formatCurrency
 }: ComparisonBarChartProps) => {
+
+  const { t } = useTranslation()
   if (data.length <= 1) return null
 
   return (
     <div className='card'>
       <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
-        Comparación Ingresos vs Gastos
+        {t.incomeVsExpensesComparison}
       </h2>
       <ResponsiveContainer
         width='100%'
@@ -48,12 +51,12 @@ const ComparisonBarChart = ({
           <Bar
             dataKey='income'
             fill='#10b981'
-            name='Ingresos'
+            name={t.income}
           />
           <Bar
             dataKey='expenses'
             fill='#ef4444'
-            name='Gastos'
+            name={t.expenses}
           />
         </BarChart>
       </ResponsiveContainer>

@@ -12,18 +12,20 @@ import {
 import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
 import LanguageSelector from './LanguageSelector'
+import { useTranslation } from '../hooks/useTranslation'
 
 const Layout = () => {
+  const { t } = useTranslation()
   const { user, logout } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Transacciones', href: '/transactions', icon: Receipt },
-    { name: 'Metas', href: '/savings-goals', icon: Target },
-    { name: 'Asistente IA', href: '/ai-assistant', icon: Bot }
+    { name: t.dashboard, href: '/dashboard', icon: LayoutDashboard },
+    { name: t.transactions, href: '/transactions', icon: Receipt },
+    { name: t.savingsGoals, href: '/savings-goals', icon: Target },
+    { name: t.aiAssistant, href: '/ai-assistant', icon: Bot }
   ]
 
   const handleLogout = () => {
@@ -72,14 +74,14 @@ const Layout = () => {
               <ThemeToggle />
               <LanguageSelector />
               <span className='text-sm pl-1 text-gray-600 dark:text-gray-300'>
-                Hola, <span className='font-medium'>{user?.name}</span>
+                {t.hello}, <span className='font-medium'>{user?.name}</span>
               </span>
               <button
                 onClick={handleLogout}
                 className='flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-400 transition-colors'
               >
                 <LogOut className='w-4 h-4 mr-2' />
-                Salir
+                {t.logout}
               </button>
             </div>
 
@@ -128,13 +130,13 @@ const Layout = () => {
               })}
               <div className='flex items-center justify-between px-3 py-2 space-x-3'>
                 <span className='text-sm text-gray-600 dark:text-gray-300'>
-                  Tema
+                  {t.theme}
                 </span>
                 <ThemeToggle />
               </div>
               <div className='flex items-center justify-between px-3 py-2'>
                 <span className='text-sm text-gray-600 dark:text-gray-300'>
-                  Idioma
+                  {t.language}
                 </span>
                 <LanguageSelector />
               </div>
@@ -143,7 +145,7 @@ const Layout = () => {
                 className='w-full flex items-center px-3 py-2 rounded-lg text-base font-medium text-gray-600 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-400'
               >
                 <LogOut className='w-5 h-5 mr-3' />
-                Salir
+                {t.logout}
               </button>
             </div>
           </div>

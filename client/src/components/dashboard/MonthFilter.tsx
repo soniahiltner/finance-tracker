@@ -1,4 +1,5 @@
 import { Calendar } from 'lucide-react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface MonthFilterProps {
   selectedMonth: string
@@ -6,6 +7,7 @@ interface MonthFilterProps {
 }
 
 const MonthFilter = ({ selectedMonth, onMonthChange }: MonthFilterProps) => {
+  const { t } = useTranslation()
   return (
     <div className='flex items-center space-x-2 max-xs:ms-auto max-xxs:flex-col'>
       <Calendar className='w-5 h-5 text-gray-400 dark:text-gray-100 max-sm:hidden' />
@@ -13,7 +15,7 @@ const MonthFilter = ({ selectedMonth, onMonthChange }: MonthFilterProps) => {
         htmlFor='selected-month'
         className='sr-only'
       >
-        Seleccionar mes
+        {t.selectMonth}
       </label>
       <input
         type='month'
@@ -27,7 +29,7 @@ const MonthFilter = ({ selectedMonth, onMonthChange }: MonthFilterProps) => {
           onClick={() => onMonthChange('')}
           className='text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300'
         >
-          Ver todo
+          {t.viewAll}
         </button>
       )}
     </div>

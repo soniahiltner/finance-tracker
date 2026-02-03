@@ -1,3 +1,4 @@
+import { useTranslation } from '../../hooks/useTranslation'
 import type { Transaction } from '../../types'
 import ExportMenu from '../ExportMenu'
 import MonthFilter from './MonthFilter'
@@ -13,14 +14,15 @@ const DashboardHeader = ({
   onMonthChange,
   transactions
 }: DashboardHeaderProps) => {
+  const { t } = useTranslation()
   return (
     <div className='flex justify-between flex-col items-start sm:flex-row sm:items-center'>
       <div>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
-          Dashboard
+          {t.dashboard}
         </h1>
         <p className='text-gray-600 dark:text-gray-400 mt-1'>
-          Resumen de tus finanzas
+          {t.summaryOfYourFinances}
         </p>
       </div>
 

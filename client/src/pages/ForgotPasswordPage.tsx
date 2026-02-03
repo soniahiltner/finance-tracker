@@ -3,12 +3,14 @@ import { Mail } from 'lucide-react'
 import { Link } from 'react-router'
 import ThemeToggle from '../components/ThemeToggle'
 import { authService } from '../services/authService'
+import { useTranslation } from '../hooks/useTranslation'
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const { t } = useTranslation()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,7 +18,7 @@ const ForgotPasswordPage = () => {
     setSuccess('')
 
     if (!email) {
-      setError('Email es requerido')
+      setError(t.emailRequired)
       return
     }
 
@@ -50,7 +52,7 @@ const ForgotPasswordPage = () => {
             FinanceTracker
           </h1>
           <p className='text-gray-600 dark:text-gray-400'>
-            Recupera el acceso a tu cuenta
+            {t.regainAccessToYourAccount}
           </p>
         </div>
 
@@ -62,7 +64,7 @@ const ForgotPasswordPage = () => {
           </div>
 
           <h2 className='text-2xl font-bold text-center mb-6 dark:text-gray-100'>
-            Olvidé mi contraseña
+            {t.forgotPassword}
           </h2>
 
           {error && (
@@ -105,7 +107,7 @@ const ForgotPasswordPage = () => {
               disabled={loading}
               className='w-full btn-primary'
             >
-              {loading ? 'Enviando...' : 'Enviar enlace'}
+              {loading ? t.sendingLink : t.sendResetLink}
             </button>
           </form>
 
@@ -114,7 +116,7 @@ const ForgotPasswordPage = () => {
               to='/login'
               className='text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300'
             >
-              Volver al login
+              {t.backToLogin}
             </Link>
           </p>
         </div>
