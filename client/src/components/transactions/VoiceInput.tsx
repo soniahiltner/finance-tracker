@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Mic, Square, Loader2, AlertCircle } from 'lucide-react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 // Declaraciones de tipos para Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -53,6 +54,8 @@ export const VoiceInput = ({
   const [error, setError] = useState('')
   const [transcript, setTranscript] = useState('')
   const [isSupported, setIsSupported] = useState(false)
+
+  const { t } = useTranslation()
 
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const processingRef = useRef(false)
@@ -455,7 +458,7 @@ export const VoiceInput = ({
             title='Grabar entrada por voz'
           >
             <Mic size={20} />
-            <span>Hablar</span>
+            <span>{t.speakNow}</span>
           </button>
         )}
 
@@ -465,7 +468,7 @@ export const VoiceInput = ({
             className='flex items-center gap-2 px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors animate-pulse'
           >
             <Square size={20} />
-            <span>Detener</span>
+            <span>{t.stop}</span>
           </button>
         )}
 
@@ -475,7 +478,7 @@ export const VoiceInput = ({
               className='animate-spin'
               size={20}
             />
-            <span>Procesando...</span>
+            <span>{t.processingVoiceInput}</span>
           </div>
         )}
       </div>
@@ -493,13 +496,13 @@ export const VoiceInput = ({
               style={{ animationDelay: '0.4s' }}
             ></div>
           </div>
-          <span className='text-sm'>Escuchando...</span>
+          <span className='text-sm'>{t.listening}</span>
         </div>
       )}
 
       {transcript && !isProcessing && (
         <div className='p-3 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-lg'>
-          <p className='text-sm font-medium mb-1'>Transcripción:</p>
+          <p className='text-sm font-medium mb-1'>{t.transcription}:</p>
           <p className='text-sm italic'>"{transcript}"</p>
         </div>
       )}
@@ -512,12 +515,12 @@ export const VoiceInput = ({
       )}
 
       <div className='text-xs text-gray-500 dark:text-gray-400 space-y-1'>
-        <p>💡 Ejemplos de lo que puedes decir:</p>
+        <p>💡 {t.examplesOfWhatYouCanSay}:</p>
         <ul className='list-disc list-inside space-y-0.5 ml-2'>
-          <li>"Gasté 50 euros en el supermercado hoy"</li>
-          <li>"Ingreso de 1200 euros de nómina"</li>
-          <li>"Compra de 25 euros en restaurante ayer"</li>
-          <li>"Pago de 80 euros en gasolina"</li>
+          <li>"{t.iSpent50EurosAtTheSupermarketToday}"</li>
+          <li>"{t.incomeOf1200EurosFromPayroll}"</li>
+          <li>"{t.purchaseOf25EurosAtARestaurantYesterday}"</li>
+          <li>"{t.paymentOf80EurosInGasoline}"</li>
         </ul>
       </div>
     </div>

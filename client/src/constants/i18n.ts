@@ -20,6 +20,7 @@ export interface I18nStrings {
   edit: string
   delete: string
   save: string
+  saving: string
   cancel: string
   close: string
   loading: string
@@ -27,7 +28,16 @@ export interface I18nStrings {
   success: string
   noData: string
   back: string
+  update: string
   updating: string
+  new: string
+  of: string
+  manage: string
+  search: string
+  show: string
+  hide: string
+  create: string
+  creating: string
 
   // Dashboard
   balance: string
@@ -51,6 +61,7 @@ export interface I18nStrings {
   // Transactions
   myTransactions: string
   newTransaction: string
+  transaction: string
   type: string
   amount: string
   category: string
@@ -66,6 +77,43 @@ export interface I18nStrings {
   expense: string
   revenue: string
   noTransactions: string
+  import: string
+  voiceInput: string
+  speakNow: string
+  stop: string
+  listening: string
+  processingVoiceInput: string
+  transcription: string
+  newCategoryName: string
+  selectACategory: string
+  createNewCategory: string
+  optionalDetails: string
+
+  // Filters
+  filters: string
+  advancedFilters: string
+  searchByDescription: string
+  allTypes: string
+  onlyIncome: string
+  onlyExpenses: string
+  sortBy: string
+  sortByDate: string
+  sortByAmount: string
+  sortByCategory: string
+  ascending: string
+  descending: string
+  minimumAmount: string
+  maximumAmount: string
+  from: string
+  to: string
+  quickFilters: string
+  currentMonth: string
+  lastMonth: string
+  last30Days: string
+  thisYear: string
+  active: string
+  cleanAll: string
+  cleanCategories: string
 
   // Savings Goals
   savingsGoal: string
@@ -124,12 +172,19 @@ export interface I18nStrings {
   loginHere: string
   backToLogin: string
 
-  // Subtitles / Headings
+  // Subtitles / Headings / Examples
   manageYourFinancesWithAI: string
   createAccountAndStartManagingYourFinances: string
   regainAccessToYourAccount: string
   createANewPassword: string
   summaryOfYourFinances: string
+  manageYourIncomeAndExpenses: string
+  examplesOfWhatYouCanSay: string
+  iSpent50EurosAtTheSupermarketToday: string
+  incomeOf1200EurosFromPayroll: string
+  purchaseOf25EurosAtARestaurantYesterday: string
+  paymentOf80EurosInGasoline: string
+
 
   // Settings / Profile
   profile: string
@@ -169,6 +224,8 @@ export interface I18nStrings {
   checkYourEmail: string
   passwordUpdated: string
   languageChanged: string
+  notAllowedFormat: string
+  pleaseUsePDFExcelCSVOrImages: string
 }
 
 export const i18nStrings: Record<Language, I18nStrings> = {
@@ -186,6 +243,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     edit: 'Editar',
     delete: 'Eliminar',
     save: 'Guardar',
+    saving: 'Guardando...',
     cancel: 'Cancelar',
     close: 'Cerrar',
     loading: 'Cargando...',
@@ -193,7 +251,16 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     success: 'Éxito',
     noData: 'Sin datos',
     back: 'Volver',
+    update: 'Actualizar',
     updating: 'Actualizando...',
+    new: 'Nueva',
+    of: 'de',
+    manage: 'Gestionar',
+    search: 'Búsqueda',
+    show: 'Mostrar',
+    hide: 'Ocultar',
+    create: 'Crear',
+    creating: 'Creando...',
 
     // Dashboard
     balance: 'Balance',
@@ -217,6 +284,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     // Transactions
     myTransactions: 'Mis Transacciones',
     newTransaction: 'Nueva Transacción',
+    transaction: 'Transacción',
     type: 'Tipo',
     amount: 'Monto',
     category: 'Categoría',
@@ -232,6 +300,43 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     expense: 'Gasto',
     revenue: 'Ingreso',
     noTransactions: 'Sin transacciones',
+    import: 'Importar',
+    voiceInput: 'Entrada por voz',
+    speakNow: 'Habla ahora',
+    stop: 'Detener',
+    listening: 'Escuchando...',
+    processingVoiceInput: 'Procesando entrada de voz...',
+    transcription: 'Transcripción',
+    newCategoryName: 'Nombre de la Nueva Categoría',
+    selectACategory: 'Selecciona una ategoría',
+    createNewCategory: 'Crear nueva categoría',
+    optionalDetails: 'Detalles opcionales...',
+
+    // Filters
+    filters: 'Filtros',
+    advancedFilters: 'Filtros Avanzados',
+    searchByDescription: 'Buscar por Descripción...',
+    allTypes: 'Todos los Tipos',
+    onlyIncome: 'Solo Ingresos',
+    onlyExpenses: 'Solo Gastos',
+    sortBy: 'Ordenar por',
+    sortByDate: 'Ordenar por Fecha',
+    sortByAmount: 'Ordenar por Monto',
+    sortByCategory: 'Ordenar por Categoría',
+    ascending: 'Ascendente',
+    descending: 'Descendente',
+    minimumAmount: 'Monto Mínimo',
+    maximumAmount: 'Monto Máximo',
+    from: 'Desde',
+    to: 'Hasta',
+    quickFilters: 'Filtros Rápidos',
+    currentMonth: 'Mes Actual',
+    lastMonth: 'Mes Pasado',
+    last30Days: 'Últimos 30 Días',
+    thisYear: 'Este Año',
+    active: 'Activos',
+    cleanAll: 'Limpiar Todo',
+    cleanCategories: 'Limpiar categorías',
 
     // Savings Goals
     savingsGoal: 'Meta de Ahorro',
@@ -290,13 +395,20 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     loginHere: 'Inicia sesión aquí',
     backToLogin: 'Volver al login',
 
-    // Subtitles / Headings
+    // Subtitles / Headings / Examples
     manageYourFinancesWithAI: 'Gestiona tus finanzas con IA',
     createAccountAndStartManagingYourFinances:
       'Crea tu cuenta y empieza a gestionar tus finanzas',
     regainAccessToYourAccount: 'Recupera el acceso a tu cuenta',
     createANewPassword: 'Crea una nueva contraseña',
     summaryOfYourFinances: 'Resumen de tus finanzas',
+    manageYourIncomeAndExpenses: 'Gestiona tus ingresos y gastos',
+    examplesOfWhatYouCanSay: 'Ejemplos de lo que puedes decir',
+    iSpent50EurosAtTheSupermarketToday: 'Gasté 50 euros en el supermercado hoy',
+    incomeOf1200EurosFromPayroll: 'Ingreso de 1200 euros de la nómina',
+    purchaseOf25EurosAtARestaurantYesterday:
+      'Compra de 25 euros en un restaurante ayer',
+    paymentOf80EurosInGasoline: 'Pago de 80 euros en gasolina',
 
     // Settings / Profile
     profile: 'Perfil',
@@ -320,7 +432,8 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     filteredResultsOnly: 'Solo resultados filtrados',
     withFiltersApplied: 'con los filtros aplicados',
     fullSummary: 'Resumen Completo',
-    includesStatisticsAndAllTransactions: 'Incluye estadísticas y todas las transacciones',
+    includesStatisticsAndAllTransactions:
+      'Incluye estadísticas y todas las transacciones',
     csvFilesCanBeOpenedInExcelGoogleSheetsOrAnySpreadsheetApp:
       'Los archivos CSV se pueden abrir en Excel, Google Sheets o cualquier aplicación de hojas de cálculo',
 
@@ -336,7 +449,10 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     emailSent: 'Email enviado',
     checkYourEmail: 'Revisa tu email',
     passwordUpdated: 'Contraseña actualizada',
-    languageChanged: 'Idioma cambiado'
+    languageChanged: 'Idioma cambiado',
+    notAllowedFormat: 'Formato no permitido.',
+    pleaseUsePDFExcelCSVOrImages:
+      'Por favor, utiliza PDF, Excel, CSV o imágenes (JPG, PNG, WEBP, GIF)'
   },
 
   en: {
@@ -353,6 +469,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     edit: 'Edit',
     delete: 'Delete',
     save: 'Save',
+    saving: 'Saving...',
     cancel: 'Cancel',
     close: 'Close',
     loading: 'Loading...',
@@ -360,7 +477,16 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     success: 'Success',
     noData: 'No data',
     back: 'Back',
+    update: 'Update',
     updating: 'Updating...',
+    new: 'New',
+    of: 'of',
+    manage: 'Manage',
+    search: 'Search',
+    show: 'Show',
+    hide: 'Hide',
+    create: 'Create',
+    creating: 'Creating...',
 
     // Dashboard
     balance: 'Balance',
@@ -384,6 +510,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     // Transactions
     myTransactions: 'My Transactions',
     newTransaction: 'New Transaction',
+    transaction: 'Transaction',
     type: 'Type',
     amount: 'Amount',
     category: 'Category',
@@ -399,6 +526,43 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     expense: 'Expense',
     revenue: 'Income',
     noTransactions: 'No transactions',
+    import: 'Import',
+    voiceInput: 'Voice Input',
+    speakNow: 'Speak Now',
+    stop: 'Stop',
+    listening: 'Listening...',
+    processingVoiceInput: 'Processing voice input...',
+    transcription: 'Transcription',
+    newCategoryName: 'New Category Name',
+    selectACategory: 'Select a Category',
+    createNewCategory: 'Create New Category',
+    optionalDetails: 'Optional Details...',
+
+    // Filters
+    filters: 'Filters',
+    advancedFilters: 'Advanced Filters',
+    searchByDescription: 'Search by Description...',
+    allTypes: 'All Types',
+    onlyIncome: 'Only Income',
+    onlyExpenses: 'Only Expenses',
+    sortBy: 'Sort by',
+    sortByDate: 'Sort by Date',
+    sortByAmount: 'Sort by Amount',
+    sortByCategory: 'Sort by Category',
+    ascending: 'Ascending',
+    descending: 'Descending',
+    minimumAmount: 'Minimum Amount',
+    maximumAmount: 'Maximum Amount',
+    from: 'From',
+    to: 'To',
+    quickFilters: 'Quick Filters',
+    currentMonth: 'Current Month',
+    lastMonth: 'Last Month',
+    last30Days: 'Last 30 Days',
+    thisYear: 'This Year',
+    active: 'Active',
+    cleanAll: 'Clean All',
+    cleanCategories: 'Clean categories',
 
     // Savings Goals
     savingsGoal: 'Savings Goal',
@@ -457,13 +621,21 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     loginHere: 'Login here',
     backToLogin: 'Back to login',
 
-    // Subtitles / Headings
+    // Subtitles / Headings / Examples
     manageYourFinancesWithAI: 'Manage your finances with AI',
     createAccountAndStartManagingYourFinances:
       'Create an account and start managing your finances',
     regainAccessToYourAccount: 'Regain access to your account',
     createANewPassword: 'Create a new password',
     summaryOfYourFinances: 'Summary of your finances',
+    manageYourIncomeAndExpenses: 'Manage your income and expenses',
+    examplesOfWhatYouCanSay: 'Examples of what you can say',
+    iSpent50EurosAtTheSupermarketToday:
+      'I spent 50 euros at the supermarket today',
+    incomeOf1200EurosFromPayroll: 'Income of 1200 euros from payroll',
+    purchaseOf25EurosAtARestaurantYesterday:
+      'Purchase of 25 euros at a restaurant yesterday',
+    paymentOf80EurosInGasoline: 'Payment of 80 euros in gasoline',
 
     // Settings / Profile
     profile: 'Profile',
@@ -487,11 +659,10 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     filteredResultsOnly: 'Filtered results only',
     withFiltersApplied: 'with filters applied',
     fullSummary: 'Full Summary',
-    includesStatisticsAndAllTransactions: 'Includes statistics and all transactions',
+    includesStatisticsAndAllTransactions:
+      'Includes statistics and all transactions',
     csvFilesCanBeOpenedInExcelGoogleSheetsOrAnySpreadsheetApp:
       'CSV files can be opened in Excel, Google Sheets, or any spreadsheet app',
-    
-    // Calendar
 
     // Messages
     savedSuccessfully: 'Saved successfully',
@@ -505,7 +676,10 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     emailSent: 'Email sent',
     checkYourEmail: 'Check your email',
     passwordUpdated: 'Password updated',
-    languageChanged: 'Language changed'
+    languageChanged: 'Language changed',
+    notAllowedFormat: 'Not allowed format.',
+    pleaseUsePDFExcelCSVOrImages:
+      'Please use PDF, Excel, CSV, or images (JPG, PNG, WEBP, GIF)'
   }
 }
 

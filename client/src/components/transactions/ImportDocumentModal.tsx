@@ -10,6 +10,7 @@ import {
 import { aiService, type ParsedTransaction } from '../../services/aiService'
 import { transactionService } from '../../services/transactionService'
 import { useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface ImportDocumentModalProps {
   isOpen: boolean
@@ -31,7 +32,9 @@ export const ImportDocumentModal = ({
   )
   const [isImporting, setIsImporting] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false) 
+
+  const { t } = useTranslation()
 
   const queryClient = useQueryClient()
 
@@ -77,7 +80,7 @@ export const ImportDocumentModal = ({
 
     if (!allowedTypes.includes(selectedFile.type)) {
       setError(
-        'Formato no permitido. Use PDF, Excel, CSV o imágenes (JPG, PNG, WEBP, GIF)'
+        t.notAllowedFormat + ' ' + t.pleaseUsePDFExcelCSVOrImages
       )
       return
     }
@@ -216,7 +219,7 @@ export const ImportDocumentModal = ({
         {/* Header */}
         <div className='sticky top-0 z-10 flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'>
           <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
-            Importar Transacciones
+            {t.import} {t.transaction}
           </h2>
           <button
             onClick={handleClose}

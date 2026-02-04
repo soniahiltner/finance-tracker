@@ -7,6 +7,7 @@ import { categoryService } from '../../services/categoryService'
 import type { Transaction, Category } from '../../types'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateCategory } from '../../constants/categoryTranslations'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface TransactionModalProps {
   isOpen: boolean
@@ -29,7 +30,10 @@ const TransactionModal = ({
   transaction,
   categories
 }: TransactionModalProps) => {
+
   const { language } = useLanguage()
+  const { t } = useTranslation()
+
   const getInitialFormData = () => {
     if (transaction) {
       return {
@@ -40,6 +44,7 @@ const TransactionModal = ({
         date: format(new Date(transaction.date), 'yyyy-MM-dd')
       }
     }
+
     return {
       type: 'expense' as 'income' | 'expense',
       amount: '',
@@ -137,7 +142,7 @@ const TransactionModal = ({
       <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6'>
         <div className='flex items-center justify-between mb-6'>
           <h2 className='text-2xl font-bold dark:text-gray-100'>
-            {transaction ? 'Editar' : 'Nueva'} Transacción
+            {transaction ? t.edit : t.new} {t.transaction}
           </h2>
           <button
             onClick={onClose}
@@ -160,7 +165,7 @@ const TransactionModal = ({
                 onClick={() => setShowVoiceInput(!showVoiceInput)}
                 className='text-sm text-blue-600 dark:text-blue-400 hover:underline mb-2'
               >
-                {showVoiceInput ? 'Ocultar' : 'Usar'} entrada por voz
+                {showVoiceInput ? t.hide : t.show} {t.voiceInput}
               </button>
               {showVoiceInput && (
                 <div className='p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg'>
@@ -176,7 +181,7 @@ const TransactionModal = ({
           {/* Tipo */}
           <div>
             <div className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
-              Tipo
+              {t.type}
             </div>
             <div className='grid grid-cols-2 gap-3'>
               <button
@@ -192,7 +197,7 @@ const TransactionModal = ({
                 disabled={submitting}
               >
                 <TrendingUp className='w-5 h-5 mx-auto mb-1' />
-                <span className='text-sm font-medium'>Ingreso</span>
+                <span className='text-sm font-medium'>{t.income}</span>
               </button>
               <button
                 type='button'
@@ -211,7 +216,7 @@ const TransactionModal = ({
                 disabled={submitting}
               >
                 <TrendingDown className='w-5 h-5 mx-auto mb-1' />
-                <span className='text-sm font-medium'>Gasto</span>
+                <span className='text-sm font-medium'>{t.expense}</span>
               </button>
             </div>
           </div>
@@ -222,7 +227,7 @@ const TransactionModal = ({
               htmlFor='amount'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              Monto *
+              {t.amount} *
             </label>
             <input
               id='amount'
@@ -245,7 +250,7 @@ const TransactionModal = ({
               htmlFor='category'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              Categoría *
+              {t.category} *
             </label>
             {showNewCategory ? (
               <div className='space-y-2'>
@@ -253,7 +258,7 @@ const TransactionModal = ({
                   type='text'
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
-                  placeholder='Nombre de la nueva categoría'
+                  placeholder={t.newCategoryName}
                   className='input-field'
                   disabled={creatingCategory}
                   autoFocus
@@ -265,7 +270,7 @@ const TransactionModal = ({
                     disabled={!newCategoryName.trim() || creatingCategory}
                     className='flex-1 px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium'
                   >
-                    {creatingCategory ? 'Creando...' : 'Crear'}
+                    {creatingCategory ? t.creating : t.create}
                   </button>
                   <button
                     type='button'
@@ -276,7 +281,7 @@ const TransactionModal = ({
                     disabled={creatingCategory}
                     className='px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium'
                   >
-                    Cancelar
+                    {t.cancel}
                   </button>
                 </div>
               </div>
@@ -292,7 +297,7 @@ const TransactionModal = ({
                   required
                   disabled={submitting}
                 >
-                  <option value=''>Selecciona una categoría</option>
+                  <option value=''>{t.selectACategory}</option>
                   {formCategories.map((cat) => (
                     <option
                       key={cat._id}
@@ -306,7 +311,7 @@ const TransactionModal = ({
                   type='button'
                   onClick={() => setShowNewCategory(true)}
                   className='px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors'
-                  title='Crear nueva categoría'
+                  title={t.createNewCategory}
                   disabled={submitting}
                 >
                   <Plus className='w-5 h-5' />
@@ -321,7 +326,7 @@ const TransactionModal = ({
               htmlFor='description'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              Descripción
+              {t.description}
             </label>
             <textarea
               id='description'
@@ -331,7 +336,7 @@ const TransactionModal = ({
               }
               className='input-field'
               rows={3}
-              placeholder='Detalles opcionales...'
+              placeholder={t.optionalDetails}
               disabled={submitting}
             />
           </div>
@@ -342,7 +347,7 @@ const TransactionModal = ({
               htmlFor='date'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              Fecha *
+              {t.date} *
             </label>
             <input
               id='date'
@@ -365,7 +370,7 @@ const TransactionModal = ({
               className='flex-1 btn-secondary'
               disabled={submitting}
             >
-              Cancelar
+              {t.cancel}
             </button>
             <button
               type='submit'
@@ -373,10 +378,10 @@ const TransactionModal = ({
               disabled={submitting}
             >
               {submitting
-                ? 'Guardando...'
+                ? t.saving
                 : transaction
-                  ? 'Actualizar'
-                  : 'Crear'}
+                  ? t.update
+                  : t.create}
             </button>
           </div>
         </form>

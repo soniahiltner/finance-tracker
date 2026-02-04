@@ -1,6 +1,7 @@
 import { Plus, FileUp } from 'lucide-react'
 import ExportMenu from '../ExportMenu'
 import type { Transaction } from '../../types'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface TransactionsHeaderProps {
   allTransactions: Transaction[]
@@ -17,14 +18,16 @@ const TransactionsHeader = ({
   onNewTransaction,
   onImportDocument
 }: TransactionsHeaderProps) => {
+
+  const { t } = useTranslation()
   return (
     <div className='flex justify-between items-center max-sm:flex-col max-sm:items-start'>
       <div>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
-          Transacciones
+          {t.transactions}
         </h1>
         <p className='text-gray-600 dark:text-gray-400 mt-1'>
-          Gestiona tus ingresos y gastos
+          {t.manageYourIncomeAndExpenses}
         </p>
       </div>
       <div className='flex space-x-3 max-sm:mt-2'>
@@ -37,10 +40,10 @@ const TransactionsHeader = ({
           <button
             onClick={onImportDocument}
             className='btn-secondary flex items-center max-sm:px-2 max-sm:text-sm'
-            title='Importar desde documento'
+            title={t.importDocument}
           >
             <FileUp className='w-5 h-5 mr-2' />
-            <span className='max-sm:hidden'>Importar</span>
+            <span className='max-sm:hidden'>{t.import}</span>
           </button>
         )}
         <button
@@ -48,8 +51,8 @@ const TransactionsHeader = ({
           className='btn-primary flex items-center max-sm:px-2 max-sm:text-sm'
         >
           <Plus className='w-5 h-5 mr-2' />
-          <span className='max-sm:hidden'>Nueva Transacción</span>
-          <span className='sm:hidden'>Nueva</span>
+          <span className='max-sm:hidden'>{t.newTransaction}</span>
+          <span className='sm:hidden'>{t.new}</span>
         </button>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { format } from 'date-fns'
 import CategoryManagementModal from './CategoryManagementModal'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateCategory } from '../../constants/categoryTranslations'
+import { useTranslation } from '../../hooks/useTranslation'
 
 export interface FilterValues {
   searchTerm: string
@@ -36,6 +37,7 @@ export default function TransactionFilters({
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [showCategoryModal, setShowCategoryModal] = useState(false)
   const { language } = useLanguage()
+  const { t } = useTranslation()
 
   const handleChange = <K extends keyof FilterValues>(
     key: K,
@@ -86,31 +88,31 @@ export default function TransactionFilters({
         <div className='flex items-center justify-between gap-1 max-xs:flex-wrap'>
           <div className='flex items-center space-x-2'>
             <Filter className='w-5 h-5 text-gray-600 dark:text-gray-400' />
-            <span className='font-medium dark:text-gray-200'>Filtros</span>
+            <span className='font-medium dark:text-gray-200'>{t.filters}</span>
             {hasActiveFilters && (
               <span className='px-2 py-1 bg-primary-200 dark:bg-primary-700/30 text-primary-900 dark:text-primary-500 text-xs rounded-full'>
-                Activos
+                {t.active}
               </span>
             )}
             <button
               onClick={() => setShowCategoryModal(true)}
               className='flex items-center space-x-1 px-2 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors'
-              title='Gestionar categorías'
+              title={`${t.manage} ${t.categories.toLowerCase()}`}
             >
               <Settings className='w-4 h-4' />
-              <span className='hidden sm:inline'>Categorías</span>
+              <span className='hidden sm:inline'>{t.categories}</span>
             </button>
           </div>
           <div className='flex items-center space-x-2'>
             <span className='text-sm text-gray-800 dark:text-gray-400'>
-              {filteredCount} de {totalCount} transacciones
+              {filteredCount} {t.of} {totalCount} {t.transactionss}
             </span>
             {hasActiveFilters && (
               <button
                 onClick={resetFilters}
                 className='text-sm font-medium text-primary-700 dark:text-primary-400 hover:text-primary-600 dark:hover:text-primary-300'
               >
-                Limpiar todo
+                {t.cleanAll}
               </button>
             )}
           </div>
@@ -124,12 +126,12 @@ export default function TransactionFilters({
               htmlFor='search-input'
               className='sr-only'
             >
-              Buscar por descripción
+              {t.searchByDescription}
             </label>
             <input
               id='search-input'
               type='text'
-              placeholder='Buscar por descripción...'
+              placeholder={t.searchByDescription}
               value={filters.searchTerm}
               onChange={(e) => handleChange('searchTerm', e.target.value)}
               className='input-field pr-8'
@@ -138,6 +140,7 @@ export default function TransactionFilters({
               <button
                 onClick={() => handleChange('searchTerm', '')}
                 className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                title={t.cancel}
               >
                 <X className='w-4 h-4' />
               </button>
@@ -149,7 +152,7 @@ export default function TransactionFilters({
             htmlFor='type'
             className='sr-only'
           >
-            Tipo
+            {t.type}
           </label>
           <select
             id='type'
@@ -162,9 +165,9 @@ export default function TransactionFilters({
             }
             className='input-field'
           >
-            <option value='all'>Todos los tipos</option>
-            <option value='income'>Solo Ingresos</option>
-            <option value='expense'>Solo Gastos</option>
+            <option value='all'>{t.allTypes}</option>
+            <option value='income'>{t.onlyIncome}</option>
+            <option value='expense'>{t.onlyExpenses}</option>
           </select>
 
           {/* Ordenar */}
@@ -173,7 +176,7 @@ export default function TransactionFilters({
               htmlFor='sortBy'
               className='sr-only'
             >
-              Ordenar por
+              {t.sortBy}
             </label>
             <select
               id='sortBy'
@@ -186,9 +189,9 @@ export default function TransactionFilters({
               }
               className='input-field flex-1'
             >
-              <option value='date'>Ordenar por Fecha</option>
-              <option value='amount'>Ordenar por Monto</option>
-              <option value='category'>Ordenar por Categoría</option>
+              <option value='date'>{t.sortByDate}</option>
+              <option value='amount'>{t.sortByAmount}</option>
+              <option value='category'>{t.sortByCategory}</option>
             </select>
             <button
               onClick={() =>
@@ -198,6 +201,7 @@ export default function TransactionFilters({
                 )
               }
               className='px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
+              title={filters.sortOrder === 'asc' ? t.ascending : t.descending}
             >
               {filters.sortOrder === 'asc' ? '↑' : '↓'}
             </button>
@@ -210,7 +214,7 @@ export default function TransactionFilters({
           className='flex items-center space-x-2 text-sm font-medium text-primary-700 dark:text-primary-400 hover:text-primary-600 dark:hover:text-primary-300'
         >
           <Filter className='w-4 h-4' />
-          <span>{showAdvanced ? 'Ocultar' : 'Mostrar'} filtros avanzados</span>
+          <span>{showAdvanced ? t.hide : t.show} {t.advancedFilters}</span>
         </button>
 
         {/* Filtros avanzados */}
@@ -224,7 +228,7 @@ export default function TransactionFilters({
                   className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
                 >
                   <Calendar className='w-4 h-4 mr-2' />
-                  Desde
+                  {t.from}
                 </label>
                 <input
                   id='startDate'
@@ -241,7 +245,7 @@ export default function TransactionFilters({
                   className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
                 >
                   <Calendar className='w-4 h-4 mr-2' />
-                  Hasta
+                  {t.to}
                 </label>
                 <input
                   id='endDate'
@@ -263,7 +267,7 @@ export default function TransactionFilters({
                   className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
                 >
                   <DollarSign className='w-4 h-4 mr-2' />
-                  Monto mínimo
+                  {t.minimumAmount}
                 </label>
                 <input
                   id='minAmount'
@@ -281,7 +285,7 @@ export default function TransactionFilters({
                   className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
                 >
                   <DollarSign className='w-4 h-4 mr-2' />
-                  Monto máximo
+                  {t.maximumAmount}
                 </label>
                 <input
                   id='maxAmount'
@@ -300,7 +304,7 @@ export default function TransactionFilters({
               <div>
                 <div className='flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
                   <Tag className='w-4 h-4 mr-2' />
-                  Categorías
+                  {t.categories}
                 </div>
                 <div className='flex flex-wrap gap-2'>
                   {availableCategories.map((category) => (
@@ -322,7 +326,7 @@ export default function TransactionFilters({
                     onClick={() => handleChange('categories', [])}
                     className='mt-2 text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
                   >
-                    Limpiar categorías ({filters.categories.length})
+                    {t.cleanCategories} ({filters.categories.length})
                   </button>
                 )}
               </div>
@@ -331,7 +335,7 @@ export default function TransactionFilters({
             {/* Filtros rápidos predefinidos */}
             <div>
               <div className='text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block'>
-                Filtros rápidos
+                {t.quickFilters}
               </div>
               <div className='flex flex-wrap gap-2'>
                 <button
@@ -350,7 +354,7 @@ export default function TransactionFilters({
                   }}
                   className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
                 >
-                  Este mes
+                  {t.currentMonth}
                 </button>
                 <button
                   onClick={() => {
@@ -373,7 +377,7 @@ export default function TransactionFilters({
                   }}
                   className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
                 >
-                  Mes pasado
+                  {t.lastMonth}
                 </button>
                 <button
                   onClick={() => {
@@ -388,7 +392,7 @@ export default function TransactionFilters({
                   }}
                   className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
                 >
-                  Últimos 30 días
+                  {t.last30Days}
                 </button>
                 <button
                   onClick={() => {
@@ -402,7 +406,7 @@ export default function TransactionFilters({
                   }}
                   className='px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors'
                 >
-                  Este año
+                  {t.thisYear}
                 </button>
               </div>
             </div>
@@ -414,7 +418,7 @@ export default function TransactionFilters({
           <div className='flex flex-wrap gap-2 pt-4 border-t border-gray-200 dark:border-gray-700'>
             {filters.searchTerm && (
               <span className='inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-700 dark:text-primary-300 rounded-full text-sm'>
-                Búsqueda: "{filters.searchTerm}"
+                {t.search}: "{filters.searchTerm}"
                 <button
                   onClick={() => handleChange('searchTerm', '')}
                   className='ml-2 hover:text-primary-900 dark:hover:text-primary-100'
@@ -425,7 +429,7 @@ export default function TransactionFilters({
             )}
             {filters.type !== 'all' && (
               <span className='inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-700 dark:text-primary-300 rounded-full text-sm'>
-                Tipo: {filters.type === 'income' ? 'Ingresos' : 'Gastos'}
+                {t.type}: {filters.type === 'income' ? t.income : t.expenses}
                 <button
                   onClick={() => handleChange('type', 'all')}
                   className='ml-2 hover:text-primary-900 dark:hover:text-primary-100'
@@ -450,7 +454,7 @@ export default function TransactionFilters({
             ))}
             {filters.startDate && (
               <span className='inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-700 dark:text-primary-300 rounded-full text-sm'>
-                Desde: {format(new Date(filters.startDate), 'dd/MM/yyyy')}
+                {t.from}: {format(new Date(filters.startDate), 'dd/MM/yyyy')}
                 <button
                   onClick={() => handleChange('startDate', '')}
                   className='ml-2 hover:text-primary-900 dark:hover:text-primary-100'
@@ -461,7 +465,7 @@ export default function TransactionFilters({
             )}
             {filters.endDate && (
               <span className='inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-700 dark:text-primary-300 rounded-full text-sm'>
-                Hasta: {format(new Date(filters.endDate), 'dd/MM/yyyy')}
+                {t.to}: {format(new Date(filters.endDate), 'dd/MM/yyyy')}
                 <button
                   onClick={() => handleChange('endDate', '')}
                   className='ml-2 hover:text-primary-900 dark:hover:text-primary-100'

@@ -7,8 +7,12 @@ import TransactionModal from '../components/transactions/TransactionModal'
 import { ImportDocumentModal } from '../components/transactions/ImportDocumentModal'
 import ConfirmModal from '../components/ConfirmModal'
 import type { Transaction } from '../types'
+import { useTranslation } from '../hooks/useTranslation'
 
 export default function TransactionsPage() {
+
+  const { t } = useTranslation()
+
   const {
     transactions,
     filteredTransactions,
@@ -73,7 +77,7 @@ export default function TransactionsPage() {
     return (
       <div className='flex items-center justify-center h-64'>
         <div className='text-lg text-gray-600 dark:text-gray-400'>
-          Cargando...
+          {t.loading}
         </div>
       </div>
     )
