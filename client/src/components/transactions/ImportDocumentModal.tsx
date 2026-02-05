@@ -32,7 +32,7 @@ export const ImportDocumentModal = ({
   )
   const [isImporting, setIsImporting] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false) 
+  const [success, setSuccess] = useState(false)
 
   const { t } = useTranslation()
 
@@ -79,9 +79,7 @@ export const ImportDocumentModal = ({
     ]
 
     if (!allowedTypes.includes(selectedFile.type)) {
-      setError(
-        t.notAllowedFormat + ' ' + t.pleaseUsePDFExcelCSVOrImages
-      )
+      setError(t.notAllowedFormat + ' ' + t.pleaseUsePDFExcelCSVOrImages)
       return
     }
 
@@ -176,8 +174,14 @@ export const ImportDocumentModal = ({
 
       // Invalidar queries para refrescar datos
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-transactions'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-transactions'],
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-summary'],
+        refetchType: 'active'
+      })
 
       setSuccess(true)
       setTimeout(() => {
@@ -225,6 +229,7 @@ export const ImportDocumentModal = ({
             onClick={handleClose}
             disabled={isProcessing || isImporting}
             className='p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-50'
+            aria-label={t.close}
           >
             <X size={24} />
           </button>

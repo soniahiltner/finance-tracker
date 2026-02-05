@@ -17,6 +17,7 @@ export interface I18nStrings {
 
   // Common
   add: string
+  adding: string
   edit: string
   delete: string
   save: string
@@ -68,6 +69,7 @@ export interface I18nStrings {
   description: string
   date: string
   addTransaction: string
+  createFirstTransaction: string
   editTransaction: string
   deleteTransaction: string
   confirmDelete: string
@@ -88,6 +90,7 @@ export interface I18nStrings {
   selectACategory: string
   createNewCategory: string
   optionalDetails: string
+  noTransactionsWithFilters: string
 
   // Filters
   filters: string
@@ -126,10 +129,23 @@ export interface I18nStrings {
   goalName: string
   completed: string
   inProgress: string
-  addGoal: string
+  createNewGoal: string
   editGoal: string
   goalDetails: string
   noGoals: string
+  totalGoals: string
+  planAndAchieveYourFinancialGoals: string
+  notSavingsGoalSelected: string
+  totalSaved: string
+  allSavingsGoals: string
+  activeSavingsGoals: string
+  completedSavingsGoals: string
+  daysRemaining: string
+  oneDayRemaining: string
+  goalDefeated: string
+  amountSaved: string
+  remainingAmount: string
+  amountToAdd: string
 
   // AI Assistant
   askAssistant: string
@@ -184,7 +200,7 @@ export interface I18nStrings {
   incomeOf1200EurosFromPayroll: string
   purchaseOf25EurosAtARestaurantYesterday: string
   paymentOf80EurosInGasoline: string
-
+  exampleOfSavingGoal: string
 
   // Settings / Profile
   profile: string
@@ -239,7 +255,8 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     logout: 'Cerrar Sesión',
 
     // Common
-    add: 'Agregar',
+    add: 'Añadir',
+    adding: 'Añadiendo...',
     edit: 'Editar',
     delete: 'Eliminar',
     save: 'Guardar',
@@ -291,6 +308,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     description: 'Descripción',
     date: 'Fecha',
     addTransaction: 'Agregar Transacción',
+    createFirstTransaction: 'Crea tu primera transacción',
     editTransaction: 'Editar Transacción',
     deleteTransaction: 'Eliminar Transacción',
     confirmDelete: '¿Estás seguro?',
@@ -311,6 +329,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     selectACategory: 'Selecciona una ategoría',
     createNewCategory: 'Crear nueva categoría',
     optionalDetails: 'Detalles opcionales...',
+    noTransactionsWithFilters: 'No se encontraron transacciones con los filtros aplicados',
 
     // Filters
     filters: 'Filtros',
@@ -340,19 +359,32 @@ export const i18nStrings: Record<Language, I18nStrings> = {
 
     // Savings Goals
     savingsGoal: 'Meta de Ahorro',
-    newSavingsGoal: 'Nueva Meta de Ahorro',
-    targetAmount: 'Monto Objetivo',
+    newSavingsGoal: 'Nueva Meta',
+    targetAmount: 'Objetivo',
     currentAmount: 'Monto Actual',
     deadline: 'Fecha Límite',
     progress: 'Progreso',
-    addProgress: 'Agregar Progreso',
+    addProgress: 'Añadir Progreso',
     goalName: 'Nombre de la Meta',
-    completed: 'Completado',
+    completed: 'Completadas',
     inProgress: 'En Progreso',
-    addGoal: 'Agregar Meta',
+    createNewGoal: 'Crear una nueva meta',
     editGoal: 'Editar Meta',
     goalDetails: 'Detalles de la Meta',
     noGoals: 'Sin metas de ahorro',
+    totalGoals: 'Metas Totales',
+    planAndAchieveYourFinancialGoals: 'Planifica y alcanza tus objetivos financieros',
+    notSavingsGoalSelected: 'Ninguna meta de ahorro seleccionada',
+    totalSaved: 'Total Ahorrado',
+    allSavingsGoals: 'Todas',
+    activeSavingsGoals: 'Activas',
+    completedSavingsGoals: 'Completadas',
+    daysRemaining: 'días',
+    oneDayRemaining: 'día',
+    goalDefeated: 'Meta vencida',
+    amountSaved: 'Ahorrado',
+    remainingAmount: 'Faltan',
+    amountToAdd: 'Cantidad a añadir',
 
     // AI Assistant
     askAssistant: 'Pregunta al Asistente',
@@ -409,6 +441,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     purchaseOf25EurosAtARestaurantYesterday:
       'Compra de 25 euros en un restaurante ayer',
     paymentOf80EurosInGasoline: 'Pago de 80 euros en gasolina',
+    exampleOfSavingGoal: 'Ej: Viaje a Japón',
 
     // Settings / Profile
     profile: 'Perfil',
@@ -466,6 +499,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
 
     // Common
     add: 'Add',
+    adding: 'Adding...',
     edit: 'Edit',
     delete: 'Delete',
     save: 'Save',
@@ -517,6 +551,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     description: 'Description',
     date: 'Date',
     addTransaction: 'Add Transaction',
+    createFirstTransaction: 'Create your first transaction',
     editTransaction: 'Edit Transaction',
     deleteTransaction: 'Delete Transaction',
     confirmDelete: 'Are you sure?',
@@ -537,6 +572,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     selectACategory: 'Select a Category',
     createNewCategory: 'Create New Category',
     optionalDetails: 'Optional Details...',
+    noTransactionsWithFilters: 'No transactions found with the applied filters',
 
     // Filters
     filters: 'Filters',
@@ -566,8 +602,8 @@ export const i18nStrings: Record<Language, I18nStrings> = {
 
     // Savings Goals
     savingsGoal: 'Savings Goal',
-    newSavingsGoal: 'New Savings Goal',
-    targetAmount: 'Target Amount',
+    newSavingsGoal: 'New Goal',
+    targetAmount: 'Target',
     currentAmount: 'Current Amount',
     deadline: 'Deadline',
     progress: 'Progress',
@@ -575,10 +611,23 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     goalName: 'Goal Name',
     completed: 'Completed',
     inProgress: 'In Progress',
-    addGoal: 'Add Goal',
+    createNewGoal: 'Create New Goal',
     editGoal: 'Edit Goal',
     goalDetails: 'Goal Details',
     noGoals: 'No savings goals',
+    totalGoals: 'Total Goals',
+    planAndAchieveYourFinancialGoals: 'Plan and achieve your financial goals',
+    notSavingsGoalSelected: 'No savings goal selected',
+    totalSaved: 'Total Saved',
+    allSavingsGoals: 'All',
+    activeSavingsGoals: 'Active',
+    completedSavingsGoals: 'Completed',
+    daysRemaining: 'days',
+    oneDayRemaining: 'day',
+    goalDefeated: 'Goal Defeated',
+    amountSaved: 'Saved',
+    remainingAmount: 'Remaining',
+    amountToAdd: 'Amount to add',
 
     // AI Assistant
     askAssistant: 'Ask Assistant',
@@ -636,6 +685,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     purchaseOf25EurosAtARestaurantYesterday:
       'Purchase of 25 euros at a restaurant yesterday',
     paymentOf80EurosInGasoline: 'Payment of 80 euros in gasoline',
+    exampleOfSavingGoal: 'Eg: Trip to Japan',
 
     // Settings / Profile
     profile: 'Profile',

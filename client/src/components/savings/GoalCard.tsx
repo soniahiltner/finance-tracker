@@ -6,6 +6,7 @@ import { formatCurrency } from '../../utils/formatters'
 import type { SavingsGoal } from '../../types'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateGoalCategory } from '../../constants/categoryTranslations'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface GoalCardProps {
   goal: SavingsGoal
@@ -16,6 +17,8 @@ interface GoalCardProps {
 
 const GoalCard = memo(
   ({ goal, onEdit, onDelete, onAddProgress }: GoalCardProps) => {
+
+    const { t } = useTranslation()
     const { language } = useLanguage()
     const handleDelete = () => {
       onDelete(goal._id)
@@ -80,8 +83,8 @@ const GoalCard = memo(
             <Calendar className='w-4 h-4 mr-1' />
             <span>
               {goal.daysRemaining > 0
-                ? `${goal.daysRemaining} días`
-                : 'Vencida'}
+                ? goal.daysRemaining > 1 ? `${goal.daysRemaining} ${t.daysRemaining}` : `${goal.daysRemaining} ${t.oneDayRemaining}`
+                : t.goalDefeated}
             </span>
           </div>
           <span className='text-gray-600 dark:text-gray-400'>
@@ -97,22 +100,22 @@ const GoalCard = memo(
             <button
               onClick={() => onAddProgress(goal)}
               className='flex-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg text-sm font-medium hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors'
-              aria-label='añadir progreso'
+              aria-label={t.addProgress}
             >
-              Añadir Progreso
+              {t.addProgress}
             </button>
           )}
           <button
             onClick={() => onEdit(goal)}
             className='p-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors'
-            aria-label='editar'
+            aria-label={t.edit}
           >
             <Edit2 className='w-4 h-4' />
           </button>
           <button
             onClick={handleDelete}
             className='p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
-            aria-label='eliminar'
+            aria-label={t.delete}
           >
             <Trash2 className='w-4 h-4' />
           </button>

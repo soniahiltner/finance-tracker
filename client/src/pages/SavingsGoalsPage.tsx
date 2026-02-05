@@ -8,6 +8,7 @@ import GoalCard from '../components/savings/GoalCard'
 import GoalModal from '../components/savings/GoalModal'
 import ProgressModal from '../components/savings/ProgressModal'
 import ConfirmModal from '../components/ConfirmModal'
+import { useTranslation } from '../hooks/useTranslation'
 
 export default function SavingsGoalsPage() {
   const {
@@ -30,6 +31,8 @@ export default function SavingsGoalsPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [goalToDelete, setGoalToDelete] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+
+  const { t } = useTranslation()
 
   // Handlers
   const openModal = (goal?: SavingsGoal) => {
@@ -95,7 +98,7 @@ export default function SavingsGoalsPage() {
       }
       return result
     }
-    return { success: false, error: 'No hay meta seleccionada' }
+    return { success: false, error: t.notSavingsGoalSelected }
   }
 
   if (loading) {
@@ -111,10 +114,10 @@ export default function SavingsGoalsPage() {
       <div className='flex justify-between items-center'>
         <div>
           <h1 className='text-3xl font-bold mb-2 dark:text-gray-100'>
-            Metas de Ahorro
+            {t.savingsGoals}
           </h1>
           <p className='text-gray-600 dark:text-gray-400'>
-            Planifica y alcanza tus objetivos financieros
+            {t.planAndAchieveYourFinancialGoals}
           </p>
         </div>
         <button
@@ -122,7 +125,7 @@ export default function SavingsGoalsPage() {
           className='btn-primary'
         >
           <Target className='w-5 h-5 mr-2' />
-          Nueva Meta
+          {t.newSavingsGoal}
         </button>
       </div>
 
@@ -141,18 +144,18 @@ export default function SavingsGoalsPage() {
           <div className='col-span-full card text-center py-12'>
             <Target className='w-16 h-16 text-gray-400 mx-auto mb-4' />
             <p className='text-gray-500 dark:text-gray-400 mb-4'>
-              No hay metas{' '}
+              {t.noGoals}{' '}
               {filter !== 'all'
                 ? filter === 'active'
-                  ? 'activas'
-                  : 'completadas'
+                  ? t.activeSavingsGoals.toLowerCase()
+                  : t.completedSavingsGoals.toLowerCase()
                 : ''}
             </p>
             <button
               onClick={() => openModal()}
               className='text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
             >
-              Crear tu primera meta
+              {t.createNewGoal}
             </button>
           </div>
         ) : (

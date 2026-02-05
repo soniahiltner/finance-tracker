@@ -1,13 +1,18 @@
+import { useTranslation } from "../../hooks/useTranslation"
+
 interface GoalFiltersProps {
   filter: 'all' | 'active' | 'completed'
   onFilterChange: (filter: 'all' | 'active' | 'completed') => void
 }
 
 const GoalFilters = ({ filter, onFilterChange }: GoalFiltersProps) => {
+
+  const { t } = useTranslation()
+
   const filters = [
-    { value: 'all' as const, label: 'Todas' },
-    { value: 'active' as const, label: 'Activas' },
-    { value: 'completed' as const, label: 'Completadas' }
+    { value: 'all' as const, label: t.allSavingsGoals },
+    { value: 'active' as const, label: t.activeSavingsGoals },
+    { value: 'completed' as const, label: t.completedSavingsGoals }
   ]
 
   return (

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 import { formatCurrency } from '../../utils/formatters'
 import type { SavingsGoal } from '../../types'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface ProgressModalProps {
   isOpen: boolean
@@ -18,6 +19,8 @@ const ProgressModal = ({
 }: ProgressModalProps) => {
   const [amount, setAmount] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  const { t } = useTranslation()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,10 +42,10 @@ const ProgressModal = ({
 
   return (
     <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6'>
+      <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full max-xs:p-2 xs:p-4 sm:p-6'>
         <div className='flex items-center justify-between mb-6'>
           <h2 className='text-2xl font-bold dark:text-gray-100'>
-            Añadir Progreso
+            {t.addProgress}
           </h2>
           <button
             onClick={onClose}
@@ -56,14 +59,14 @@ const ProgressModal = ({
 
         <div className='mb-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg'>
           <p className='text-sm text-gray-600 dark:text-gray-400 mb-2'>
-            Meta: {goal.name}
+            {t.savingsGoal}: {goal.name}
           </p>
           <p className='text-lg font-bold dark:text-gray-100'>
             {formatCurrency(goal.currentAmount)} /{' '}
             {formatCurrency(goal.targetAmount)}
           </p>
           <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
-            Faltan {formatCurrency(goal.targetAmount - goal.currentAmount)}
+            {t.remainingAmount} {formatCurrency(goal.targetAmount - goal.currentAmount)}
           </p>
         </div>
 
@@ -76,7 +79,7 @@ const ProgressModal = ({
               htmlFor='progressAmount'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              Cantidad a añadir (€) *
+              {t.amountToAdd} (€) *
             </label>
             <input
               id='progressAmount'
@@ -99,14 +102,14 @@ const ProgressModal = ({
               className='flex-1 btn-secondary'
               disabled={submitting}
             >
-              Cancelar
+              {t.cancel}
             </button>
             <button
               type='submit'
               className='flex-1 btn-primary'
               disabled={submitting}
             >
-              {submitting ? 'Añadiendo...' : 'Añadir'}
+              {submitting ? t.adding : t.add}
             </button>
           </div>
         </form>

@@ -345,15 +345,11 @@ export const getTransactionsSummary = async (
     const totalIncome = totals.find((t) => t._id === 'income')?.total || 0
     const totalExpenses = totals.find((t) => t._id === 'expense')?.total || 0
 
-    // Agregar por mes (últimos 6 meses)
-    const sixMonthsAgo = new Date()
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
-
     const byMonth = await Transaction.aggregate([
       {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
-          date: { $gte: sixMonthsAgo }
+          ...dateFilter
         }
       },
       {

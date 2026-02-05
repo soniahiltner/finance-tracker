@@ -52,7 +52,14 @@ export const useTransactions = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
       queryClient.invalidateQueries({ queryKey: ['categories'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-summary'],
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-transactions'],
+        refetchType: 'active'
+      })
     }
   })
 
@@ -74,7 +81,14 @@ export const useTransactions = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
       queryClient.invalidateQueries({ queryKey: ['categories'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-summary'],
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-transactions'],
+        refetchType: 'active'
+      })
     }
   })
 
@@ -83,7 +97,14 @@ export const useTransactions = () => {
     mutationFn: (id: string) => transactionService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-summary'],
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['dashboard-transactions'],
+        refetchType: 'active'
+      })
     }
   })
 

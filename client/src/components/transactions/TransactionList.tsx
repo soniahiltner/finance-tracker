@@ -1,5 +1,6 @@
 import TransactionItem from './TransactionItem'
 import type { Transaction } from '../../types'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -16,6 +17,9 @@ const TransactionList = ({
   onDelete,
   onNewTransaction
 }: TransactionListProps) => {
+
+  const { t } = useTranslation()
+
   if (transactions.length === 0) {
     return (
       <div className='card'>
@@ -23,18 +27,18 @@ const TransactionList = ({
           {allTransactions.length === 0 ? (
             <>
               <p className='text-gray-500 dark:text-gray-400'>
-                No hay transacciones
+                {t.noTransactions}
               </p>
               <button
                 onClick={onNewTransaction}
                 className='mt-4 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
               >
-                Crear tu primera transacción
+                {t.createFirstTransaction}
               </button>
             </>
           ) : (
             <p className='text-gray-500 dark:text-gray-400'>
-              No se encontraron transacciones con los filtros aplicados
+              {t.noTransactionsWithFilters}
             </p>
           )}
         </div>

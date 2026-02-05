@@ -139,7 +139,7 @@ const TransactionModal = ({
 
   return (
     <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6'>
+      <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full max-xs:p-2 xs:p-4 sm:p-6'>
         <div className='flex items-center justify-between mb-6'>
           <h2 className='text-2xl font-bold dark:text-gray-100'>
             {transaction ? t.edit : t.new} {t.transaction}
@@ -377,11 +377,7 @@ const TransactionModal = ({
               className='flex-1 btn-primary'
               disabled={submitting}
             >
-              {submitting
-                ? t.saving
-                : transaction
-                  ? t.update
-                  : t.create}
+              {submitting ? t.saving : transaction ? t.update : t.create}
             </button>
           </div>
         </form>

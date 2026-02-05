@@ -4,6 +4,9 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { formatCurrency } from '../../utils/formatters'
 import type { Transaction } from '../../types'
+import { useTranslation } from '../../hooks/useTranslation'
+import { useLanguage } from '../../hooks/useLanguage'
+import { translateCategory } from '../../constants/categoryTranslations'
 
 interface TransactionItemProps {
   transaction: Transaction
@@ -13,6 +16,10 @@ interface TransactionItemProps {
 
 const TransactionItem = memo(
   ({ transaction, onEdit, onDelete }: TransactionItemProps) => {
+
+    const { t } = useTranslation()
+    const { language } = useLanguage()
+
     const handleDelete = () => {
       onDelete(transaction._id)
     }
@@ -39,10 +46,10 @@ const TransactionItem = memo(
           <div className='flex-1'>
             <div className='flex items-center space-x-2'>
               <span className='font-medium dark:text-gray-200'>
-                {transaction.category}
+                {translateCategory(transaction.category, language)}
               </span>
               <span className='text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'>
-                {transaction.type === 'income' ? 'Ingreso' : 'Gasto'}
+                {transaction.type === 'income' ? t.income : t.expense}
               </span>
             </div>
             {transaction.description && (
@@ -77,14 +84,14 @@ const TransactionItem = memo(
           <button
             onClick={() => onEdit(transaction)}
             className='p-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors'
-            aria-label='editar'
+            aria-label={t.edit}
           >
             <Edit2 className='w-4 h-4' />
           </button>
           <button
             onClick={handleDelete}
             className='p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
-            aria-label='eliminar'
+            aria-label={t.delete}
           >
             <Trash2 className='w-4 h-4' />
           </button>

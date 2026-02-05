@@ -5,6 +5,7 @@ import type { SavingsGoal } from '../../types'
 import { GOAL_CATEGORIES } from '../../constants/goalCategories'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateGoalCategory } from '../../constants/categoryTranslations'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface GoalModalProps {
   isOpen: boolean
@@ -23,6 +24,8 @@ interface GoalModalProps {
 
 const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
   const { language } = useLanguage()
+  const { t } = useTranslation()
+
   const getInitialFormData = () => {
     if (goal) {
       return {
@@ -71,7 +74,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
     if (result.success) {
       onClose()
     } else {
-      alert(result.error || 'Error al guardar')
+      alert(result.error || t.errorSaving)
     }
   }
 
@@ -79,15 +82,16 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
 
   return (
     <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto'>
+      <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full max-xs:p-2 xs:p-4 sm:p-6 max-h-[90vh] overflow-y-auto'>
         <div className='flex items-center justify-between mb-6'>
           <h2 className='text-2xl font-bold dark:text-gray-100'>
-            {goal ? 'Editar' : 'Nueva'} Meta
+            {goal ? t.edit : t.new} {t.savingsGoal}
           </h2>
           <button
             onClick={onClose}
             className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'
             disabled={submitting}
+            aria-label={t.close}
           >
             <X className='w-5 h-5 dark:text-gray-400' />
           </button>
@@ -102,7 +106,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
               htmlFor='name'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              Nombre *
+              {t.name} *
             </label>
             <input
               id='name'
@@ -112,7 +116,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
                 setFormData({ ...formData, name: e.target.value })
               }
               className='input-field'
-              placeholder='ej: Viaje a Japón'
+              placeholder={t.exampleOfSavingGoal}
               required
               disabled={submitting}
               autoComplete='off'
@@ -121,7 +125,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
 
           <div>
             <h3 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-              Categoría *
+              {t.category} *
             </h3>
             <div className='grid grid-cols-2 gap-2'>
               {GOAL_CATEGORIES.map((cat) => (
@@ -159,7 +163,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
                 htmlFor='targetAmount'
                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
-                Meta (€) *
+                {t.targetAmount} (€) *
               </label>
               <input
                 id='targetAmount'
@@ -180,7 +184,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
                 htmlFor='currentAmount'
                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
-                Ahorrado (€)
+                {t.amountSaved} (€)
               </label>
               <input
                 id='currentAmount'
@@ -204,7 +208,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
               htmlFor='deadline'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              Fecha límite *
+              {t.deadline} *
             </label>
             <input
               id='deadline'
@@ -227,14 +231,14 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
               className='flex-1 btn-secondary'
               disabled={submitting}
             >
-              Cancelar
+              {t.cancel}
             </button>
             <button
               type='submit'
               className='flex-1 btn-primary'
               disabled={submitting}
             >
-              {submitting ? 'Guardando...' : goal ? 'Actualizar' : 'Crear'}
+              {submitting ? t.saving : goal ? t.update : t.create}
             </button>
           </div>
         </form>
