@@ -1,5 +1,6 @@
 import { api } from '../config/api'
 import type { AIQueryResponse } from '../types'
+import type { Language } from '../context/LanguageContext'
 
 export interface ParsedTransaction {
   date: string
@@ -33,16 +34,35 @@ export interface VoiceTransactionResponse {
 }
 
 export const aiService = {
-  async query(query: string): Promise<AIQueryResponse> {
-    const response = await api.post<AIQueryResponse>('/ai/query', { query })
+  async query(query: string, language?: Language): Promise<AIQueryResponse> {
+    const response = await api.post<AIQueryResponse>(
+      '/ai/query',
+      { query },
+      {
+        headers: language ? { 'X-Language': language } : undefined
+      }
+    )
     return response.data
   },
 
-  async getSuggestions(): Promise<string[]> {
+  async getSuggestions(language?: Language): Promise<string[]> {
     const response = await api.get<{ success: boolean; suggestions: string[] }>(
-      '/ai/suggestions'
+      '/ai/suggestions',
+      {
+        headers: language ? { 'X-Language': language } : undefined
+      }
     )
     return response.data.suggestions
+  },
+
+  async getWelcomeMessage(language?: Language): Promise<string> {
+    const response = await api.get<{ success: boolean; message: string }>(
+      '/ai/welcome',
+      {
+        headers: language ? { 'X-Language': language } : undefined
+      }
+    )
+    return response.data.message
   },
 
   async importDocument(file: File): Promise<ImportDocumentResponse> {

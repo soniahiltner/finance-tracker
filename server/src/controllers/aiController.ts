@@ -11,6 +11,89 @@ import { defaultCategories } from '../config/defaultCategories.js'
 // Función helper para obtener instancia del servicio
 const getClaudeService = () => new ClaudeService()
 
+type Language = 'es' | 'en'
+
+const getRequestLanguage = (req: AuthRequest): Language => {
+  const queryLanguage =
+    typeof req.query.lang === 'string' ? req.query.lang : undefined
+  const headerLanguage =
+    req.headers['x-language'] ?? req.headers['accept-language']
+  const rawLanguage =
+    queryLanguage ||
+    (Array.isArray(headerLanguage) ? headerLanguage[0] : headerLanguage)
+
+  if (!rawLanguage) {
+    return 'es'
+  }
+
+  const normalized = rawLanguage.toLowerCase()
+  if (normalized.startsWith('en')) {
+    return 'en'
+  }
+
+  if (normalized.startsWith('es')) {
+    return 'es'
+  }
+
+  return 'es'
+}
+
+const detectQueryLanguage = (query: string, fallback: Language): Language => {
+  const lower = query.toLowerCase()
+
+  if (/[áéíóúñ¿¡]/.test(lower)) {
+    return 'es'
+  }
+
+  const spanishWords = [
+    'que',
+    'como',
+    'cuanto',
+    'gaste',
+    'gasto',
+    'ingrese',
+    'ingreso',
+    'ingresos',
+    'mes',
+    'categoria',
+    'resumen',
+    'finanzas'
+  ]
+
+  const englishWords = [
+    'what',
+    'how',
+    'much',
+    'spent',
+    'spend',
+    'month',
+    'category',
+    'summary',
+    'finance',
+    'expenses',
+    'income'
+  ]
+
+  const countMatches = (words: string[]) =>
+    words.reduce((count, word) => {
+      const matcher = new RegExp(`\\b${word}\\b`, 'i')
+      return count + (matcher.test(lower) ? 1 : 0)
+    }, 0)
+
+  const spanishScore = countMatches(spanishWords)
+  const englishScore = countMatches(englishWords)
+
+  if (englishScore > spanishScore) {
+    return 'en'
+  }
+
+  if (spanishScore > englishScore) {
+    return 'es'
+  }
+
+  return fallback
+}
+
 // @desc    Consultar al asistente de IA
 // @route   POST /api/ai/query
 // @access  Private
@@ -23,6 +106,8 @@ export const queryAI = async (
     const { query } = req.body as AIQueryRequest
     const userId = req.user!.id
     const claudeService = getClaudeService()
+    const requestLanguage = getRequestLanguage(req)
+    const queryLanguage = detectQueryLanguage(query, requestLanguage)
 
     // Validar query
     if (!query || query.trim().length === 0) {
@@ -40,7 +125,7 @@ export const queryAI = async (
     }
 
     // Obtener respuesta de Claude
-    const answer = await claudeService.query(userId, query)
+    const answer = await claudeService.query(userId, query, queryLanguage)
 
     res.status(200).json({
       success: true,
@@ -81,7 +166,11 @@ export const getSuggestions = async (
   try {
     const userId = req.user!.id
     const claudeService = getClaudeService()
-    const suggestions = await claudeService.generateSuggestedQuestions(userId)
+    const language = getRequestLanguage(req)
+    const suggestions = await claudeService.generateSuggestedQuestions(
+      userId,
+      language
+    )
 
     res.status(200).json({
       success: true,
@@ -89,6 +178,31 @@ export const getSuggestions = async (
     })
   } catch (error) {
     console.error('GetSuggestions error:', error)
+    next(error)
+  }
+}
+
+// @desc    Obtener mensaje de bienvenida del asistente
+// @route   GET /api/ai/welcome
+// @access  Private
+export const getWelcomeMessage = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const language = getRequestLanguage(req)
+    const welcomeMessages: Record<Language, string> = {
+      es: '¡Hola! Soy tu asistente financiero personal. Puedo ayudarte a analizar tus gastos, identificar patrones y darte consejos para mejorar tus finanzas. ¿En qué puedo ayudarte hoy?',
+      en: 'Hi! I am your personal financial assistant. I can help you analyze your expenses, identify patterns, and give you advice to improve your finances. How can I assist you today?'
+    }
+
+    res.status(200).json({
+      success: true,
+      message: welcomeMessages[language]
+    })
+  } catch (error) {
+    console.error('GetWelcomeMessage error:', error)
     next(error)
   }
 }

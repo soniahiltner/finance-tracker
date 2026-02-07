@@ -1,18 +1,21 @@
 import React from 'react'
-
-const EXAMPLES = [
-  '¿Cuál es mi balance actual?',
-  '¿En qué categoría gasto más dinero?',
-  'Dame consejos para ahorrar basándote en mis datos',
-  '¿Cuánto gasté en restaurantes este mes?',
-  'Compara mis gastos de este mes con el anterior'
-]
+import { useTranslation } from '../../hooks/useTranslation'
 
 export const ExamplesCard = React.memo(() => {
+  const { t } = useTranslation()
+
+  const EXAMPLES = [
+    t.exampleQuestion1,
+    t.exampleQuestion2,
+    t.exampleQuestion3,
+    t.exampleQuestion4,
+    t.exampleQuestion5
+  ]
+
   return (
     <div className='card bg-gray-50 dark:bg-gray-800/50'>
       <h2 className='font-semibold text-gray-900 dark:text-gray-100 mb-3'>
-        Ejemplos de preguntas:
+        {t.examplesOfQuestions}
       </h2>
       <ul className='space-y-2 text-sm text-gray-700 dark:text-gray-300'>
         {EXAMPLES.map((example, index) => (

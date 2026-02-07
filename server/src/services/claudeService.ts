@@ -1,6 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { Transaction, Category } from '../models/index.js'
 
+type Language = 'es' | 'en'
+
 interface ConversationMessage {
   role: 'user' | 'assistant'
   content: string
@@ -25,8 +27,9 @@ export class ClaudeService {
   /**
    * Formatea un número como moneda
    */
-  private formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('es-ES', {
+  private formatCurrency(amount: number, language: Language): string {
+    const locale = language === 'en' ? 'en-US' : 'es-ES'
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'EUR'
     }).format(amount)
@@ -35,8 +38,9 @@ export class ClaudeService {
   /**
    * Formatea una fecha
    */
-  private formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('es-ES', {
+  private formatDate(date: Date, language: Language): string {
+    const locale = language === 'en' ? 'en-US' : 'es-ES'
+    return new Intl.DateTimeFormat(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -46,7 +50,10 @@ export class ClaudeService {
   /**
    * Construye el contexto financiero del usuario
    */
-  private async buildFinancialContext(userId: string): Promise<string> {
+  private async buildFinancialContext(
+    userId: string,
+    language: Language
+  ): Promise<string> {
     // Obtener todas las transacciones del usuario
     const transactions = await Transaction.find({ userId })
       .sort({ date: -1 })
@@ -82,45 +89,89 @@ export class ClaudeService {
     const topExpenses = Object.entries(expensesByCategory)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
-      .map(([cat, amount]) => `${cat}: ${this.formatCurrency(amount)}`)
+      .map(
+        ([cat, amount]) => `${cat}: ${this.formatCurrency(amount, language)}`
+      )
       .join(', ')
 
     // Transacciones recientes (últimas 10)
     const recentTransactions = transactions.slice(0, 10).map((t) => ({
-      date: this.formatDate(new Date(t.date)),
-      type: t.type === 'income' ? 'Ingreso' : 'Gasto',
-      amount: this.formatCurrency(t.amount),
+      date: this.formatDate(new Date(t.date), language),
+      type:
+        t.type === 'income'
+          ? language === 'en'
+            ? 'Income'
+            : 'Ingreso'
+          : language === 'en'
+            ? 'Expense'
+            : 'Gasto',
+      amount: this.formatCurrency(t.amount, language),
       category: t.category,
       description: t.description
     }))
 
+    const contextStrings = {
+      es: {
+        header: 'INFORMACION FINANCIERA DEL USUARIO:',
+        summary: 'RESUMEN GENERAL:',
+        totalIncome: 'Total de ingresos',
+        totalExpenses: 'Total de gastos',
+        balance: 'Balance actual',
+        transactions: 'Numero de transacciones',
+        topExpenses: 'TOP 5 CATEGORIAS DE GASTO:',
+        noExpenses: 'No hay gastos registrados',
+        categories: 'CATEGORIAS DISPONIBLES:',
+        income: 'Ingresos',
+        expenses: 'Gastos',
+        recent: 'TRANSACCIONES RECIENTES (ultimas 10):',
+        all: 'TODAS LAS TRANSACCIONES (para analisis detallado):'
+      },
+      en: {
+        header: 'USER FINANCIAL INFORMATION:',
+        summary: 'GENERAL SUMMARY:',
+        totalIncome: 'Total income',
+        totalExpenses: 'Total expenses',
+        balance: 'Current balance',
+        transactions: 'Number of transactions',
+        topExpenses: 'TOP 5 SPENDING CATEGORIES:',
+        noExpenses: 'No expenses recorded',
+        categories: 'AVAILABLE CATEGORIES:',
+        income: 'Income',
+        expenses: 'Expenses',
+        recent: 'RECENT TRANSACTIONS (last 10):',
+        all: 'ALL TRANSACTIONS (for detailed analysis):'
+      }
+    } as const
+
+    const strings = contextStrings[language]
+
     // Construir contexto
     const context = `
-INFORMACIÓN FINANCIERA DEL USUARIO:
+${strings.header}
 
-RESUMEN GENERAL:
-- Total de ingresos: ${this.formatCurrency(totalIncome)}
-- Total de gastos: ${this.formatCurrency(totalExpenses)}
-- Balance actual: ${this.formatCurrency(balance)}
-- Número de transacciones: ${transactions.length}
+${strings.summary}
+- ${strings.totalIncome}: ${this.formatCurrency(totalIncome, language)}
+- ${strings.totalExpenses}: ${this.formatCurrency(totalExpenses, language)}
+- ${strings.balance}: ${this.formatCurrency(balance, language)}
+- ${strings.transactions}: ${transactions.length}
 
-TOP 5 CATEGORÍAS DE GASTO:
-${topExpenses || 'No hay gastos registrados'}
+${strings.topExpenses}
+${topExpenses || strings.noExpenses}
 
-CATEGORÍAS DISPONIBLES:
-Ingresos: ${categories
+${strings.categories}
+${strings.income}: ${categories
       .filter((c) => c.type === 'income')
       .map((c) => c.name)
       .join(', ')}
-Gastos: ${categories
+${strings.expenses}: ${categories
       .filter((c) => c.type === 'expense')
       .map((c) => c.name)
       .join(', ')}
 
-TRANSACCIONES RECIENTES (últimas 10):
+${strings.recent}
 ${JSON.stringify(recentTransactions, null, 2)}
 
-TODAS LAS TRANSACCIONES (para análisis detallado):
+${strings.all}
 ${JSON.stringify(
   transactions.map((t) => ({
     date: t.date,
@@ -143,14 +194,18 @@ ${JSON.stringify(
   async query(
     userId: string,
     userQuery: string,
+    language: Language = 'es',
     conversationHistory: ConversationMessage[] = []
   ): Promise<string> {
     try {
       // Construir contexto financiero
-      const financialContext = await this.buildFinancialContext(userId)
+      const financialContext = await this.buildFinancialContext(
+        userId,
+        language
+      )
 
       // Sistema prompt
-      const systemPrompt = `Eres un asistente financiero personal inteligente y amigable. Tu trabajo es ayudar al usuario a entender y gestionar mejor sus finanzas personales.
+      const systemPrompt = `You are a smart, friendly personal finance assistant. Your job is to help the user understand and manage their personal finances.
 
 ${financialContext}
 
@@ -160,7 +215,7 @@ INSTRUCCIONES:
 3. Proporciona insights útiles y recomendaciones prácticas
 4. Si el usuario pregunta sobre un período específico, filtra los datos según las fechas
 5. Sé conciso pero informativo
-6. Habla en español de forma natural y cercana
+    6. Responde en el mismo idioma que el usuario utilice en su pregunta
 7. Si no tienes suficiente información para responder, dilo claramente
 8. Puedes hacer cálculos, comparaciones y análisis de tendencias
 9. Sugiere formas de ahorrar o mejorar la gestión financiera cuando sea apropiado
@@ -219,30 +274,53 @@ EJEMPLOS DE PREGUNTAS QUE PUEDES RESPONDER:
   /**
    * Genera sugerencias de preguntas basadas en los datos del usuario
    */
-  async generateSuggestedQuestions(userId: string): Promise<string[]> {
+  async generateSuggestedQuestions(
+    userId: string,
+    language: Language = 'es'
+  ): Promise<string[]> {
     const transactions = await Transaction.find({ userId }).lean()
 
-    const suggestions: string[] = [
-      '¿Cuál es mi balance actual?',
-      'Dame un resumen de mis finanzas'
-    ]
+    const suggestionStrings = {
+      es: {
+        balance: '¿Cuál es mi balance actual?',
+        summary: 'Dame un resumen de mis finanzas',
+        topCategory: '¿Cuál es mi categoría de mayor gasto?',
+        reduceExpenses: '¿Cómo puedo reducir mis gastos?',
+        spentThisMonth: '¿Cuánto gasté este mes?',
+        incomeThisMonth: '¿Cuánto ingresé este mes?',
+        compareMonth: 'Compara mis gastos de este mes con el anterior'
+      },
+      en: {
+        balance: 'What is my current balance?',
+        summary: 'Give me a summary of my finances',
+        topCategory: 'What is my highest spending category?',
+        reduceExpenses: 'How can I reduce my expenses?',
+        spentThisMonth: 'How much did I spend this month?',
+        incomeThisMonth: 'How much did I earn this month?',
+        compareMonth: 'Compare my spending this month with last month'
+      }
+    } as const
+
+    const strings = suggestionStrings[language]
+
+    const suggestions: string[] = [strings.balance, strings.summary]
 
     if (transactions.length > 0) {
-      suggestions.push('¿Cuál es mi categoría de mayor gasto?')
+      suggestions.push(strings.topCategory)
 
       const hasExpenses = transactions.some((t) => t.type === 'expense')
       if (hasExpenses) {
-        suggestions.push('¿Cómo puedo reducir mis gastos?')
-        suggestions.push('¿Cuánto gasté este mes?')
+        suggestions.push(strings.reduceExpenses)
+        suggestions.push(strings.spentThisMonth)
       }
 
       const hasIncome = transactions.some((t) => t.type === 'income')
       if (hasIncome) {
-        suggestions.push('¿Cuánto ingresé este mes?')
+        suggestions.push(strings.incomeThisMonth)
       }
 
       if (transactions.length > 30) {
-        suggestions.push('Compara mis gastos de este mes con el anterior')
+        suggestions.push(strings.compareMonth)
       }
     }
 

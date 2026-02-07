@@ -2,6 +2,7 @@ import express from 'express'
 import {
   queryAI,
   getSuggestions,
+  getWelcomeMessage,
   importDocument,
   processVoiceTransaction
 } from '../controllers/aiController.js'
@@ -17,6 +18,7 @@ router.use(protect)
 
 router.post('/query', validate(aiChatSchema), queryAI)
 router.get('/suggestions', getSuggestions)
+router.get('/welcome', getWelcomeMessage)
 router.post(
   '/import-document',
   upload.single('file'),

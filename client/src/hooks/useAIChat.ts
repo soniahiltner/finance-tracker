@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { aiService } from '../services/aiService'
+import { useLanguage } from './useLanguage'
 
 export interface Message {
   id: string
@@ -17,29 +18,44 @@ interface ErrorResponse {
   }
 }
 
-const WELCOME_MESSAGE: Message = {
-  id: '1',
-  role: 'assistant',
-  content:
-    '¡Hola! Soy tu asistente financiero personal. Puedo ayudarte a analizar tus gastos, identificar patrones y darte consejos para mejorar tus finanzas. ¿En qué puedo ayudarte hoy?',
-  timestamp: new Date()
-}
-
 export const useAIChat = () => {
-  const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE])
+  const { language } = useLanguage()
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  const { data: welcomeMessage } = useQuery<string>({
+    queryKey: ['ai-welcome', language],
+    queryFn: () => aiService.getWelcomeMessage(language),
+    staleTime: 1000 * 60 * 60 // 1 hora
+  })
+
+  const displayMessages = useMemo<Message[]>(() => {
+    if (!welcomeMessage) {
+      return messages
+    }
+
+    return [
+      {
+        id: 'welcome',
+        role: 'assistant',
+        content: welcomeMessage,
+        timestamp: new Date()
+      },
+      ...messages
+    ]
+  }, [messages, welcomeMessage])
+
   // Query para sugerencias
   const { data: suggestions = [] } = useQuery<string[]>({
-    queryKey: ['ai-suggestions'],
-    queryFn: () => aiService.getSuggestions(),
+    queryKey: ['ai-suggestions', language],
+    queryFn: () => aiService.getSuggestions(language),
     staleTime: 1000 * 60 * 30 // 30 minutos
   })
 
   // Mutation para queries al AI
   const queryMutation = useMutation({
-    mutationFn: (query: string) => aiService.query(query)
+    mutationFn: (query: string) => aiService.query(query, language)
   })
 
   const scrollToBottom = () => {
@@ -48,11 +64,11 @@ export const useAIChat = () => {
 
   useEffect(() => {
     // Solo hacer scroll cuando la conversación ha comenzado (más de 1 mensaje)
-    if (messages.length > 1) {
+    if (displayMessages.length > 1) {
       scrollToBottom()
     }
-  }, [messages])
-  
+  }, [displayMessages.length])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || queryMutation.isPending) return
@@ -98,7 +114,7 @@ export const useAIChat = () => {
   }
 
   return {
-    messages,
+    messages: displayMessages,
     input,
     setInput,
     loading: queryMutation.isPending,

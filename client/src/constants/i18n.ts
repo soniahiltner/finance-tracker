@@ -174,6 +174,18 @@ export interface I18nStrings {
   askMeAboutYourFinances: string
   writeYourQuestion: string
   characters: string
+  analysis: string
+  analysisDescription: string
+  comparisons: string
+  comparisonsDescription: string
+  advice: string
+  adviceDescription: string
+  examplesOfQuestions: string
+  exampleQuestion1: string
+  exampleQuestion2: string
+  exampleQuestion3: string
+  exampleQuestion4: string
+  exampleQuestion5: string
 
   // Auth
   login: string
@@ -353,11 +365,14 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     selectACategory: 'Selecciona una ategoría',
     createNewCategory: 'Crear nueva categoría',
     optionalDetails: 'Detalles opcionales...',
-    noTransactionsWithFilters: 'No se encontraron transacciones con los filtros aplicados',
+    noTransactionsWithFilters:
+      'No se encontraron transacciones con los filtros aplicados',
     otherExpenses: 'Otros gastos',
     otherIncome: 'Otros ingresos',
-    dragFileHereOrClickToSelect: 'Arrastra el archivo aquí o haz clic para seleccionar',
-    allowedFormats: 'Formatos permitidos: PDF, Excel (.xlsx, .xls), CSV, imágenes',
+    dragFileHereOrClickToSelect:
+      'Arrastra el archivo aquí o haz clic para seleccionar',
+    allowedFormats:
+      'Formatos permitidos: PDF, Excel (.xlsx, .xls), CSV, imágenes',
     images: 'imágenes (JPG, PNG, WEBP, GIF)',
     maximumFileSize: 'Tamaño máximo: 10 MB',
     processingDocument: 'Procesando documento...',
@@ -408,7 +423,8 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     goalDetails: 'Detalles de la Meta',
     noGoals: 'Sin metas de ahorro',
     totalGoals: 'Metas Totales',
-    planAndAchieveYourFinancialGoals: 'Planifica y alcanza tus objetivos financieros',
+    planAndAchieveYourFinancialGoals:
+      'Planifica y alcanza tus objetivos financieros',
     notSavingsGoalSelected: 'Ninguna meta de ahorro seleccionada',
     totalSaved: 'Total Ahorrado',
     allSavingsGoals: 'Todas',
@@ -422,7 +438,8 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     amountToAdd: 'Cantidad a añadir',
 
     // AI Assistant
-    HiImYourAIAssistant: '¡Hola! Soy tu asistente financiero personal. Puedo ayudarte a analizar tus gastos, identificar patrones y darte consejos para mejorar tus finanzas. ¿En qué puedo ayudarte hoy?',
+    HiImYourAIAssistant:
+      '¡Hola! Soy tu asistente financiero personal. Puedo ayudarte a analizar tus gastos, identificar patrones y darte consejos para mejorar tus finanzas. ¿En qué puedo ayudarte hoy?',
     askAssistant: 'Pregunta al Asistente',
     yourQuestion: 'Tu Pregunta',
     send: 'Enviar',
@@ -435,6 +452,21 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     askMeAboutYourFinances: 'Pregúntame sobre tus finanzas',
     writeYourQuestion: 'Escribe tu pregunta...',
     characters: 'caracteres',
+    analysis: 'Análisis',
+    analysisDescription:
+      'Pregunta sobre tus gastos, ingresos y balance para obtener insights detallados.',
+    comparisons: 'Comparaciones',
+    comparisonsDescription:
+      'Compara tus finanzas entre diferentes períodos y categorías.',
+    advice: 'Consejos',
+    adviceDescription:
+      'Recibe recomendaciones personalizadas para mejorar tu situación financiera.',
+    examplesOfQuestions: 'Ejemplos de preguntas:',
+    exampleQuestion1: '¿Cuál es mi balance actual?',
+    exampleQuestion2: '¿En qué categoría gasto más dinero?',
+    exampleQuestion3: 'Dame consejos para ahorrar basándote en mis datos',
+    exampleQuestion4: '¿Cuánto gasté en restaurantes este mes?',
+    exampleQuestion5: 'Compara mis gastos de este mes con el anterior',
 
     // Auth
     login: 'Iniciar Sesión',
@@ -527,8 +559,10 @@ export const i18nStrings: Record<Language, I18nStrings> = {
       'Por favor, utiliza PDF, Excel, CSV o imágenes (JPG, PNG, WEBP, GIF)',
     fileTooLarge: 'El archivo es demasiado grande. Tamaño máximo: 10 MB',
     errorProcessing: 'Error al procesar el documento. Intente nuevamente.',
-    selectOneTransactionToImport: 'Seleccione al menos una transacción para importar',
-    errorImportingTransactions: 'Error al importar transacciones. Intente nuevamente.',
+    selectOneTransactionToImport:
+      'Seleccione al menos una transacción para importar',
+    errorImportingTransactions:
+      'Error al importar transacciones. Intente nuevamente.',
     transactionsImportedSuccessfully: 'Transacciones importadas exitosamente!'
   },
 
@@ -687,7 +721,8 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     amountToAdd: 'Amount to add',
 
     // AI Assistant
-    HiImYourAIAssistant: 'Hi! I am your personal financial assistant. I can help you analyze your expenses, identify patterns, and give you advice to improve your finances. How can I assist you today?',
+    HiImYourAIAssistant:
+      'Hi! I am your personal financial assistant. I can help you analyze your expenses, identify patterns, and give you advice to improve your finances. How can I assist you today?',
     askAssistant: 'Ask Assistant',
     yourQuestion: 'Your Question',
     send: 'Send',
@@ -700,6 +735,21 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     askMeAboutYourFinances: 'Ask me about your finances',
     writeYourQuestion: 'Write your question...',
     characters: 'characters',
+    analysis: 'Analysis',
+    analysisDescription:
+      'Ask about your expenses, income and balance to get detailed insights.',
+    comparisons: 'Comparisons',
+    comparisonsDescription:
+      'Compare your finances across different periods and categories.',
+    advice: 'Advice',
+    adviceDescription:
+      'Get personalized recommendations to improve your financial situation.',
+    examplesOfQuestions: 'Example questions:',
+    exampleQuestion1: 'What is my current balance?',
+    exampleQuestion2: 'Which category do I spend the most on?',
+    exampleQuestion3: 'Give me tips to save based on my data',
+    exampleQuestion4: 'How much did I spend on restaurants this month?',
+    exampleQuestion5: 'Compare my spending this month with last month',
 
     // Auth
     login: 'Login',
@@ -793,8 +843,10 @@ export const i18nStrings: Record<Language, I18nStrings> = {
       'Please use PDF, Excel, CSV, or images (JPG, PNG, WEBP, GIF)',
     fileTooLarge: 'The file is too large. Maximum size: 10 MB',
     errorProcessing: 'Error processing the document. Please try again.',
-    selectOneTransactionToImport: 'Please select at least one transaction to import',
-    errorImportingTransactions: 'Error importing transactions. Please try again.',
+    selectOneTransactionToImport:
+      'Please select at least one transaction to import',
+    errorImportingTransactions:
+      'Error importing transactions. Please try again.',
     transactionsImportedSuccessfully: 'Transactions imported successfully!'
   }
 }
