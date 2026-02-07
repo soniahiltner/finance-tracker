@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { aiService } from '../services/aiService'
+import type { ConversationMessage } from '../types'
 import { useLanguage } from './useLanguage'
 
 export interface Message {
@@ -17,6 +18,13 @@ interface ErrorResponse {
     }
   }
 }
+
+interface AIQueryPayload {
+  query: string
+  conversationHistory: ConversationMessage[]
+}
+
+const MAX_HISTORY = 10
 
 export const useAIChat = () => {
   const { language } = useLanguage()
@@ -55,7 +63,8 @@ export const useAIChat = () => {
 
   // Mutation para queries al AI
   const queryMutation = useMutation({
-    mutationFn: (query: string) => aiService.query(query, language)
+    mutationFn: ({ query, conversationHistory }: AIQueryPayload) =>
+      aiService.query(query, language, conversationHistory)
   })
 
   const scrollToBottom = () => {
@@ -80,12 +89,20 @@ export const useAIChat = () => {
       timestamp: new Date()
     }
 
-    setMessages((prev) => [...prev, userMessage])
     const queryText = input.trim()
+    const conversationHistory = messages.slice(-MAX_HISTORY).map((message) => ({
+      role: message.role,
+      content: message.content
+    }))
+
+    setMessages((prev) => [...prev, userMessage])
     setInput('')
 
     try {
-      const response = await queryMutation.mutateAsync(queryText)
+      const response = await queryMutation.mutateAsync({
+        query: queryText,
+        conversationHistory
+      })
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -113,6 +130,11 @@ export const useAIChat = () => {
     setInput(suggestion)
   }
 
+  const resetChat = () => {
+    setMessages([])
+    setInput('')
+  }
+
   return {
     messages: displayMessages,
     input,
@@ -121,6 +143,7 @@ export const useAIChat = () => {
     suggestions,
     messagesEndRef,
     handleSubmit,
-    handleSuggestionClick
+    handleSuggestionClick,
+    resetChat
   }
 }

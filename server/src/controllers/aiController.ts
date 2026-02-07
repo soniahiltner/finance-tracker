@@ -103,7 +103,7 @@ export const queryAI = async (
   next: NextFunction
 ) => {
   try {
-    const { query } = req.body as AIQueryRequest
+    const { query, conversationHistory } = req.body as AIQueryRequest
     const userId = req.user!.id
     const claudeService = getClaudeService()
     const requestLanguage = getRequestLanguage(req)
@@ -124,8 +124,17 @@ export const queryAI = async (
       })
     }
 
+    const safeHistory = Array.isArray(conversationHistory)
+      ? conversationHistory.slice(-10)
+      : []
+
     // Obtener respuesta de Claude
-    const answer = await claudeService.query(userId, query, queryLanguage)
+    const answer = await claudeService.query(
+      userId,
+      query,
+      queryLanguage,
+      safeHistory
+    )
 
     res.status(200).json({
       success: true,

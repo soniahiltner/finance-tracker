@@ -172,6 +172,7 @@ export interface I18nStrings {
   selectFile: string
   upload: string
   askMeAboutYourFinances: string
+  resetChat: string
   writeYourQuestion: string
   characters: string
   analysis: string
@@ -450,6 +451,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     selectFile: 'Seleccionar Archivo',
     upload: 'Subir',
     askMeAboutYourFinances: 'Pregúntame sobre tus finanzas',
+    resetChat: 'Reiniciar chat',
     writeYourQuestion: 'Escribe tu pregunta...',
     characters: 'caracteres',
     analysis: 'Análisis',
@@ -733,6 +735,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     selectFile: 'Select File',
     upload: 'Upload',
     askMeAboutYourFinances: 'Ask me about your finances',
+    resetChat: 'Reset chat',
     writeYourQuestion: 'Write your question...',
     characters: 'characters',
     analysis: 'Analysis',

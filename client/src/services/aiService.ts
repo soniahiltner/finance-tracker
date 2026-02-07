@@ -1,5 +1,5 @@
 import { api } from '../config/api'
-import type { AIQueryResponse } from '../types'
+import type { AIQueryResponse, ConversationMessage } from '../types'
 import type { Language } from '../context/LanguageContext'
 
 export interface ParsedTransaction {
@@ -34,10 +34,14 @@ export interface VoiceTransactionResponse {
 }
 
 export const aiService = {
-  async query(query: string, language?: Language): Promise<AIQueryResponse> {
+  async query(
+    query: string,
+    language?: Language,
+    conversationHistory?: ConversationMessage[]
+  ): Promise<AIQueryResponse> {
     const response = await api.post<AIQueryResponse>(
       '/ai/query',
-      { query },
+      { query, conversationHistory },
       {
         headers: language ? { 'X-Language': language } : undefined
       }

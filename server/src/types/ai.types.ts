@@ -1,5 +1,6 @@
 export interface AIQueryRequest {
   query: string
+  conversationHistory?: ConversationMessage[]
 }
 
 export interface AIQueryResponse {

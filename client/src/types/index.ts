@@ -59,6 +59,11 @@ export interface AIQueryResponse {
   timestamp: string
 }
 
+export interface ConversationMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
 export interface SavingsGoal {
   _id: string
   userId: string

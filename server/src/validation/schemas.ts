@@ -179,7 +179,19 @@ export const aiChatSchema = z.object({
     query: z
       .string()
       .min(1, 'La consulta no puede estar vacía')
-      .max(500, 'La consulta es demasiado larga')
+      .max(500, 'La consulta es demasiado larga'),
+    conversationHistory: z
+      .array(
+        z.object({
+          role: z.enum(['user', 'assistant']),
+          content: z
+            .string()
+            .min(1, 'El mensaje no puede estar vacío')
+            .max(1000, 'El mensaje es demasiado largo')
+        })
+      )
+      .max(10, 'El historial es demasiado largo')
+      .optional()
   })
 })
 
@@ -233,9 +245,11 @@ export const updateProfileSchema = z.object({
       .max(100, 'El nombre es demasiado largo')
       .optional(),
     email: z.email('Email inválido').optional(),
-    language: z.enum(['es', 'en'], {
-      message: 'El idioma debe ser es o en'
-    }).optional()
+    language: z
+      .enum(['es', 'en'], {
+        message: 'El idioma debe ser es o en'
+      })
+      .optional()
   })
 })
 
