@@ -6,6 +6,7 @@ import { SuggestionChips } from '../components/ai-assistant/SuggestionChips'
 import { LoadingIndicator } from '../components/ai-assistant/LoadingIndicator'
 import { InfoCards } from '../components/ai-assistant/InfoCards'
 import { ExamplesCard } from '../components/ai-assistant/ExamplesCard'
+import { useTranslation } from '../hooks/useTranslation'
 
 const AIAssistantPage = () => {
   const {
@@ -19,6 +20,8 @@ const AIAssistantPage = () => {
     handleSuggestionClick
   } = useAIChat()
 
+  const { t } = useTranslation()
+
   return (
     <div className='space-y-6'>
       {/* Header */}
@@ -28,10 +31,10 @@ const AIAssistantPage = () => {
         </div>
         <div>
           <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
-            Asistente IA
+            {t.aiAssistant}
           </h1>
           <p className='text-gray-600 dark:text-gray-400'>
-            Pregúntame sobre tus finanzas
+            {t.askMeAboutYourFinances}
           </p>
         </div>
       </div>

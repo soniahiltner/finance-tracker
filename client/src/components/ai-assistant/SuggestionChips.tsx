@@ -1,5 +1,6 @@
 import React from 'react'
 import { Sparkles } from 'lucide-react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface SuggestionChipsProps {
   suggestions: string[]
@@ -8,6 +9,9 @@ interface SuggestionChipsProps {
 
 export const SuggestionChips = React.memo(
   ({ suggestions, onSuggestionClick }: SuggestionChipsProps) => {
+    
+    const { t } = useTranslation()
+
     if (suggestions.length === 0) return null
 
     return (
@@ -15,7 +19,7 @@ export const SuggestionChips = React.memo(
         <div className='flex items-center space-x-2 mb-3'>
           <Sparkles className='w-4 h-4 text-primary-600 dark:text-primary-400' />
           <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
-            Preguntas sugeridas:
+            {t.suggestedQuestions}:
           </span>
         </div>
         <div className='flex flex-wrap gap-2'>

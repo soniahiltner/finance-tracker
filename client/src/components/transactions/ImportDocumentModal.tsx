@@ -48,24 +48,7 @@ export const ImportDocumentModal = ({
     setIsDragging(false)
   }, [])
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-
-    const droppedFile = e.dataTransfer.files[0]
-    if (droppedFile) {
-      handleFileSelect(droppedFile)
-    }
-  }, [])
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
-    if (selectedFile) {
-      handleFileSelect(selectedFile)
-    }
-  }
-
-  const handleFileSelect = (selectedFile: File) => {
+  const handleFileSelect = useCallback((selectedFile: File) => {
     // Validar tipo de archivo
     const allowedTypes = [
       'application/pdf',
@@ -85,7 +68,7 @@ export const ImportDocumentModal = ({
 
     // Validar tamaño (10 MB)
     if (selectedFile.size > 10 * 1024 * 1024) {
-      setError('El archivo es demasiado grande. Tamaño máximo: 10 MB')
+      setError(t.fileTooLarge)
       return
     }
 
@@ -93,7 +76,26 @@ export const ImportDocumentModal = ({
     setError('')
     setParsedTransactions([])
     setSelectedTransactions(new Set())
+  }, [t])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+
+    const droppedFile = e.dataTransfer.files[0]
+    if (droppedFile) {
+      handleFileSelect(droppedFile)
+    }
+  }, [handleFileSelect])
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
+    if (selectedFile) {
+      handleFileSelect(selectedFile)
+    }
   }
+
+  
 
   const processDocument = async () => {
     if (!file) return
@@ -105,7 +107,7 @@ export const ImportDocumentModal = ({
       const result = await aiService.importDocument(file)
 
       if (result.data.transactions.length === 0) {
-        setError('No se encontraron transacciones en el documento')
+        setError(t.noTransactions)
         setIsProcessing(false)
         return
       }
@@ -118,7 +120,7 @@ export const ImportDocumentModal = ({
     } catch (err: unknown) {
       setError(
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || 'Error al procesar el documento. Intente nuevamente.'
+          ?.message || t.errorProcessing
       )
     } finally {
       setIsProcessing(false)
@@ -147,7 +149,7 @@ export const ImportDocumentModal = ({
 
   const importTransactions = async () => {
     if (selectedTransactions.size === 0) {
-      setError('Seleccione al menos una transacción para importar')
+      setError(t.selectOneTransactionToImport)
       return
     }
 
@@ -191,7 +193,7 @@ export const ImportDocumentModal = ({
     } catch (err: unknown) {
       setError(
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || 'Error al importar transacciones. Intente nuevamente.'
+          ?.message || t.errorImportingTransactions
       )
     } finally {
       setIsImporting(false)
@@ -223,7 +225,7 @@ export const ImportDocumentModal = ({
         {/* Header */}
         <div className='sticky top-0 z-10 flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'>
           <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
-            {t.import} {t.transaction}
+            {t.import} {t.transactions}
           </h2>
           <button
             onClick={handleClose}
@@ -240,7 +242,7 @@ export const ImportDocumentModal = ({
           {success && (
             <div className='flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 rounded-lg'>
               <CheckCircle2 size={20} />
-              <span>¡Transacciones importadas exitosamente!</span>
+              <span>{t.transactionsImportedSuccessfully}</span>
             </div>
           )}
 
@@ -269,14 +271,13 @@ export const ImportDocumentModal = ({
                 size={48}
               />
               <p className='mb-2 text-lg font-medium text-gray-700 dark:text-gray-300'>
-                Arrastra un archivo aquí o haz clic para seleccionar
+               {t.dragFileHereOrClickToSelect}
               </p>
               <p className='mb-4 text-sm text-gray-500 dark:text-gray-400'>
-                Formatos permitidos: PDF, Excel (.xlsx, .xls), CSV, imágenes
-                (JPG, PNG, WEBP, GIF)
+                {t.allowedFormats} {t.images}
               </p>
               <p className='text-xs text-gray-400 dark:text-gray-500'>
-                Tamaño máximo: 10 MB
+                {t.maximumFileSize}
               </p>
               <input
                 type='file'
@@ -289,7 +290,7 @@ export const ImportDocumentModal = ({
                 htmlFor='file-upload'
                 className='inline-block px-6 py-3 mt-4 text-white bg-blue-600 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors'
               >
-                Seleccionar Archivo
+                {t.selectFile}
               </label>
             </div>
           )}
@@ -314,6 +315,7 @@ export const ImportDocumentModal = ({
                   onClick={() => setFile(null)}
                   className='p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400'
                   disabled={isProcessing}
+                  aria-label={t.close}
                 >
                   <X size={20} />
                 </button>
@@ -330,10 +332,10 @@ export const ImportDocumentModal = ({
                       className='animate-spin'
                       size={20}
                     />
-                    Procesando documento...
+                    {t.processingDocument}
                   </>
                 ) : (
-                  <>Procesar Documento</>
+                  <>{t.processDocument}</>
                 )}
               </button>
             </div>
@@ -344,15 +346,15 @@ export const ImportDocumentModal = ({
             <div className='space-y-4'>
               <div className='flex items-center justify-between'>
                 <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
-                  Transacciones Detectadas: {parsedTransactions.length}
+                  {t.transactionsDetected}: {parsedTransactions.length}
                 </h3>
                 <button
                   onClick={toggleAll}
                   className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
                 >
                   {selectedTransactions.size === parsedTransactions.length
-                    ? 'Deseleccionar Todas'
-                    : 'Seleccionar Todas'}
+                    ? t.deselectAll
+                    : t.selectAll}
                 </button>
               </div>
 
@@ -426,8 +428,8 @@ export const ImportDocumentModal = ({
                             }`}
                           >
                             {transaction.type === 'income'
-                              ? 'Ingreso'
-                              : 'Gasto'}
+                              ? t.income
+                              : t.expense}
                           </span>
                         </td>
                         <td className='p-3 text-right font-semibold text-gray-900 dark:text-white'>
@@ -449,7 +451,7 @@ export const ImportDocumentModal = ({
                   disabled={isImporting}
                   className='px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50'
                 >
-                  Cancelar
+                  {t.cancel}
                 </button>
                 <button
                   onClick={importTransactions}
@@ -462,14 +464,14 @@ export const ImportDocumentModal = ({
                         className='animate-spin'
                         size={16}
                       />
-                      Importando...
+                      {t.importing}
                     </>
                   ) : (
                     <>
-                      Importar {selectedTransactions.size}{' '}
+                      {t.import} {selectedTransactions.size}{' '}
                       {selectedTransactions.size === 1
-                        ? 'Transacción'
-                        : 'Transacciones'}
+                        ? t.transaction
+                        : t.transactions}
                     </>
                   )}
                 </button>

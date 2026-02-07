@@ -39,6 +39,7 @@ export interface I18nStrings {
   hide: string
   create: string
   creating: string
+  sending: string
 
   // Dashboard
   balance: string
@@ -80,6 +81,7 @@ export interface I18nStrings {
   revenue: string
   noTransactions: string
   import: string
+  importing: string
   voiceInput: string
   speakNow: string
   stop: string
@@ -91,6 +93,17 @@ export interface I18nStrings {
   createNewCategory: string
   optionalDetails: string
   noTransactionsWithFilters: string
+  otherExpenses: string
+  otherIncome: string
+  dragFileHereOrClickToSelect: string
+  allowedFormats: string
+  images: string
+  maximumFileSize: string
+  processingDocument: string
+  processDocument: string
+  transactionsDetected: string
+  selectAll: string
+  deselectAll: string
 
   // Filters
   filters: string
@@ -148,6 +161,7 @@ export interface I18nStrings {
   amountToAdd: string
 
   // AI Assistant
+  HiImYourAIAssistant: string
   askAssistant: string
   yourQuestion: string
   send: string
@@ -157,6 +171,9 @@ export interface I18nStrings {
   importDocument: string
   selectFile: string
   upload: string
+  askMeAboutYourFinances: string
+  writeYourQuestion: string
+  characters: string
 
   // Auth
   login: string
@@ -242,6 +259,11 @@ export interface I18nStrings {
   languageChanged: string
   notAllowedFormat: string
   pleaseUsePDFExcelCSVOrImages: string
+  fileTooLarge: string
+  errorProcessing: string
+  selectOneTransactionToImport: string
+  errorImportingTransactions: string
+  transactionsImportedSuccessfully: string
 }
 
 export const i18nStrings: Record<Language, I18nStrings> = {
@@ -278,6 +300,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     hide: 'Ocultar',
     create: 'Crear',
     creating: 'Creando...',
+    sending: 'Enviando...',
 
     // Dashboard
     balance: 'Balance',
@@ -319,6 +342,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     revenue: 'Ingreso',
     noTransactions: 'Sin transacciones',
     import: 'Importar',
+    importing: 'Importando...',
     voiceInput: 'Entrada por voz',
     speakNow: 'Habla ahora',
     stop: 'Detener',
@@ -330,6 +354,17 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     createNewCategory: 'Crear nueva categoría',
     optionalDetails: 'Detalles opcionales...',
     noTransactionsWithFilters: 'No se encontraron transacciones con los filtros aplicados',
+    otherExpenses: 'Otros gastos',
+    otherIncome: 'Otros ingresos',
+    dragFileHereOrClickToSelect: 'Arrastra el archivo aquí o haz clic para seleccionar',
+    allowedFormats: 'Formatos permitidos: PDF, Excel (.xlsx, .xls), CSV, imágenes',
+    images: 'imágenes (JPG, PNG, WEBP, GIF)',
+    maximumFileSize: 'Tamaño máximo: 10 MB',
+    processingDocument: 'Procesando documento...',
+    processDocument: 'Procesar Documento',
+    transactionsDetected: 'Transacciones Detectadas',
+    selectAll: 'Seleccionar Todas',
+    deselectAll: 'Deseleccionar Todas',
 
     // Filters
     filters: 'Filtros',
@@ -387,6 +422,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     amountToAdd: 'Cantidad a añadir',
 
     // AI Assistant
+    HiImYourAIAssistant: '¡Hola! Soy tu asistente financiero personal. Puedo ayudarte a analizar tus gastos, identificar patrones y darte consejos para mejorar tus finanzas. ¿En qué puedo ayudarte hoy?',
     askAssistant: 'Pregunta al Asistente',
     yourQuestion: 'Tu Pregunta',
     send: 'Enviar',
@@ -396,6 +432,9 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     importDocument: 'Importar Documento',
     selectFile: 'Seleccionar Archivo',
     upload: 'Subir',
+    askMeAboutYourFinances: 'Pregúntame sobre tus finanzas',
+    writeYourQuestion: 'Escribe tu pregunta...',
+    characters: 'caracteres',
 
     // Auth
     login: 'Iniciar Sesión',
@@ -485,7 +524,12 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     languageChanged: 'Idioma cambiado',
     notAllowedFormat: 'Formato no permitido.',
     pleaseUsePDFExcelCSVOrImages:
-      'Por favor, utiliza PDF, Excel, CSV o imágenes (JPG, PNG, WEBP, GIF)'
+      'Por favor, utiliza PDF, Excel, CSV o imágenes (JPG, PNG, WEBP, GIF)',
+    fileTooLarge: 'El archivo es demasiado grande. Tamaño máximo: 10 MB',
+    errorProcessing: 'Error al procesar el documento. Intente nuevamente.',
+    selectOneTransactionToImport: 'Seleccione al menos una transacción para importar',
+    errorImportingTransactions: 'Error al importar transacciones. Intente nuevamente.',
+    transactionsImportedSuccessfully: 'Transacciones importadas exitosamente!'
   },
 
   en: {
@@ -521,6 +565,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     hide: 'Hide',
     create: 'Create',
     creating: 'Creating...',
+    sending: 'Sending...',
 
     // Dashboard
     balance: 'Balance',
@@ -562,6 +607,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     revenue: 'Income',
     noTransactions: 'No transactions',
     import: 'Import',
+    importing: 'Importing...',
     voiceInput: 'Voice Input',
     speakNow: 'Speak Now',
     stop: 'Stop',
@@ -573,6 +619,17 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     createNewCategory: 'Create New Category',
     optionalDetails: 'Optional Details...',
     noTransactionsWithFilters: 'No transactions found with the applied filters',
+    otherExpenses: 'Other expenses',
+    otherIncome: 'Other income',
+    dragFileHereOrClickToSelect: 'Drag the file here or click to select',
+    allowedFormats: 'Allowed formats: PDF, Excel (.xlsx, .xls), CSV, images',
+    images: 'images (JPG, PNG, WEBP, GIF)',
+    maximumFileSize: 'Maximum file size: 10 MB',
+    processingDocument: 'Processing document...',
+    processDocument: 'Process Document',
+    transactionsDetected: 'Transactions Detected',
+    selectAll: 'Select All',
+    deselectAll: 'Deselect All',
 
     // Filters
     filters: 'Filters',
@@ -630,6 +687,7 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     amountToAdd: 'Amount to add',
 
     // AI Assistant
+    HiImYourAIAssistant: 'Hi! I am your personal financial assistant. I can help you analyze your expenses, identify patterns, and give you advice to improve your finances. How can I assist you today?',
     askAssistant: 'Ask Assistant',
     yourQuestion: 'Your Question',
     send: 'Send',
@@ -639,6 +697,9 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     importDocument: 'Import Document',
     selectFile: 'Select File',
     upload: 'Upload',
+    askMeAboutYourFinances: 'Ask me about your finances',
+    writeYourQuestion: 'Write your question...',
+    characters: 'characters',
 
     // Auth
     login: 'Login',
@@ -729,7 +790,12 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     languageChanged: 'Language changed',
     notAllowedFormat: 'Not allowed format.',
     pleaseUsePDFExcelCSVOrImages:
-      'Please use PDF, Excel, CSV, or images (JPG, PNG, WEBP, GIF)'
+      'Please use PDF, Excel, CSV, or images (JPG, PNG, WEBP, GIF)',
+    fileTooLarge: 'The file is too large. Maximum size: 10 MB',
+    errorProcessing: 'Error processing the document. Please try again.',
+    selectOneTransactionToImport: 'Please select at least one transaction to import',
+    errorImportingTransactions: 'Error importing transactions. Please try again.',
+    transactionsImportedSuccessfully: 'Transactions imported successfully!'
   }
 }
 

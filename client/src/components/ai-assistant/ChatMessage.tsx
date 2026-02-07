@@ -2,6 +2,7 @@ import React from 'react'
 import { Bot, User } from 'lucide-react'
 import type { Message } from '../../hooks/useAIChat'
 
+
 interface ChatMessageProps {
   message: Message
 }
@@ -14,6 +15,7 @@ const formatTime = (date: Date) => {
 }
 
 export const ChatMessage = React.memo(({ message }: ChatMessageProps) => {
+
   const isUser = message.role === 'user'
 
   return (

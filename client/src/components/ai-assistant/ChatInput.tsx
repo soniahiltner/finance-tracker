@@ -1,5 +1,6 @@
 import React from 'react'
 import { Send, Loader2 } from 'lucide-react'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface ChatInputProps {
   input: string
@@ -10,6 +11,9 @@ interface ChatInputProps {
 
 export const ChatInput = React.memo(
   ({ input, setInput, loading, onSubmit }: ChatInputProps) => {
+
+    const { t } = useTranslation()
+
     return (
       <div className='border-t border-gray-200 dark:border-gray-700 p-4'>
         <form
@@ -20,14 +24,14 @@ export const ChatInput = React.memo(
             htmlFor='question'
             className='sr-only'
           >
-            Pregunta
+            {t.yourQuestion}
           </label>
           <input
             id='question'
             type='text'
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder='Escribe tu pregunta...'
+            placeholder={t.writeYourQuestion}
             className='flex-1 input-field'
             disabled={loading}
             maxLength={500}
@@ -40,18 +44,18 @@ export const ChatInput = React.memo(
             {loading ? (
               <Loader2
                 className='w-5 h-5 animate-spin'
-                aria-label='enviando'
+                aria-label={t.sending}
               />
             ) : (
               <Send
                 className='w-5 h-5'
-                aria-label='enviar'
+                aria-label={t.send}
               />
             )}
           </button>
         </form>
         <p className='text-xs text-gray-500 dark:text-gray-400 mt-2'>
-          {input.length}/500 caracteres
+          {input.length}/500 {t.characters}
         </p>
       </div>
     )
