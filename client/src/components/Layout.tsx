@@ -13,6 +13,7 @@ import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
 import LanguageSelector from './LanguageSelector'
 import { useTranslation } from '../hooks/useTranslation'
+import SettingsButton from './SettingsButton'
 
 const Layout = () => {
   const { t } = useTranslation()
@@ -71,8 +72,7 @@ const Layout = () => {
 
             {/* User Menu */}
             <div className='hidden w-auto md:flex items-center md:gap-x-1  md:ms-auto lg:self-auto'>
-              <ThemeToggle />
-              <LanguageSelector />
+              <SettingsButton  />
               <span className='text-sm pl-1 text-gray-600 dark:text-gray-300'>
                 {t.hello}, <span className='font-medium'>{user?.name}</span>
               </span>
