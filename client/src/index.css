@@ -35,6 +35,18 @@
   --breakpoint-xs: 30rem;
   --breakpoint-xxs: 23rem;
   --color-light-gradient: linear-gradient(135deg, var(--color-primary-50), var(--color-primary-500));
+  --animate-move-down: move-down 0.5s ease-in-out;
+
+  @keyframes move-down {
+    0% {
+      transform: translateY(-0.5rem);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
