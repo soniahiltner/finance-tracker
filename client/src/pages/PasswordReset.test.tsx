@@ -6,6 +6,28 @@ import ForgotPasswordPage from './ForgotPasswordPage'
 import ResetPasswordPage from './ResetPasswordPage'
 import { authService } from '../services/authService'
 
+// Mock del hook de traducción para forzar español
+vi.mock('../hooks/useTranslation', () => ({
+  useTranslation: () => ({
+    language: 'es',
+    t: {
+      email: 'Email',
+      emailRequired: 'Email es requerido',
+      sendResetLink: 'Enviar enlace',
+      sendingLink: 'Enviando...',
+      backToLogin: 'Volver al login',
+      regainAccessToYourAccount: 'Recupera el acceso a tu cuenta',
+      newPassword: 'Nueva contraseña',
+      confirmPassword: 'Confirmar contraseña',
+      updatePassword: 'Actualizar contraseña',
+      updating: 'Actualizando...',
+      createANewPassword: 'Crea una nueva contraseña',
+      forgotPassword: 'Olvidé mi contraseña',
+      resetPassword: 'Restablecer contraseña'
+    }
+  })
+}))
+
 vi.mock('../services/authService', () => ({
   authService: {
     forgotPassword: vi.fn(),
@@ -18,7 +40,7 @@ afterEach(() => {
 })
 
 // Tests unitarios simplificados para Password Reset
-describe('Password Reset Pages', () => {
+describe('Password Reset Pages (Spanish)', () => {
   describe('ForgotPasswordPage', () => {
     let form: HTMLFormElement
     let emailInput: HTMLElement
@@ -37,7 +59,9 @@ describe('Password Reset Pages', () => {
       vi.mocked(authService.forgotPassword).mockReset()
       vi.mocked(authService.resetPassword).mockReset()
     })
+
     it('should validate email is required', () => {
+      fireEvent.change(emailInput, { target: { value: '' } })
       fireEvent.submit(form)
       expect(screen.getByText('Email es requerido')).toBeInTheDocument()
     })
@@ -97,12 +121,18 @@ describe('Password Reset Pages', () => {
       vi.mocked(authService.resetPassword).mockReset()
     })
 
+    it('should render reset password form in Spanish', () => {
+      expect(screen.getByText(/Crea una nueva contraseña/i)).toBeInTheDocument()
+      expect(passwordInput).toBeInTheDocument()
+      expect(confirmPasswordInput).toBeInTheDocument()
+    })
+
     it('should extract token from URL params', () => {
       const urlParams = new URLSearchParams(window.location.search)
       expect(urlParams.get('token')).toBe('dummy-reset-token')
     })
 
-    it('should validate passwords match', () => {
+    it('should validate passwords match in Spanish', () => {
       fireEvent.change(passwordInput, { target: { value: 'password123' } })
       fireEvent.change(confirmPasswordInput, {
         target: { value: 'password124' }
@@ -113,7 +143,7 @@ describe('Password Reset Pages', () => {
       ).toBeInTheDocument()
     })
 
-    it('should validate password minimum length', () => {
+    it('should validate password minimum length in Spanish', () => {
       fireEvent.change(passwordInput, { target: { value: 'pass' } })
       fireEvent.change(confirmPasswordInput, { target: { value: 'pass' } })
       fireEvent.submit(form)

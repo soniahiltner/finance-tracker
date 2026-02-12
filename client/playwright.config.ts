@@ -1,4 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
+import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+dotenv.config({ path: path.resolve(__dirname, '.env') })
 
 export default defineConfig({
   testDir: './e2e',
@@ -9,12 +15,12 @@ export default defineConfig({
   fullyParallel: true,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: 'http://127.0.0.1:5173',
     trace: 'on-first-retry'
   },
   webServer: {
-    command: 'npm run dev -- --port 4173 --strictPort',
-    url: 'http://127.0.0.1:4173',
+    command: 'npm run dev -- --port 5173 --strictPort',
+    url: 'http://127.0.0.1:5173',
     reuseExistingServer: !process.env.CI
   },
   projects: [
