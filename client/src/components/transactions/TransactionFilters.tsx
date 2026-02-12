@@ -214,12 +214,14 @@ export default function TransactionFilters({
           className='flex items-center space-x-2 text-sm font-medium text-primary-700 dark:text-primary-400 hover:text-primary-600 dark:hover:text-primary-300'
         >
           <Filter className='w-4 h-4' />
-          <span>{showAdvanced ? t.hide : t.show} {t.advancedFilters}</span>
+          <span>
+            {showAdvanced ? t.hide : t.show} {t.advancedFilters}
+          </span>
         </button>
 
         {/* Filtros avanzados */}
         {showAdvanced && (
-          <div className='space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700'>
+          <div className='space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700 animate-move-down'>
             {/* Rango de fechas */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
