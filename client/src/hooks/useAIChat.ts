@@ -35,7 +35,10 @@ export const useAIChat = () => {
   const { data: welcomeMessage } = useQuery<string>({
     queryKey: ['ai-welcome', language],
     queryFn: () => aiService.getWelcomeMessage(language),
-    staleTime: 1000 * 60 * 60 // 1 hora
+    staleTime: 1000 * 60 * 60, // 1 hora
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
   })
 
   const displayMessages = useMemo<Message[]>(() => {
@@ -58,7 +61,10 @@ export const useAIChat = () => {
   const { data: suggestions = [] } = useQuery<string[]>({
     queryKey: ['ai-suggestions', language],
     queryFn: () => aiService.getSuggestions(language),
-    staleTime: 1000 * 60 * 30 // 30 minutos
+    staleTime: 1000 * 60 * 30, // 30 minutos
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
   })
 
   // Mutation para queries al AI

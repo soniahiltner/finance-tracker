@@ -50,8 +50,8 @@ export const authLimiter = rateLimit({
   legacyHeaders: false
 })
 
-// Rate limiter para endpoints de AI (más restrictivo por costos API)
-export const aiLimiter = rateLimit({
+// Rate limiter para endpoints costosos de AI
+export const aiQueryLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hora
   max: 20, // 20 requests por hora
   message: {
@@ -62,3 +62,19 @@ export const aiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false
 })
+
+// Rate limiter para endpoints livianos de AI (welcome/suggestions)
+export const aiReadLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hora
+  max: 120, // 120 requests por hora
+  message: {
+    success: false,
+    message:
+      'Has alcanzado temporalmente el límite de peticiones del asistente IA. Por favor intenta de nuevo más tarde.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
+// Alias para compatibilidad con tests/código existente
+export const aiLimiter = aiQueryLimiter
