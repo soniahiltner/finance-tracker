@@ -14,6 +14,7 @@ import ThemeToggle from './ThemeToggle'
 import LanguageSelector from './LanguageSelector'
 import { useTranslation } from '../hooks/useTranslation'
 import SettingsButton from './SettingsButton'
+import CurrencySelector from './CurrencySelector'
 
 const Layout = () => {
   const { t } = useTranslation()
@@ -72,7 +73,7 @@ const Layout = () => {
 
             {/* User Menu */}
             <div className='hidden w-auto md:flex items-center md:gap-x-1  md:ms-auto lg:self-auto'>
-              <SettingsButton  />
+              <SettingsButton />
               <span className='text-sm pl-1 text-gray-600 dark:text-gray-300'>
                 {t.hello}, <span className='font-medium'>{user?.name}</span>
               </span>
@@ -139,6 +140,12 @@ const Layout = () => {
                   {t.language}
                 </span>
                 <LanguageSelector />
+              </div>
+              <div className='flex items-center justify-between px-3 py-2'>
+                <span className='text-sm text-gray-600 dark:text-gray-300'>
+                  {t.currency}
+                </span>
+                <CurrencySelector />
               </div>
               <button
                 onClick={handleLogout}
