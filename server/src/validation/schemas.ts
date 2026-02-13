@@ -249,6 +249,11 @@ export const updateProfileSchema = z.object({
       .enum(['es', 'en'], {
         message: 'El idioma debe ser es o en'
       })
+      .optional(),
+    currency: z
+      .enum(['EUR', 'USD'], {
+        message: 'La moneda debe ser EUR o USD'
+      })
       .optional()
   })
 })

@@ -6,6 +6,7 @@ import CategoryManagementModal from './CategoryManagementModal'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateCategory } from '../../constants/categoryTranslations'
 import { useTranslation } from '../../hooks/useTranslation'
+import { useCurrencyFormatter } from '../../hooks/useCurrency'
 
 export interface FilterValues {
   searchTerm: string
@@ -38,6 +39,7 @@ export default function TransactionFilters({
   const [showCategoryModal, setShowCategoryModal] = useState(false)
   const { language } = useLanguage()
   const { t } = useTranslation()
+  const { formatCurrency } = useCurrencyFormatter()
 
   const handleChange = <K extends keyof FilterValues>(
     key: K,
@@ -478,7 +480,7 @@ export default function TransactionFilters({
             )}
             {filters.minAmount && (
               <span className='inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-700 dark:text-primary-300 rounded-full text-sm'>
-                Min: €{filters.minAmount}
+                Min: {formatCurrency(parseFloat(filters.minAmount))}
                 <button
                   onClick={() => handleChange('minAmount', '')}
                   className='ml-2 hover:text-primary-900 dark:hover:text-primary-100'
@@ -489,7 +491,7 @@ export default function TransactionFilters({
             )}
             {filters.maxAmount && (
               <span className='inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-700/30 text-primary-700 dark:text-primary-300 rounded-full text-sm'>
-                Max: €{filters.maxAmount}
+                Max: {formatCurrency(parseFloat(filters.maxAmount))}
                 <button
                   onClick={() => handleChange('maxAmount', '')}
                   className='ml-2 hover:text-primary-900 dark:hover:text-primary-100'

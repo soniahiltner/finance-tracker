@@ -6,6 +6,7 @@ import { GOAL_CATEGORIES } from '../../constants/goalCategories'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateGoalCategory } from '../../constants/categoryTranslations'
 import { useTranslation } from '../../hooks/useTranslation'
+import { useCurrencyFormatter } from '../../hooks/useCurrency'
 
 interface GoalModalProps {
   isOpen: boolean
@@ -25,6 +26,7 @@ interface GoalModalProps {
 const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
   const { language } = useLanguage()
   const { t } = useTranslation()
+  const { currency } = useCurrencyFormatter()
 
   const getInitialFormData = () => {
     if (goal) {
@@ -163,7 +165,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
                 htmlFor='targetAmount'
                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
-                {t.targetAmount} (€) *
+                {t.targetAmount} ({currency}) *
               </label>
               <input
                 id='targetAmount'
@@ -184,7 +186,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
                 htmlFor='currentAmount'
                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
               >
-                {t.amountSaved} (€)
+                {t.amountSaved} ({currency})
               </label>
               <input
                 id='currentAmount'

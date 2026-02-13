@@ -3,6 +3,7 @@ export interface User {
   email: string
   name: string
   language?: 'es' | 'en'
+  currency?: 'EUR' | 'USD'
   createdAt?: string
 }
 

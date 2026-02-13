@@ -18,12 +18,13 @@ import {
   updateProfileSchema,
   changePasswordSchema
 } from '../validation/schemas.js'
+import { authLimiter } from '../middleware/rateLimiter.js'
 
 const router = express.Router()
 
 // Rutas públicas
 router.post('/register', validate(registerSchema), register)
-router.post('/login', validate(loginSchema), login)
+router.post('/login', validate(loginSchema), authLimiter, login)
 router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword)
 router.post('/reset-password', validate(resetPasswordSchema), resetPassword)
 

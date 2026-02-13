@@ -44,17 +44,45 @@ describe('Rate Limiter Middleware', () => {
     let app: Application
 
     beforeEach(() => {
-      app = createTestApp(authLimiter)
+      app = express()
+      app.use(express.json())
+      app.use(authLimiter)
+      app.post('/login', (req, res) => {
+        res.status(401).json({ success: false, message: 'Invalid credentials' })
+      })
     })
 
     it('should have stricter limits for auth endpoints', async () => {
-      const response = await request(app).get('/test')
+      const response = await request(app)
+        .post('/login')
+        .send({ email: 'test@example.com', password: 'wrong-password' })
 
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(401)
       // El límite de auth es 5 por ventana
-      expect(parseInt(response.headers['ratelimit-limit'] as string)).toBeLessThanOrEqual(
-        100
-      )
+      expect(
+        parseInt(response.headers['ratelimit-limit'] as string)
+      ).toBeLessThanOrEqual(100)
+    })
+
+    it('should return retryAfter when auth limit is exceeded', async () => {
+      const email = 'lockout@example.com'
+
+      for (let i = 0; i < 5; i++) {
+        await request(app)
+          .post('/login')
+          .send({ email, password: 'wrong-password' })
+          .expect(401)
+      }
+
+      const limitedResponse = await request(app)
+        .post('/login')
+        .send({ email, password: 'wrong-password' })
+        .expect(429)
+
+      expect(limitedResponse.body.success).toBe(false)
+      expect(limitedResponse.body.message).toContain('Demasiados intentos')
+      expect(typeof limitedResponse.body.retryAfter).toBe('number')
+      expect(limitedResponse.body.retryAfter).toBeGreaterThan(0)
     })
   })
 

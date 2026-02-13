@@ -15,6 +15,8 @@ export interface AuthResponse {
     id: string
     email: string
     name: string
+    language: 'es' | 'en'
+    currency: 'EUR' | 'USD'
   }
   token: string
 }

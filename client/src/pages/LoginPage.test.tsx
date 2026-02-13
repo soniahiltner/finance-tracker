@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { render } from '../test/test-utils'
 import LoginPage from './LoginPage'
@@ -41,6 +41,10 @@ describe('LoginPage', () => {
   beforeEach(() => {
     mockLogin.mockReset()
     mockNavigate.mockReset()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('renderiza campos requeridos y botón de submit', () => {
@@ -89,6 +93,29 @@ describe('LoginPage', () => {
     expect(mockNavigate).not.toHaveBeenCalled()
   })
 
+  it('normaliza mensajes de auth del backend al idioma de la UI', async () => {
+    mockLogin.mockRejectedValueOnce({
+      response: {
+        data: {
+          message: 'Invalid credentials'
+        }
+      }
+    })
+    render(<LoginPage />)
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'sonia@example.com' }
+    })
+    fireEvent.change(screen.getByLabelText('Contraseña'), {
+      target: { value: 'wrong-pass' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
+
+    expect(
+      await screen.findByText('Credenciales inválidas')
+    ).toBeInTheDocument()
+  })
+
   it('deshabilita el botón y muestra estado de carga durante submit', () => {
     const pendingPromise = new Promise<void>(() => {})
     mockLogin.mockReturnValueOnce(pendingPromise)
@@ -104,5 +131,76 @@ describe('LoginPage', () => {
 
     const loadingButton = screen.getByRole('button', { name: 'Iniciando...' })
     expect(loadingButton).toBeDisabled()
+  })
+
+  it('muestra tiempo de espera cuando login devuelve retryAfter', async () => {
+    mockLogin.mockRejectedValueOnce({
+      response: {
+        data: {
+          message:
+            'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.',
+          retryAfter: 125
+        }
+      }
+    })
+    render(<LoginPage />)
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'sonia@example.com' }
+    })
+    fireEvent.change(screen.getByLabelText('Contraseña'), {
+      target: { value: 'wrong-pass' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
+
+    expect(
+      await screen.findByText(
+        'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.'
+      )
+    ).toBeInTheDocument()
+
+    const waitingButton = screen.getByRole('button', { name: /Espera 2m 5s/i })
+    expect(waitingButton).toBeDisabled()
+  })
+
+  it('limpia el error cuando termina el contador de retryAfter', async () => {
+    mockLogin.mockRejectedValueOnce({
+      response: {
+        data: {
+          message:
+            'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.',
+          retryAfter: 1
+        }
+      }
+    })
+
+    render(<LoginPage />)
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'sonia@example.com' }
+    })
+    fireEvent.change(screen.getByLabelText('Contraseña'), {
+      target: { value: 'wrong-pass' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
+
+    expect(
+      await screen.findByText(
+        'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.'
+      )
+    ).toBeInTheDocument()
+
+    await waitFor(
+      () => {
+        expect(
+          screen.queryByText(
+            'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.'
+          )
+        ).not.toBeInTheDocument()
+      },
+      { timeout: 2500 }
+    )
+
+    expect(screen.getByRole('button', { name: 'Iniciar sesión' })).toBeEnabled()
   })
 })

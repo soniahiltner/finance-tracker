@@ -4,6 +4,7 @@ import { AuthContextProvider } from './context/AuthContextProvider'
 import { Route, Routes, Navigate, BrowserRouter } from 'react-router'
 import { ThemeProvider } from './context/ThemeContextProvider'
 import { LanguageProvider } from './context/LanguageContextProvider'
+import { CurrencyProvider } from './context/CurrencyContextProvider'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './config/queryClient'
 
@@ -213,7 +214,9 @@ const App = () => {
         <ThemeProvider>
           <AuthContextProvider>
             <LanguageProvider>
-              <AppRoutes />
+              <CurrencyProvider>
+                <AppRoutes />
+              </CurrencyProvider>
             </LanguageProvider>
           </AuthContextProvider>
         </ThemeProvider>

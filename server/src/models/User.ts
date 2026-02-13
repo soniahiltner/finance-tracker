@@ -7,6 +7,7 @@ export interface IUser extends Document {
   password: string
   name: string
   language: 'es' | 'en'
+  currency: 'EUR' | 'USD'
   createdAt: Date
   updatedAt: Date
   passwordResetToken?: string
@@ -40,6 +41,11 @@ const userSchema = new Schema<IUser>(
       type: String,
       enum: ['es', 'en'],
       default: 'es'
+    },
+    currency: {
+      type: String,
+      enum: ['EUR', 'USD'],
+      default: 'EUR'
     },
     passwordResetToken: {
       type: String,

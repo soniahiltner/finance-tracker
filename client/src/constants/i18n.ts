@@ -84,10 +84,18 @@ export interface I18nStrings {
   importing: string
   voiceInput: string
   speakNow: string
+  recordVoiceInput: string
   stop: string
   listening: string
   processingVoiceInput: string
   transcription: string
+  errorProcessingTranscription: string
+  waitingForVoiceInput: string
+  microphoneAccessError: string
+  microphonePermissionDenied: string
+  recognitionErrorPrefix: string
+  errorStartingVoiceRecognition: string
+  unsupportedVoiceRecognition: string
   newCategoryName: string
   selectACategory: string
   createNewCategory: string
@@ -235,6 +243,9 @@ export interface I18nStrings {
   // Settings / Profile
   profile: string
   changeLanguage: string
+  currency: string
+  euro: string
+  usDollar: string
   spanish: string
   english: string
   language: string
@@ -358,10 +369,20 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     importing: 'Importando...',
     voiceInput: 'Entrada por voz',
     speakNow: 'Habla ahora',
+    recordVoiceInput: 'Grabar entrada por voz',
     stop: 'Detener',
     listening: 'Escuchando...',
     processingVoiceInput: 'Procesando entrada de voz...',
     transcription: 'Transcripción',
+    errorProcessingTranscription: 'Error al procesar la transcripción',
+    waitingForVoiceInput: 'Esperando entrada de voz...',
+    microphoneAccessError:
+      'No se puede acceder al micrófono. Verifica los permisos.',
+    microphonePermissionDenied: 'Permiso de micrófono denegado.',
+    recognitionErrorPrefix: 'Error de reconocimiento',
+    errorStartingVoiceRecognition: 'Error al iniciar el reconocimiento de voz',
+    unsupportedVoiceRecognition:
+      'Tu navegador no soporta reconocimiento de voz. Usa Chrome, Edge o Safari.',
     newCategoryName: 'Nombre de la Nueva Categoría',
     selectACategory: 'Selecciona una ategoría',
     createNewCategory: 'Crear nueva categoría',
@@ -519,6 +540,9 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     // Settings / Profile
     profile: 'Perfil',
     changeLanguage: 'Cambiar Idioma',
+    currency: 'Moneda',
+    euro: 'Euro (EUR)',
+    usDollar: 'Dólar estadounidense (USD)',
     spanish: 'Español',
     english: 'Inglés',
     language: 'Idioma',
@@ -646,10 +670,20 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     importing: 'Importing...',
     voiceInput: 'Voice Input',
     speakNow: 'Speak Now',
+    recordVoiceInput: 'Record voice input',
     stop: 'Stop',
     listening: 'Listening...',
     processingVoiceInput: 'Processing voice input...',
     transcription: 'Transcription',
+    errorProcessingTranscription: 'Error processing transcription',
+    waitingForVoiceInput: 'Waiting for voice input...',
+    microphoneAccessError:
+      'Microphone cannot be accessed. Check your permissions.',
+    microphonePermissionDenied: 'Microphone permission denied.',
+    recognitionErrorPrefix: 'Recognition error',
+    errorStartingVoiceRecognition: 'Error starting voice recognition',
+    unsupportedVoiceRecognition:
+      'Your browser does not support voice recognition. Use Chrome, Edge, or Safari.',
     newCategoryName: 'New Category Name',
     selectACategory: 'Select a Category',
     createNewCategory: 'Create New Category',
@@ -804,6 +838,9 @@ export const i18nStrings: Record<Language, I18nStrings> = {
     // Settings / Profile
     profile: 'Profile',
     changeLanguage: 'Change Language',
+    currency: 'Currency',
+    euro: 'Euro (EUR)',
+    usDollar: 'US Dollar (USD)',
     spanish: 'Spanish',
     english: 'English',
     language: 'Language',

@@ -23,6 +23,12 @@ vi.mock('./LanguageSelector', () => ({
   )
 }))
 
+vi.mock('./CurrencySelector', () => ({
+  default: ({ onSelect }: { onSelect?: () => void }) => (
+    <button onClick={onSelect}>Currency</button>
+  )
+}))
+
 describe('SettingsButton', () => {
   it('closes when clicking outside', () => {
     render(<SettingsButton />)
@@ -48,6 +54,15 @@ describe('SettingsButton', () => {
 
     fireEvent.click(screen.getByTitle('Settings'))
     fireEvent.click(screen.getByText('Language'))
+
+    expect(screen.queryByText('Theme')).not.toBeInTheDocument()
+  })
+
+  it('closes when selecting currency', () => {
+    render(<SettingsButton />)
+
+    fireEvent.click(screen.getByTitle('Settings'))
+    fireEvent.click(screen.getByText('Currency'))
 
     expect(screen.queryByText('Theme')).not.toBeInTheDocument()
   })

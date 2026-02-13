@@ -11,6 +11,7 @@ import { aiService, type ParsedTransaction } from '../../services/aiService'
 import { transactionService } from '../../services/transactionService'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from '../../hooks/useTranslation'
+import { useCurrencyFormatter } from '../../hooks/useCurrency'
 
 interface ImportDocumentModalProps {
   isOpen: boolean
@@ -35,6 +36,7 @@ export const ImportDocumentModal = ({
   const [success, setSuccess] = useState(false)
 
   const { t } = useTranslation()
+  const { formatCurrency, locale } = useCurrencyFormatter()
 
   const queryClient = useQueryClient()
 
@@ -48,45 +50,51 @@ export const ImportDocumentModal = ({
     setIsDragging(false)
   }, [])
 
-  const handleFileSelect = useCallback((selectedFile: File) => {
-    // Validar tipo de archivo
-    const allowedTypes = [
-      'application/pdf',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'text/csv',
-      'image/jpeg',
-      'image/png',
-      'image/webp',
-      'image/gif'
-    ]
+  const handleFileSelect = useCallback(
+    (selectedFile: File) => {
+      // Validar tipo de archivo
+      const allowedTypes = [
+        'application/pdf',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'text/csv',
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/gif'
+      ]
 
-    if (!allowedTypes.includes(selectedFile.type)) {
-      setError(t.notAllowedFormat + ' ' + t.pleaseUsePDFExcelCSVOrImages)
-      return
-    }
+      if (!allowedTypes.includes(selectedFile.type)) {
+        setError(t.notAllowedFormat + ' ' + t.pleaseUsePDFExcelCSVOrImages)
+        return
+      }
 
-    // Validar tamaño (10 MB)
-    if (selectedFile.size > 10 * 1024 * 1024) {
-      setError(t.fileTooLarge)
-      return
-    }
+      // Validar tamaño (10 MB)
+      if (selectedFile.size > 10 * 1024 * 1024) {
+        setError(t.fileTooLarge)
+        return
+      }
 
-    setFile(selectedFile)
-    setError('')
-    setParsedTransactions([])
-    setSelectedTransactions(new Set())
-  }, [t])
+      setFile(selectedFile)
+      setError('')
+      setParsedTransactions([])
+      setSelectedTransactions(new Set())
+    },
+    [t]
+  )
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDragging(false)
 
-    const droppedFile = e.dataTransfer.files[0]
-    if (droppedFile) {
-      handleFileSelect(droppedFile)
-    }
-  }, [handleFileSelect])
+      const droppedFile = e.dataTransfer.files[0]
+      if (droppedFile) {
+        handleFileSelect(droppedFile)
+      }
+    },
+    [handleFileSelect]
+  )
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -94,8 +102,6 @@ export const ImportDocumentModal = ({
       handleFileSelect(selectedFile)
     }
   }
-
-  
 
   const processDocument = async () => {
     if (!file) return
@@ -271,7 +277,7 @@ export const ImportDocumentModal = ({
                 size={48}
               />
               <p className='mb-2 text-lg font-medium text-gray-700 dark:text-gray-300'>
-               {t.dragFileHereOrClickToSelect}
+                {t.dragFileHereOrClickToSelect}
               </p>
               <p className='mb-4 text-sm text-gray-500 dark:text-gray-400'>
                 {t.allowedFormats} {t.images}
@@ -410,7 +416,7 @@ export const ImportDocumentModal = ({
                         </td>
                         <td className='p-3 text-gray-900 dark:text-white'>
                           {new Date(transaction.date).toLocaleDateString(
-                            'es-ES'
+                            locale
                           )}
                         </td>
                         <td className='p-3 text-gray-900 dark:text-white'>
@@ -433,7 +439,7 @@ export const ImportDocumentModal = ({
                           </span>
                         </td>
                         <td className='p-3 text-right font-semibold text-gray-900 dark:text-white'>
-                          €{transaction.amount.toFixed(2)}
+                          {formatCurrency(transaction.amount)}
                         </td>
                       </tr>
                     ))}

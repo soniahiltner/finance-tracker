@@ -1,6 +1,23 @@
 import { test, expect } from '@playwright/test'
 
 test('login happy path redirects to dashboard', async ({ page }) => {
+  await page.route('**/api/auth/me', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        user: {
+          id: 'user-e2e-1',
+          email: 'sonia@example.com',
+          name: 'Sonia',
+          language: 'es',
+          currency: 'EUR'
+        }
+      })
+    })
+  })
+
   await page.route('**/api/auth/login', async (route) => {
     await route.fulfill({
       status: 200,
@@ -11,7 +28,9 @@ test('login happy path redirects to dashboard', async ({ page }) => {
         user: {
           id: 'user-e2e-1',
           email: 'sonia@example.com',
-          name: 'Sonia'
+          name: 'Sonia',
+          language: 'es',
+          currency: 'EUR'
         }
       })
     })

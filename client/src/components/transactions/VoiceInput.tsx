@@ -55,7 +55,8 @@ export const VoiceInput = ({
   const [transcript, setTranscript] = useState('')
   const [isSupported, setIsSupported] = useState(false)
 
-  const { t } = useTranslation()
+  const { t, language } = useTranslation()
+  const recognitionLanguage = language === 'en' ? 'en-US' : 'es-ES'
 
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const processingRef = useRef(false)
@@ -76,12 +77,20 @@ export const VoiceInput = ({
         const type =
           lowerText.includes('ingreso') ||
           lowerText.includes('cobré') ||
-          lowerText.includes('nómina')
+          lowerText.includes('nómina') ||
+          lowerText.includes('income') ||
+          lowerText.includes('salary') ||
+          lowerText.includes('payroll') ||
+          lowerText.includes('paycheck') ||
+          lowerText.includes('earned') ||
+          lowerText.includes('received')
             ? 'income'
             : 'expense'
 
         // Extraer cantidad (buscar números)
-        const amountMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:euros?|€)?/)
+        const amountMatch = text.match(
+          /(\d+(?:[.,]\d+)?)\s*(?:euros?|€|dollars?|usd|\$)?/
+        )
         const amount = amountMatch
           ? parseFloat(amountMatch[1].replace(',', '.'))
           : 0
@@ -89,7 +98,7 @@ export const VoiceInput = ({
         // Extraer fecha
         const today = new Date().toISOString().split('T')[0]
         let date = today
-        if (lowerText.includes('ayer')) {
+        if (lowerText.includes('ayer') || lowerText.includes('yesterday')) {
           const yesterday = new Date()
           yesterday.setDate(yesterday.getDate() - 1)
           date = yesterday.toISOString().split('T')[0]
@@ -254,13 +263,13 @@ export const VoiceInput = ({
         })
       } catch (err) {
         console.error('Error processing transcript:', err)
-        setError('Error al procesar la transcripción')
+        setError(t.errorProcessingTranscription)
       } finally {
         setIsProcessing(false)
         processingRef.current = false
       }
     },
-    [onTranscriptProcessed, availableCategories]
+    [onTranscriptProcessed, availableCategories, t]
   )
 
   // Inicializar el reconocimiento de voz
@@ -277,7 +286,7 @@ export const VoiceInput = ({
       setIsSupported(true)
       const recognition = new SpeechRecognitionAPI()
 
-      recognition.lang = 'es-ES'
+      recognition.lang = recognitionLanguage
       recognition.continuous = true
       recognition.interimResults = true
       recognition.maxAlternatives = 1
@@ -324,19 +333,19 @@ export const VoiceInput = ({
 
         switch (event.error) {
           case 'no-speech':
-            setError('Esperando entrada de voz...')
+            setError(t.waitingForVoiceInput)
             // No detener la grabación, solo mostrar un mensaje
             break
           case 'audio-capture':
-            setError('No se puede acceder al micrófono. Verifica los permisos.')
+            setError(t.microphoneAccessError)
             setIsRecording(false)
             break
           case 'not-allowed':
-            setError('Permiso de micrófono denegado.')
+            setError(t.microphonePermissionDenied)
             setIsRecording(false)
             break
           default:
-            setError(`Error de reconocimiento: ${event.error}`)
+            setError(`${t.recognitionErrorPrefix}: ${event.error}`)
             setIsRecording(false)
         }
       }
@@ -378,7 +387,14 @@ export const VoiceInput = ({
         }
       }
     }
-  }, [processTranscript])
+  }, [
+    processTranscript,
+    recognitionLanguage,
+    t.microphoneAccessError,
+    t.microphonePermissionDenied,
+    t.recognitionErrorPrefix,
+    t.waitingForVoiceInput
+  ])
 
   const startRecording = () => {
     if (!isSupported || !recognitionRef.current) return
@@ -394,7 +410,7 @@ export const VoiceInput = ({
       recognitionRef.current.start()
     } catch (err) {
       console.error('Error starting recognition:', err)
-      setError('Error al iniciar el reconocimiento de voz')
+      setError(t.errorStartingVoiceRecognition)
       setIsRecording(false)
       ;(window as unknown as Record<string, unknown>).__isRecordingActive =
         false
@@ -440,10 +456,7 @@ export const VoiceInput = ({
     return (
       <div className='flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 rounded-lg text-sm'>
         <AlertCircle size={16} />
-        <span>
-          Tu navegador no soporta reconocimiento de voz. Usa Chrome, Edge o
-          Safari.
-        </span>
+        <span>{t.unsupportedVoiceRecognition}</span>
       </div>
     )
   }
@@ -455,7 +468,7 @@ export const VoiceInput = ({
           <button
             onClick={startRecording}
             className='flex items-center gap-2 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors'
-            title='Grabar entrada por voz'
+            title={t.recordVoiceInput}
           >
             <Mic size={20} />
             <span>{t.speakNow}</span>

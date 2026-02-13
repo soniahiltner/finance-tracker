@@ -1,4 +1,11 @@
-import rateLimit from 'express-rate-limit'
+import type { Request, Response } from 'express'
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit'
+
+interface RateLimitedRequest extends Request {
+  rateLimit?: {
+    resetTime?: Date
+  }
+}
 
 // Rate limiter general para todas las rutas API
 export const apiLimiter = rateLimit({
@@ -17,10 +24,26 @@ export const apiLimiter = rateLimit({
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 5, // solo 5 intentos de login por ventana
-  message: {
-    success: false,
-    message:
-      'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.'
+  keyGenerator: (req) => {
+    const email =
+      typeof req.body?.email === 'string' ? req.body.email.toLowerCase() : ''
+    const ip = ipKeyGenerator(req.ip || req.socket.remoteAddress || '')
+
+    return email ? `${ip}:${email}` : ip
+  },
+  handler: (req: RateLimitedRequest, res: Response) => {
+    const resetTime = req.rateLimit?.resetTime
+    const retryAfter =
+      resetTime instanceof Date
+        ? Math.max(1, Math.ceil((resetTime.getTime() - Date.now()) / 1000))
+        : Math.ceil((15 * 60 * 1000) / 1000)
+
+    return res.status(429).json({
+      success: false,
+      message:
+        'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.',
+      retryAfter
+    })
   },
   skipSuccessfulRequests: true, // No contar requests exitosos
   standardHeaders: true,

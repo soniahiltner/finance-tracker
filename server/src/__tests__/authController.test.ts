@@ -363,4 +363,16 @@ describe('Auth Controller - PUT /api/auth/profile', () => {
     expect(response.body.success).toBe(false)
     expect(response.body.message).toContain('already in use')
   })
+
+  it('should update user currency successfully', async () => {
+    const response = await request(app)
+      .put('/api/auth/profile')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({ currency: 'USD' })
+      .expect(200)
+
+    expect(response.body.success).toBe(true)
+    expect(response.body.user).toHaveProperty('id', userId)
+    expect(response.body.user.currency).toBe('USD')
+  })
 })

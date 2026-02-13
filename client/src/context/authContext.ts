@@ -9,6 +9,7 @@ export interface AuthContextType {
   register: (email: string, password: string, name: string) => Promise<void>
   logout: () => void
   updateUserLanguage?: (language: 'es' | 'en') => Promise<void>
+  updateUserCurrency?: (currency: 'EUR' | 'USD') => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)

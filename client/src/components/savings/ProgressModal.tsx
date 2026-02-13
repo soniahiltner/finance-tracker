@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
-import { formatCurrency } from '../../utils/formatters'
 import type { SavingsGoal } from '../../types'
 import { useTranslation } from '../../hooks/useTranslation'
+import { useCurrencyFormatter } from '../../hooks/useCurrency'
 
 interface ProgressModalProps {
   isOpen: boolean
@@ -21,6 +21,7 @@ const ProgressModal = ({
   const [submitting, setSubmitting] = useState(false)
 
   const { t } = useTranslation()
+  const { formatCurrency, currency } = useCurrencyFormatter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,7 +67,8 @@ const ProgressModal = ({
             {formatCurrency(goal.targetAmount)}
           </p>
           <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
-            {t.remainingAmount} {formatCurrency(goal.targetAmount - goal.currentAmount)}
+            {t.remainingAmount}{' '}
+            {formatCurrency(goal.targetAmount - goal.currentAmount)}
           </p>
         </div>
 
@@ -79,7 +81,7 @@ const ProgressModal = ({
               htmlFor='progressAmount'
               className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
             >
-              {t.amountToAdd} (€) *
+              {t.amountToAdd} ({currency}) *
             </label>
             <input
               id='progressAmount'

@@ -1,12 +1,12 @@
 import { memo } from 'react'
 import { Calendar, Edit2, Trash2, Check } from 'lucide-react'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
-import { formatCurrency } from '../../utils/formatters'
+import { enUS, es } from 'date-fns/locale'
 import type { SavingsGoal } from '../../types'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateGoalCategory } from '../../constants/categoryTranslations'
 import { useTranslation } from '../../hooks/useTranslation'
+import { useCurrencyFormatter } from '../../hooks/useCurrency'
 
 interface GoalCardProps {
   goal: SavingsGoal
@@ -17,9 +17,11 @@ interface GoalCardProps {
 
 const GoalCard = memo(
   ({ goal, onEdit, onDelete, onAddProgress }: GoalCardProps) => {
-
     const { t } = useTranslation()
     const { language } = useLanguage()
+    const { formatCurrency } = useCurrencyFormatter()
+    const dateLocale = language === 'en' ? enUS : es
+    const datePattern = language === 'en' ? 'MMM d, yyyy' : 'd MMM yyyy'
     const handleDelete = () => {
       onDelete(goal._id)
     }
@@ -83,13 +85,15 @@ const GoalCard = memo(
             <Calendar className='w-4 h-4 mr-1' />
             <span>
               {goal.daysRemaining > 0
-                ? goal.daysRemaining > 1 ? `${goal.daysRemaining} ${t.daysRemaining}` : `${goal.daysRemaining} ${t.oneDayRemaining}`
+                ? goal.daysRemaining > 1
+                  ? `${goal.daysRemaining} ${t.daysRemaining}`
+                  : `${goal.daysRemaining} ${t.oneDayRemaining}`
                 : t.goalDefeated}
             </span>
           </div>
           <span className='text-gray-600 dark:text-gray-400'>
-            {format(new Date(goal.deadline), 'd MMM yyyy', {
-              locale: es
+            {format(new Date(goal.deadline), datePattern, {
+              locale: dateLocale
             })}
           </span>
         </div>

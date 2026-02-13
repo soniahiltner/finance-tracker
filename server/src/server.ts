@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/database.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import { seedDefaultCategories } from './utils/seedCategories.js'
-import { apiLimiter, authLimiter, aiLimiter } from './middleware/rateLimiter.js'
+import { apiLimiter, aiLimiter } from './middleware/rateLimiter.js'
 import logger from './config/logger.js'
 
 dotenv.config()
@@ -76,7 +76,7 @@ app.get('/health', (req, res) => {
 })
 
 // Rutas API con rate limiting
-app.use('/api/auth', authLimiter, authRoutes)
+app.use('/api/auth', authRoutes)
 app.use('/api/transactions', apiLimiter, transactionRoutes)
 app.use('/api/categories', apiLimiter, categoryRoutes)
 app.use('/api/ai', aiLimiter, aiRoutes)

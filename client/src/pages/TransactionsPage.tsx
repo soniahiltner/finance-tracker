@@ -8,10 +8,11 @@ import { ImportDocumentModal } from '../components/transactions/ImportDocumentMo
 import ConfirmModal from '../components/ConfirmModal'
 import type { Transaction } from '../types'
 import { useTranslation } from '../hooks/useTranslation'
+import { useCurrencyFormatter } from '../hooks/useCurrency'
 
 export default function TransactionsPage() {
-
   const { t } = useTranslation()
+  const { formatCurrency } = useCurrencyFormatter()
 
   const {
     transactions,
@@ -131,7 +132,7 @@ export default function TransactionsPage() {
       <ConfirmModal
         isOpen={!!transactionToDelete}
         title='Eliminar transacción'
-        message={`¿Estás seguro de que quieres eliminar esta transacción de ${transactionToDelete?.category} por ${transactionToDelete?.amount}€?`}
+        message={`¿Estás seguro de que quieres eliminar esta transacción de ${transactionToDelete?.category} por ${formatCurrency(transactionToDelete?.amount || 0)}?`}
         confirmText='Eliminar'
         cancelText='Cancelar'
         variant='danger'

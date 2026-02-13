@@ -1,12 +1,12 @@
 import { memo } from 'react'
 import { Edit2, Trash2, TrendingUp, TrendingDown } from 'lucide-react'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
-import { formatCurrency } from '../../utils/formatters'
+import { enUS, es } from 'date-fns/locale'
 import type { Transaction } from '../../types'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateCategory } from '../../constants/categoryTranslations'
+import { useCurrencyFormatter } from '../../hooks/useCurrency'
 
 interface TransactionItemProps {
   transaction: Transaction
@@ -16,9 +16,11 @@ interface TransactionItemProps {
 
 const TransactionItem = memo(
   ({ transaction, onEdit, onDelete }: TransactionItemProps) => {
-
     const { t } = useTranslation()
     const { language } = useLanguage()
+    const { formatCurrency } = useCurrencyFormatter()
+    const dateLocale = language === 'en' ? enUS : es
+    const datePattern = language === 'en' ? 'MMM d, yyyy' : "d 'de' MMMM, yyyy"
 
     const handleDelete = () => {
       onDelete(transaction._id)
@@ -58,8 +60,8 @@ const TransactionItem = memo(
               </p>
             )}
             <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
-              {format(new Date(transaction.date), "d 'de' MMMM, yyyy", {
-                locale: es
+              {format(new Date(transaction.date), datePattern, {
+                locale: dateLocale
               })}
             </p>
           </div>

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { TrendingUp, TrendingDown, Wallet } from 'lucide-react'
 import { useDashboardData } from '../hooks/useDashboardData'
-import { formatCurrency, CHART_COLORS } from '../utils/formatters'
+import { CHART_COLORS } from '../utils/formatters'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
 import StatCard from '../components/dashboard/StatCard'
 import CategoryPieChart from '../components/dashboard/CategoryPieChart'
@@ -9,12 +9,14 @@ import MonthlyEvolutionChart from '../components/dashboard/MonthlyEvolutionChart
 import ComparisonBarChart from '../components/dashboard/ComparisonBarChart'
 import CategoryList from '../components/dashboard/CategoryList'
 import { useTranslation } from '../hooks/useTranslation'
+import { useCurrencyFormatter } from '../hooks/useCurrency'
 
 const DashboardPage = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>('')
   const { summary, transactions, loading, error } =
     useDashboardData(selectedMonth)
   const { t } = useTranslation()
+  const { formatCurrency } = useCurrencyFormatter()
 
   // Memoizar datos procesados para el gráfico de pastel
   const categoryData = useMemo(() => {

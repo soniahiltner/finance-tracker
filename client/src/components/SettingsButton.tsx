@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Settings } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import LanguageSelector from './LanguageSelector'
+import CurrencySelector from './CurrencySelector'
 import { useTranslation } from '../hooks/useTranslation'
 
 const SettingsButton = () => {
@@ -49,6 +50,7 @@ const SettingsButton = () => {
             {t.theme} <ThemeToggle onToggle={() => setOpen(false)} />
           </span>
           <LanguageSelector onSelect={() => setOpen(false)} />
+          <CurrencySelector onSelect={() => setOpen(false)} />
         </div>
       )}
     </div>

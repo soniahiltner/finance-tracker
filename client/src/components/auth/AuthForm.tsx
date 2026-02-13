@@ -1,8 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import type { LucideIcon } from 'lucide-react'
 import ThemeToggle from '../ThemeToggle'
 import type { ReactNode } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
+import {
+  formatRetryButtonText,
+  getLockoutMessage,
+  normalizeAuthErrorMessage
+} from '../../utils/authErrorMessages'
 
 interface AuthField {
   id: string
@@ -47,10 +53,45 @@ const AuthForm = ({
 }: AuthFormProps) => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [retryAfterSeconds, setRetryAfterSeconds] = useState(0)
   const navigate = useNavigate()
+  const { language } = useTranslation()
+
+  useEffect(() => {
+    if (retryAfterSeconds <= 0) return
+
+    const timer = window.setInterval(() => {
+      setRetryAfterSeconds((currentSeconds) =>
+        currentSeconds > 0 ? currentSeconds - 1 : 0
+      )
+    }, 1000)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [retryAfterSeconds])
+
+  useEffect(() => {
+    if (retryAfterSeconds === 0 && error) {
+      const lockoutMessageEs = getLockoutMessage('es')
+      const lockoutMessageEn = getLockoutMessage('en')
+
+      if (
+        error.includes(lockoutMessageEs) ||
+        error.includes(lockoutMessageEn)
+      ) {
+        setError('')
+      }
+    }
+  }, [error, retryAfterSeconds])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (loading || retryAfterSeconds > 0) {
+      return
+    }
+
     setError('')
 
     // Ejecutar validaciones personalizadas si existen
@@ -68,18 +109,40 @@ const AuthForm = ({
       await onSubmit()
       navigate('/dashboard')
     } catch (err: unknown) {
-      const errorMessage =
+      const responseData =
         err && typeof err === 'object' && 'response' in err
-          ? (err as { response?: { data?: { message?: string } } }).response
-              ?.data?.message
-          : err instanceof Error
-            ? err.message
-            : 'Error en la operación'
-      setError(errorMessage || 'Error en la operación')
+          ? (
+              err as {
+                response?: { data?: { message?: string; retryAfter?: number } }
+              }
+            ).response?.data
+          : undefined
+
+      const retryAfter = responseData?.retryAfter
+      const errorMessage =
+        typeof retryAfter === 'number' && retryAfter > 0
+          ? getLockoutMessage(language)
+          : normalizeAuthErrorMessage(
+              language,
+              responseData?.message ||
+                (err instanceof Error ? err.message : 'Error en la operación')
+            )
+
+      if (typeof retryAfter === 'number' && retryAfter > 0) {
+        setRetryAfterSeconds(retryAfter)
+      }
+
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
   }
+
+  const submitButtonText = loading
+    ? loadingText
+    : retryAfterSeconds > 0
+      ? formatRetryButtonText(language, retryAfterSeconds)
+      : submitText
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-linear-to-br from-primary-50 to-blue-500 dark:from-gray-900 dark:to-gray-700 px-4 transition-colors'>
@@ -139,10 +202,10 @@ const AuthForm = ({
 
             <button
               type='submit'
-              disabled={loading}
+              disabled={loading || retryAfterSeconds > 0}
               className='w-full btn-primary'
             >
-              {loading ? loadingText : submitText}
+              {submitButtonText}
             </button>
           </form>
 
