@@ -49,7 +49,7 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
-        logger.warn(`CORS blocked origin: ${origin}`)
+        logger.warn(`CORS: origin not in whitelist but allowing in development: ${origin}`)
         callback(null, true) // Temporalmente permitir todos en desarrollo
       }
     },

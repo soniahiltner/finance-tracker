@@ -23,11 +23,11 @@ export const validate =
         }
 
         if (parsedRecord.query && typeof parsedRecord.query === 'object') {
-          req.query = parsedRecord.query as Request['query']
+          Object.assign(req.query, parsedRecord.query)
         }
 
         if (parsedRecord.params && typeof parsedRecord.params === 'object') {
-          req.params = parsedRecord.params as Request['params']
+          Object.assign(req.params, parsedRecord.params)
         }
       }
 

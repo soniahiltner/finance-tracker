@@ -1,46 +1,8 @@
 import { test, expect } from '@playwright/test'
+import { setupAuthMocks, performLogin } from './fixtures/auth.fixture'
 
 test('login happy path redirects to dashboard', async ({ page }) => {
-  await page.route('**/api/auth/me', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        success: true,
-        user: {
-          id: 'user-e2e-1',
-          email: 'sonia@example.com',
-          name: 'Sonia',
-          language: 'es',
-          currency: 'EUR'
-        }
-      })
-    })
-  })
-
-  await page.route('**/api/auth/login', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        success: true,
-        token: 'fake-jwt-token',
-        user: {
-          id: 'user-e2e-1',
-          email: 'sonia@example.com',
-          name: 'Sonia',
-          language: 'es',
-          currency: 'EUR'
-        }
-      })
-    })
-  })
-
-  await page.goto('/login')
-
-  await page.getByLabel(/email/i).fill('sonia@example.com')
-  await page.getByLabel(/contraseñ|password/i).fill('password123')
-  await page.getByRole('button', { name: /iniciar sesión|login/i }).click()
-
+  await setupAuthMocks(page)
+  await performLogin(page)
   await expect(page).toHaveURL(/\/app\/dashboard/)
 })
