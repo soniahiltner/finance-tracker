@@ -15,6 +15,8 @@ const AIAssistantPage = () => {
     setInput,
     loading,
     suggestions,
+    retryAfterSeconds,
+    retryAfterMessage,
     //messagesEndRef,
     handleSubmit,
     handleSuggestionClick,
@@ -55,6 +57,12 @@ const AIAssistantPage = () => {
 
       {/* Chat Container */}
       <div className='card p-0  flex flex-col'>
+        {retryAfterSeconds > 0 && (
+          <div className='mx-4 mt-4 p-3 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 text-sm'>
+            {retryAfterMessage}
+          </div>
+        )}
+
         {/* Messages Area */}
 
         <div className='flex-1 overflow-y-auto space-y-4 p-4'>
@@ -81,7 +89,7 @@ const AIAssistantPage = () => {
         <ChatInput
           input={input}
           setInput={setInput}
-          loading={loading}
+          loading={loading || retryAfterSeconds > 0}
           onSubmit={handleSubmit}
         />
       </div>

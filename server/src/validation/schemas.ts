@@ -178,19 +178,26 @@ export const aiChatSchema = z.object({
   body: z.object({
     query: z
       .string()
-      .min(1, 'La consulta no puede estar vacía')
-      .max(500, 'La consulta es demasiado larga'),
+      .transform((value) => value.trim())
+      .pipe(
+        z
+          .string()
+          .min(1, 'La consulta no puede estar vacía')
+          .max(500, 'La consulta es demasiado larga')
+      ),
     conversationHistory: z
       .array(
         z.object({
           role: z.enum(['user', 'assistant']),
           content: z
             .string()
-            .min(1, 'El mensaje no puede estar vacío')
-            .max(1000, 'El mensaje es demasiado largo')
+            .max(10000, 'El mensaje es demasiado largo')
+            .transform((value) => value.trim().slice(0, 1000))
         })
       )
-      .max(10, 'El historial es demasiado largo')
+      .transform((messages) =>
+        messages.filter((message) => message.content.length > 0).slice(-10)
+      )
       .optional()
   })
 })

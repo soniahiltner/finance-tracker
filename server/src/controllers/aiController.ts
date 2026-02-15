@@ -12,6 +12,8 @@ import { defaultCategories } from '../config/defaultCategories.js'
 const getClaudeService = () => new ClaudeService()
 
 type Language = 'es' | 'en'
+const MAX_HISTORY_ITEMS = 10
+const MAX_HISTORY_MESSAGE_LENGTH = 1000
 
 const getRequestLanguage = (req: AuthRequest): Language => {
   const queryLanguage =
@@ -94,6 +96,11 @@ const detectQueryLanguage = (query: string, fallback: Language): Language => {
   return fallback
 }
 
+interface AIControllerError extends Error {
+  statusCode?: number
+  retryAfter?: number
+}
+
 // @desc    Consultar al asistente de IA
 // @route   POST /api/ai/query
 // @access  Private
@@ -106,8 +113,6 @@ export const queryAI = async (
     const { query, conversationHistory } = req.body as AIQueryRequest
     const userId = req.user!.id
     const claudeService = getClaudeService()
-    const requestLanguage = getRequestLanguage(req)
-    const queryLanguage = detectQueryLanguage(query, requestLanguage)
 
     // Validar query
     if (!query || query.trim().length === 0) {
@@ -124,8 +129,17 @@ export const queryAI = async (
       })
     }
 
+    const requestLanguage = getRequestLanguage(req)
+    const queryLanguage = detectQueryLanguage(query, requestLanguage)
+
     const safeHistory = Array.isArray(conversationHistory)
-      ? conversationHistory.slice(-10)
+      ? conversationHistory
+          .slice(-MAX_HISTORY_ITEMS)
+          .map((message) => ({
+            role: message.role,
+            content: message.content.trim().slice(0, MAX_HISTORY_MESSAGE_LENGTH)
+          }))
+          .filter((message) => message.content.length > 0)
       : []
 
     // Obtener respuesta de Claude
@@ -145,18 +159,30 @@ export const queryAI = async (
   } catch (error: any) {
     console.error('QueryAI error:', error)
 
+    const typedError = error as AIControllerError
+
     // Manejar errores específicos
-    if (error.message.includes('API key')) {
+    if (
+      typedError.statusCode === 401 ||
+      typedError.message.includes('API key')
+    ) {
       return res.status(500).json({
         success: false,
         message: 'AI service configuration error'
       })
     }
 
-    if (error.message.includes('Rate limit')) {
+    if (
+      typedError.statusCode === 429 ||
+      typedError.message.includes('Rate limit')
+    ) {
       return res.status(429).json({
         success: false,
-        message: 'Too many requests. Please try again later'
+        message: 'Too many requests. Please try again later',
+        ...(typeof typedError.retryAfter === 'number' &&
+        typedError.retryAfter > 0
+          ? { retryAfter: typedError.retryAfter }
+          : {})
       })
     }
 

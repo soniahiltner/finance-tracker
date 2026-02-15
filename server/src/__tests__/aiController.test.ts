@@ -16,6 +16,7 @@ let app: Express
 let mongoServer: MongoMemoryServer
 let authToken: string
 let userId: string
+let consoleErrorSpy: jest.SpyInstance
 
 // Setup test app
 const setupApp = (): Express => {
@@ -48,6 +49,8 @@ afterAll(async () => {
 })
 
 beforeEach(async () => {
+  consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
   await User.deleteMany({})
 
   // Crear usuario y token
@@ -62,6 +65,10 @@ beforeEach(async () => {
 
   // Limpiar mocks
   jest.clearAllMocks()
+})
+
+afterEach(() => {
+  consoleErrorSpy.mockRestore()
 })
 
 describe('AI Controller - POST /api/ai/query', () => {
@@ -87,7 +94,9 @@ describe('AI Controller - POST /api/ai/query', () => {
     // Verificar que se llamó al servicio
     expect(ClaudeService.prototype.query).toHaveBeenCalledWith(
       userId,
-      '¿Cuánto gasto al mes?'
+      '¿Cuánto gasto al mes?',
+      'es',
+      []
     )
   })
 
@@ -167,6 +176,27 @@ describe('AI Controller - POST /api/ai/query', () => {
     expect(response.body.message).toContain('Too many requests')
   })
 
+  it('should return retryAfter when AI service provides it', async () => {
+    const rateLimitError = Object.assign(new Error('Rate limit exceeded'), {
+      statusCode: 429,
+      retryAfter: 42
+    })
+
+    ;(ClaudeService.prototype.query as jest.Mock) = jest
+      .fn()
+      .mockRejectedValue(rateLimitError)
+
+    const response = await request(app)
+      .post('/api/ai/query')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({ query: 'Test query' })
+      .expect(429)
+
+    expect(response.body.success).toBe(false)
+    expect(response.body.message).toContain('Too many requests')
+    expect(response.body.retryAfter).toBe(42)
+  })
+
   it('should return 401 without authentication', async () => {
     const response = await request(app)
       .post('/api/ai/query')
@@ -211,8 +241,51 @@ describe('AI Controller - POST /api/ai/query', () => {
     expect(response.body.success).toBe(true)
     expect(ClaudeService.prototype.query).toHaveBeenCalledWith(
       userId,
-      specialQuery
+      specialQuery,
+      'es',
+      []
     )
+  })
+
+  it('should sanitize oversized conversation history on follow-up queries', async () => {
+    const mockAnswer = 'Respuesta para segunda pregunta'
+    ;(ClaudeService.prototype.query as jest.Mock) = jest
+      .fn()
+      .mockResolvedValue(mockAnswer)
+
+    const longHistory = Array.from({ length: 12 }, (_, index) => ({
+      role: index % 2 === 0 ? 'user' : 'assistant',
+      content:
+        index === 8
+          ? 'x'.repeat(1500)
+          : index === 11
+            ? '   '
+            : `Mensaje ${index}`
+    }))
+
+    const response = await request(app)
+      .post('/api/ai/query')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({
+        query: 'Segunda pregunta',
+        conversationHistory: longHistory
+      })
+      .expect(200)
+
+    expect(response.body.success).toBe(true)
+    expect(response.body.answer).toBe(mockAnswer)
+
+    const sanitizedHistory = (ClaudeService.prototype.query as jest.Mock).mock
+      .calls[0][3] as Array<{ role: 'user' | 'assistant'; content: string }>
+
+    expect(Array.isArray(sanitizedHistory)).toBe(true)
+    expect(sanitizedHistory.length).toBeLessThanOrEqual(10)
+    expect(
+      sanitizedHistory.every((message) => message.content.length > 0)
+    ).toBe(true)
+    expect(
+      sanitizedHistory.every((message) => message.content.length <= 1000)
+    ).toBe(true)
   })
 })
 
@@ -241,7 +314,7 @@ describe('AI Controller - GET /api/ai/suggestions', () => {
     // Verificar que se llamó al servicio
     expect(
       ClaudeService.prototype.generateSuggestedQuestions
-    ).toHaveBeenCalledWith(userId)
+    ).toHaveBeenCalledWith(userId, 'es')
   })
 
   it('should return 401 without authentication', async () => {
@@ -301,7 +374,7 @@ describe('AI Controller - GET /api/ai/suggestions', () => {
     expect(response.body.success).toBe(true)
     expect(
       ClaudeService.prototype.generateSuggestedQuestions
-    ).toHaveBeenCalledWith(otherUser._id.toString())
+    ).toHaveBeenCalledWith(otherUser._id.toString(), 'es')
   })
 })
 

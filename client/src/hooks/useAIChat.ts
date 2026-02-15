@@ -3,6 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { aiService } from '../services/aiService'
 import type { ConversationMessage } from '../types'
 import { useLanguage } from './useLanguage'
+import { formatRetryAfter } from '../utils/authErrorMessages'
 
 export interface Message {
   id: string
@@ -15,7 +16,9 @@ interface ErrorResponse {
   response?: {
     data?: {
       message?: string
+      retryAfter?: number
     }
+    status?: number
   }
 }
 
@@ -25,12 +28,35 @@ interface AIQueryPayload {
 }
 
 const MAX_HISTORY = 10
+const MAX_HISTORY_MESSAGE_LENGTH = 1000
 
 export const useAIChat = () => {
   const { language } = useLanguage()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
+  const [retryAfterSeconds, setRetryAfterSeconds] = useState(0)
+  const [retryAfterBaseMessage, setRetryAfterBaseMessage] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (retryAfterSeconds <= 0) return
+
+    const timer = window.setInterval(() => {
+      setRetryAfterSeconds((currentSeconds) =>
+        currentSeconds > 0 ? currentSeconds - 1 : 0
+      )
+    }, 1000)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [retryAfterSeconds])
+
+  useEffect(() => {
+    if (retryAfterSeconds === 0) {
+      setRetryAfterBaseMessage('')
+    }
+  }, [retryAfterSeconds])
 
   const { data: welcomeMessage } = useQuery<string>({
     queryKey: ['ai-welcome', language],
@@ -86,7 +112,8 @@ export const useAIChat = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || queryMutation.isPending) return
+    if (!input.trim() || queryMutation.isPending || retryAfterSeconds > 0)
+      return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -96,10 +123,13 @@ export const useAIChat = () => {
     }
 
     const queryText = input.trim()
-    const conversationHistory = messages.slice(-MAX_HISTORY).map((message) => ({
-      role: message.role,
-      content: message.content
-    }))
+    const conversationHistory = messages
+      .slice(-MAX_HISTORY)
+      .map((message) => ({
+        role: message.role,
+        content: message.content.trim().slice(0, MAX_HISTORY_MESSAGE_LENGTH)
+      }))
+      .filter((message) => message.content.length > 0)
 
     setMessages((prev) => [...prev, userMessage])
     setInput('')
@@ -120,10 +150,34 @@ export const useAIChat = () => {
       setMessages((prev) => [...prev, assistantMessage])
     } catch (error) {
       const err = error as ErrorResponse
+      const retryAfter = err.response?.data?.retryAfter
+      const errorMessageFromApi = err.response?.data?.message
+
+      if (typeof retryAfter === 'number' && retryAfter > 0) {
+        setRetryAfterSeconds(retryAfter)
+        setRetryAfterBaseMessage(
+          errorMessageFromApi ||
+            (language === 'en'
+              ? 'Too many requests. Please try again later.'
+              : 'Demasiadas solicitudes. Por favor intenta de nuevo más tarde.')
+        )
+      }
+
+      const rateLimitedMessage =
+        typeof retryAfter === 'number' && retryAfter > 0
+          ? `${
+              errorMessageFromApi ||
+              (language === 'en'
+                ? 'Too many requests. Please try again later.'
+                : 'Demasiadas solicitudes. Por favor intenta de nuevo más tarde.')
+            } ${formatRetryAfter(language, retryAfter)}`
+          : undefined
+
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content:
+          rateLimitedMessage ||
           err.response?.data?.message ||
           'Lo siento, hubo un error al procesar tu consulta. Por favor, inténtalo de nuevo.',
         timestamp: new Date()
@@ -139,7 +193,19 @@ export const useAIChat = () => {
   const resetChat = () => {
     setMessages([])
     setInput('')
+    setRetryAfterSeconds(0)
+    setRetryAfterBaseMessage('')
   }
+
+  const retryAfterMessage =
+    retryAfterSeconds > 0
+      ? `${
+          retryAfterBaseMessage ||
+          (language === 'en'
+            ? 'Too many requests. Please try again later.'
+            : 'Demasiadas solicitudes. Por favor intenta de nuevo más tarde.')
+        } ${formatRetryAfter(language, retryAfterSeconds)}`
+      : ''
 
   return {
     messages: displayMessages,
@@ -147,6 +213,8 @@ export const useAIChat = () => {
     setInput,
     loading: queryMutation.isPending,
     suggestions,
+    retryAfterSeconds,
+    retryAfterMessage,
     messagesEndRef,
     handleSubmit,
     handleSuggestionClick,

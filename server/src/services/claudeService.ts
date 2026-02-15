@@ -8,8 +8,46 @@ interface ConversationMessage {
   content: string
 }
 
+interface ClaudeServiceError extends Error {
+  statusCode?: number
+  retryAfter?: number
+}
+
 export class ClaudeService {
   private client: Anthropic
+
+  private createServiceError(
+    message: string,
+    statusCode?: number,
+    retryAfter?: number
+  ): ClaudeServiceError {
+    const error = new Error(message) as ClaudeServiceError
+    if (typeof statusCode === 'number') {
+      error.statusCode = statusCode
+    }
+    if (typeof retryAfter === 'number' && retryAfter > 0) {
+      error.retryAfter = retryAfter
+    }
+    return error
+  }
+
+  private getRetryAfterSeconds(error: any): number | undefined {
+    const rawRetryAfter =
+      error?.headers?.['retry-after'] ??
+      error?.response?.headers?.['retry-after'] ??
+      error?.response?.headers?.['Retry-After']
+
+    if (rawRetryAfter === undefined || rawRetryAfter === null) {
+      return undefined
+    }
+
+    const retryAfter = Number(rawRetryAfter)
+    if (!Number.isFinite(retryAfter) || retryAfter <= 0) {
+      return undefined
+    }
+
+    return Math.ceil(retryAfter)
+  }
 
   constructor() {
     const apiKey = process.env.ANTHROPIC_API_KEY
@@ -259,15 +297,34 @@ EJEMPLOS DE PREGUNTAS QUE PUEDES RESPONDER:
     } catch (error: any) {
       console.error('Claude API error:', error)
 
-      if (error.status === 401) {
-        throw new Error('Invalid API key. Please check your ANTHROPIC_API_KEY')
+      const statusCode =
+        typeof error?.status === 'number'
+          ? error.status
+          : typeof error?.response?.status === 'number'
+            ? error.response.status
+            : undefined
+
+      if (statusCode === 401) {
+        throw this.createServiceError(
+          'Invalid API key. Please check your ANTHROPIC_API_KEY',
+          401
+        )
       }
 
-      if (error.status === 429) {
-        throw new Error('Rate limit exceeded. Please try again later')
+      if (statusCode === 429) {
+        throw this.createServiceError(
+          'Rate limit exceeded. Please try again later',
+          429,
+          this.getRetryAfterSeconds(error)
+        )
       }
 
-      throw new Error('Failed to get response from AI assistant')
+      const upstreamMessage =
+        typeof error?.message === 'string' && error.message.trim().length > 0
+          ? error.message
+          : 'Failed to get response from AI assistant'
+
+      throw this.createServiceError(upstreamMessage, 502)
     }
   }
 
