@@ -76,7 +76,7 @@ describe('Password Reset Pages (Spanish)', () => {
       expect(screen.getByText('Enviando...')).toBeInTheDocument()
     })
 
-    it('should display success/error messages', () => {
+    it('should display success/error messages', async () => {
       //succcess message
       vi.mocked(authService.forgotPassword).mockResolvedValueOnce({
         success: true,
@@ -85,7 +85,7 @@ describe('Password Reset Pages (Spanish)', () => {
       })
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
       fireEvent.submit(form)
-      expect(
+      await expect(
         screen.findByText(
           'Si el email existe, enviaremos un enlace para restablecer la contraseña.'
         )
@@ -165,7 +165,7 @@ describe('Password Reset Pages (Spanish)', () => {
       expect(screen.getByText('Actualizando...')).toBeInTheDocument()
     })
 
-    it('should display success/error messages', () => {
+    it('should display success/error messages', async () => {
       vi.mocked(authService.resetPassword).mockResolvedValueOnce({
         success: true,
         message: 'Contraseña actualizada correctamente'
@@ -175,7 +175,7 @@ describe('Password Reset Pages (Spanish)', () => {
         target: { value: 'password123' }
       })
       fireEvent.submit(form)
-      expect(
+      await expect(
         screen.findByText('Contraseña actualizada correctamente')
       ).resolves.toBeInTheDocument()
     })
