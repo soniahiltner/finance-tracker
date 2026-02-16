@@ -40,6 +40,7 @@ export const ChatInput = React.memo(
             type='submit'
             disabled={!input.trim() || loading}
             className='btn-primary flex items-center'
+            title={t.send}
           >
             {loading ? (
               <Loader2

@@ -68,7 +68,13 @@ const GoalCard = memo(
               {formatCurrency(goal.targetAmount)}
             </span>
           </div>
-          <div className='w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3'>
+          <div
+            className='w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3'
+            role='progressbar'
+            aria-valuenow={goal.progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
             <div
               className='h-3 rounded-full transition-all duration-300'
               style={{

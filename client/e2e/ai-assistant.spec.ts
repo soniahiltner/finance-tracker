@@ -2,19 +2,39 @@ import { test, expect } from './fixtures/auth.fixture'
 
 test.describe('AI Assistant Page', () => {
   test.beforeEach(async ({ authenticatedPage }) => {
-    // Mock AI chat API
-    await authenticatedPage.route('**/api/ai/chat', async (route) => {
+    const timestamp = new Date().toISOString()
+
+    await authenticatedPage.route('**/api/ai/welcome', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
           success: true,
-          response: 'Esta es una respuesta de prueba del asistente AI.',
-          suggestions: [
-            '¿Cómo puedo ahorrar más dinero?',
-            'Muéstrame mis gastos del mes',
-            'Dame consejos financieros'
-          ]
+          message: 'Hola, soy tu asistente financiero. ¿En que puedo ayudarte?'
+        })
+      })
+    })
+
+    await authenticatedPage.route('**/api/ai/suggestions', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          suggestions: ['Resumen mensual', 'Gastos por categoria']
+        })
+      })
+    })
+
+    await authenticatedPage.route('**/api/ai/query', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          query: '¿Cómo esta mi situacion financiera?',
+          answer: 'Esta es una respuesta de prueba del asistente AI.',
+          timestamp
         })
       })
     })

@@ -17,7 +17,6 @@ const AIAssistantPage = () => {
     suggestions,
     retryAfterSeconds,
     retryAfterMessage,
-    //messagesEndRef,
     handleSubmit,
     handleSuggestionClick,
     resetChat

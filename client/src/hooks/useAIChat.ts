@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo} from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { aiService } from '../services/aiService'
 import type { ConversationMessage } from '../types'
@@ -36,25 +36,22 @@ export const useAIChat = () => {
   const [input, setInput] = useState('')
   const [retryAfterSeconds, setRetryAfterSeconds] = useState(0)
   const [retryAfterBaseMessage, setRetryAfterBaseMessage] = useState('')
-  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (retryAfterSeconds <= 0) return
 
     const timer = window.setInterval(() => {
-      setRetryAfterSeconds((currentSeconds) =>
-        currentSeconds > 0 ? currentSeconds - 1 : 0
-      )
+      setRetryAfterSeconds((currentSeconds) => {
+        const newSeconds = currentSeconds > 0 ? currentSeconds - 1 : 0
+        if (newSeconds === 0) {
+          setRetryAfterBaseMessage('')
+        }
+        return newSeconds
+      })
     }, 1000)
 
     return () => {
       window.clearInterval(timer)
-    }
-  }, [retryAfterSeconds])
-
-  useEffect(() => {
-    if (retryAfterSeconds === 0) {
-      setRetryAfterBaseMessage('')
     }
   }, [retryAfterSeconds])
 
@@ -98,17 +95,6 @@ export const useAIChat = () => {
     mutationFn: ({ query, conversationHistory }: AIQueryPayload) =>
       aiService.query(query, language, conversationHistory)
   })
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  useEffect(() => {
-    // Solo hacer scroll cuando la conversación ha comenzado (más de 1 mensaje)
-    if (displayMessages.length > 1) {
-      scrollToBottom()
-    }
-  }, [displayMessages.length])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -215,7 +201,6 @@ export const useAIChat = () => {
     suggestions,
     retryAfterSeconds,
     retryAfterMessage,
-    messagesEndRef,
     handleSubmit,
     handleSuggestionClick,
     resetChat

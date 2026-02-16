@@ -63,11 +63,15 @@ export const test = base.extend<AuthFixtures>({
     // Setup authentication mocks
     await setupAuthMocks(page)
 
-    // Perform login
-    await performLogin(page)
+    const token = 'fake-jwt-token'
 
-    // Wait for navigation to dashboard
-    await page.waitForURL(/\/app\/dashboard/, { timeout: 5000 })
+    await page.addInitScript(
+      ({ initToken, initUser }) => {
+        window.localStorage.setItem('token', initToken)
+        window.localStorage.setItem('user', JSON.stringify(initUser))
+      },
+      { initToken: token, initUser: mockUser }
+    )
 
     // Provide the authenticated page to the test
     // eslint-disable-next-line react-hooks/rules-of-hooks -- This is Playwright's fixture API, not a React Hook
