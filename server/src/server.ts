@@ -2,6 +2,7 @@ import express, { type Application } from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
+import * as Sentry from '@sentry/node'
 import { connectDB } from './config/database.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import { seedDefaultCategories } from './utils/seedCategories.js'
@@ -9,6 +10,14 @@ import { apiLimiter } from './middleware/rateLimiter.js'
 import logger from './config/logger.js'
 
 dotenv.config()
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV || 'development',
+    tracesSampleRate: Number(process.env.SENTRY_TRACES_SAMPLE_RATE ?? 0)
+  })
+}
 
 // Importar rutas
 import authRoutes from './routes/auth.js'
@@ -49,7 +58,9 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
-        logger.warn(`CORS: origin not in whitelist but allowing in development: ${origin}`)
+        logger.warn(
+          `CORS: origin not in whitelist but allowing in development: ${origin}`
+        )
         callback(null, true) // Temporalmente permitir todos en desarrollo
       }
     },

@@ -67,3 +67,8 @@ npm test
 - [Setup de entorno](ENV_SETUP.md)
 - [README del cliente](client/README.md)
 - [README del servidor](server/README.md)
+
+## Deploy en Render
+
+- Blueprint: [render.yaml](render.yaml)
+- Configuración de variables: [ENV_SETUP.md](ENV_SETUP.md)

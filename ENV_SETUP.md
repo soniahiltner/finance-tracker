@@ -21,20 +21,22 @@ EMAIL_FROM=Finance Tracker <no-reply@finance-tracker.com>
 
 ### Variables Requeridas
 
-| Variable            | Descripción                                        | Ejemplo                                                       |
-| ------------------- | -------------------------------------------------- | ------------------------------------------------------------- |
-| `PORT`              | Puerto del servidor                                | `5000`                                                        |
-| `MONGODB_URI`       | URI de conexión a MongoDB                          | `mongodb+srv://user:pass@cluster.mongodb.net/finance-tracker` |
-| `JWT_SECRET`        | Clave secreta para JWT (mín. 32 caracteres)        | Generar con: `openssl rand -base64 32`                        |
-| `ANTHROPIC_API_KEY` | API key de Anthropic Claude                        | `sk-ant-api03-...`                                            |
-| `NODE_ENV`          | Entorno de ejecución                               | `production`                                                  |
-| `ALLOWED_ORIGINS`   | Orígenes permitidos para CORS (separados por coma) | `https://tu-app.com,https://www.tu-app.com`                   |
-| `CLIENT_URL`        | URL base del frontend (para links de reset)        | `https://tu-app.com`                                          |
-| `MAILTRAP_HOST`     | Host SMTP de Mailtrap                              | `sandbox.smtp.mailtrap.io`                                    |
-| `MAILTRAP_PORT`     | Puerto SMTP de Mailtrap                            | `2525`                                                        |
-| `MAILTRAP_USER`     | Usuario SMTP de Mailtrap                           | `user_123`                                                    |
-| `MAILTRAP_PASS`     | Password SMTP de Mailtrap                          | `pass_123`                                                    |
-| `EMAIL_FROM`        | Remitente de emails                                | `Finance Tracker <no-reply@finance-tracker.com>`              |
+| Variable                    | Descripción                                        | Ejemplo                                                       |
+| --------------------------- | -------------------------------------------------- | ------------------------------------------------------------- |
+| `PORT`                      | Puerto del servidor                                | `5000`                                                        |
+| `MONGODB_URI`               | URI de conexión a MongoDB                          | `mongodb+srv://user:pass@cluster.mongodb.net/finance-tracker` |
+| `JWT_SECRET`                | Clave secreta para JWT (mín. 32 caracteres)        | Generar con: `openssl rand -base64 32`                        |
+| `ANTHROPIC_API_KEY`         | API key de Anthropic Claude                        | `sk-ant-api03-...`                                            |
+| `NODE_ENV`                  | Entorno de ejecución                               | `production`                                                  |
+| `ALLOWED_ORIGINS`           | Orígenes permitidos para CORS (separados por coma) | `https://tu-app.com,https://www.tu-app.com`                   |
+| `CLIENT_URL`                | URL base del frontend (para links de reset)        | `https://tu-app.com`                                          |
+| `MAILTRAP_HOST`             | Host SMTP de Mailtrap                              | `sandbox.smtp.mailtrap.io`                                    |
+| `MAILTRAP_PORT`             | Puerto SMTP de Mailtrap                            | `2525`                                                        |
+| `MAILTRAP_USER`             | Usuario SMTP de Mailtrap                           | `user_123`                                                    |
+| `MAILTRAP_PASS`             | Password SMTP de Mailtrap                          | `pass_123`                                                    |
+| `EMAIL_FROM`                | Remitente de emails                                | `Finance Tracker <no-reply@finance-tracker.com>`              |
+| `SENTRY_DSN`                | DSN de Sentry para backend                         | `https://...@o0.ingest.sentry.io/0`                           |
+| `SENTRY_TRACES_SAMPLE_RATE` | Muestreo de trazas backend (0 a 1)                 | `0.1`                                                         |
 
 ### Seguridad en Producción
 
@@ -84,6 +86,20 @@ VITE_API_URL=http://localhost:5000/api
 
 ```env
 VITE_API_URL=https://tu-api.com/api
+VITE_SENTRY_DSN=https://...@o0.ingest.sentry.io/0
+VITE_SENTRY_TRACES_SAMPLE_RATE=0.1
 ```
 
 > **Nota**: Las variables de Vite deben tener el prefijo `VITE_` para ser expuestas al código del cliente.
+
+### Sourcemaps de Sentry (frontend)
+
+Para subir sourcemaps durante el build en Render, configura también en el servicio del frontend:
+
+```env
+SENTRY_ORG=tu_org
+SENTRY_PROJECT=tu_proyecto_frontend
+SENTRY_AUTH_TOKEN=tu_token
+```
+
+Si estas tres variables no están definidas, el build funciona igual, pero no subirá sourcemaps a Sentry.

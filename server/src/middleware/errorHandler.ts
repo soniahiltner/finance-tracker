@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
+import * as Sentry from '@sentry/node'
 import logger from '../config/logger.js'
 
 export interface ApiError extends Error {
@@ -22,6 +23,16 @@ export const errorHandler = (
     method: req.method,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
   })
+
+  if (process.env.SENTRY_DSN) {
+    Sentry.captureException(err, {
+      tags: {
+        statusCode: String(statusCode),
+        method: req.method,
+        path: req.path
+      }
+    })
+  }
 
   res.status(statusCode).json({
     success: false,
