@@ -3,7 +3,7 @@ services:
     name: finance-tracker-api
     runtime: node
     rootDir: server
-    buildCommand: npm ci && npm run build
+    buildCommand: npm install && npm run build
     startCommand: npm start
     healthCheckPath: /health
     autoDeployTrigger: commit
@@ -36,13 +36,13 @@ services:
       - key: SENTRY_DSN
         sync: false
       - key: SENTRY_TRACES_SAMPLE_RATE
-        value: "0.1"
+        value: '0.1'
 
   - type: web
     name: finance-tracker-web
     runtime: static
     rootDir: client
-    buildCommand: npm ci && npm run build
+    buildCommand: npm install && npm run build
     staticPublishPath: dist
     autoDeployTrigger: commit
     envVars:
@@ -51,7 +51,7 @@ services:
       - key: VITE_SENTRY_DSN
         sync: false
       - key: VITE_SENTRY_TRACES_SAMPLE_RATE
-        value: "0.1"
+        value: '0.1'
       - key: SENTRY_ORG
         sync: false
       - key: SENTRY_PROJECT
