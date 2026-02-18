@@ -71,6 +71,9 @@ npm test
 ## Deploy en Render
 
 - Configuración de variables: [ENV_SETUP.md](ENV_SETUP.md)
+- Frontend (Static Site con React Router): en Render agrega un rewrite `/* -> /index.html` (Action: `Rewrite`) para evitar `404` en rutas como `/login`.
+- Configuración versionada: [render.yaml](render.yaml) (incluye rewrite SPA para el cliente).
 
 
 [Live site]:(https://finance-tracker-client-6p02.onrender.com/)
+

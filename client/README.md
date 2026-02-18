@@ -67,6 +67,17 @@ npm run test:smoke
 
 El cliente consume la API definida por el servicio backend en `server/`. La URL base se configura por variables de entorno (por defecto: `http://localhost:5000/api`).
 
+## Deploy en Render (SPA)
+
+Este frontend usa `BrowserRouter`, así que en Render debes configurar un rewrite para que rutas como `/login` devuelvan `index.html` y no `404`.
+
+- En `Static Site` de Render → `Redirects/Rewrites` agrega:
+  - `Source`: `/*`
+  - `Destination`: `/index.html`
+  - `Action`: `Rewrite`
+
+Si no agregas este rewrite, Lighthouse o cualquier navegación directa a rutas internas (`/login`, `/dashboard`, etc.) devolverá `404`.
+
 ## Documentación
 
 - [README raíz](../README.md)
