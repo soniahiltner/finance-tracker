@@ -85,7 +85,7 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className='space-y-6'>
+    <main className='space-y-6'>
       {/* Header */}
       <TransactionsHeader
         allTransactions={transactions}
@@ -139,6 +139,6 @@ export default function TransactionsPage() {
         onConfirm={handleConfirmDelete}
         onClose={handleCancelDelete}
       />
-    </div>
+    </main>
   )
 }

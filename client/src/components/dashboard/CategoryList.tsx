@@ -30,19 +30,19 @@ const CategoryList = memo(
 
     if (categories.length === 0) {
       return (
-        <div className='card'>
+        <section className='card'>
           <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
             {t.topCategories}
           </h2>
           <p className='text-center text-gray-500 py-8'>
             {t.thereAreNoTransactionsYet} {t.startAddingSome}
           </p>
-        </div>
+        </section>
       )
     }
 
     return (
-      <div className='card'>
+      <section className='card'>
         <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
           {t.topCategories}
         </h2>
@@ -90,7 +90,7 @@ const CategoryList = memo(
             )
           })}
         </div>
-      </div>
+      </section>
     )
   }
 )

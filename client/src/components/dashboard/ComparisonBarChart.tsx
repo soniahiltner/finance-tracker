@@ -29,7 +29,7 @@ const ComparisonBarChart = ({
   if (data.length <= 1) return null
 
   return (
-    <div className='card'>
+    <section className='card'>
       <h2 className='text-lg font-semibold mb-4 dark:text-gray-100'>
         {t.incomeVsExpensesComparison}
       </h2>
@@ -60,7 +60,7 @@ const ComparisonBarChart = ({
           />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </section>
   )
 }
 

@@ -12,7 +12,7 @@ const GoalStatsCards = ({ stats }: GoalStatsCardsProps) => {
   const { formatCurrency } = useCurrencyFormatter()
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
+    <section className='grid grid-cols-1 md:grid-cols-4 gap-4'>
       <div className='card'>
         <div className='flex items-center justify-between mb-2'>
           <Target className='w-8 h-8 text-primary-600 dark:text-primary-400' />
@@ -58,7 +58,7 @@ const GoalStatsCards = ({ stats }: GoalStatsCardsProps) => {
           {formatCurrency(stats.totalSaved)}
         </p>
       </div>
-    </div>
+    </section>
   )
 }
 

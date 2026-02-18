@@ -52,7 +52,7 @@ const LoginPage = () => {
       footerContent={
         <Link
           to='/forgot-password'
-          className='text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300'
+          className='text-primary-750 dark:text-primary-400 font-medium hover:text-primary-950 dark:hover:text-primary-300'
         >
           {t.forgotPassword}
         </Link>

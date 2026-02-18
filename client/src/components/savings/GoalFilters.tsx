@@ -16,7 +16,7 @@ const GoalFilters = ({ filter, onFilterChange }: GoalFiltersProps) => {
   ]
 
   return (
-    <div className='card'>
+    <section className='card'>
       <div className='flex space-x-2'>
         {filters.map((f) => (
           <button
@@ -32,7 +32,7 @@ const GoalFilters = ({ filter, onFilterChange }: GoalFiltersProps) => {
           </button>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 

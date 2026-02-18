@@ -69,7 +69,7 @@ const LandingPage = () => {
               </Link>
               <Link
                 to='/register'
-                className='inline-flex items-center gap-2 px-8 py-3 text-lg bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg font-semibold transition-colors shadow-lg'
+                className='inline-flex items-center gap-2 px-8 py-3 text-lg bg-primary-750 text-white hover:bg-primary-700 dark:bg-primary-750 dark:hover:bg-primary-900 rounded-lg font-semibold transition-colors shadow-lg'
               >
                 <UserPlus className='h-5 w-5' />
                 Crear Cuenta
@@ -89,9 +89,9 @@ const LandingPage = () => {
                   <div className='bg-primary-100 dark:bg-primary-900/30 w-12 h-12 rounded-lg flex items-center justify-center mb-4'>
                     <Icon className='h-6 w-6 text-primary-600 dark:text-primary-400' />
                   </div>
-                  <h3 className='text-lg font-semibold text-gray-900 dark:text-white mb-2'>
+                  <h2 className='text-lg font-semibold text-gray-900 dark:text-white mb-2'>
                     {feature.title}
-                  </h3>
+                  </h2>
                   <p className='text-gray-600 dark:text-gray-400 text-sm'>
                     {feature.description}
                   </p>

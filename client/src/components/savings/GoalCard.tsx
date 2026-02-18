@@ -71,6 +71,7 @@ const GoalCard = memo(
           <div
             className='w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3'
             role='progressbar'
+            aria-label={`${goal.name} ${t.progress}: ${goal.progress.toFixed(1)}%`}
             aria-valuenow={goal.progress}
             aria-valuemin={0}
             aria-valuemax={100}

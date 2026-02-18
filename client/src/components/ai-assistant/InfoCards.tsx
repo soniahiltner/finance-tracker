@@ -38,7 +38,7 @@ export const InfoCards = React.memo(() => {
   ]
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+    <section className='grid grid-cols-1 md:grid-cols-3 gap-4'>
       {INFO_CARDS.map((card) => (
         <div
           key={card.title}
@@ -50,7 +50,7 @@ export const InfoCards = React.memo(() => {
           <p className={`text-sm ${card.textColor}`}>{card.description}</p>
         </div>
       ))}
-    </div>
+    </section>
   )
 })
 

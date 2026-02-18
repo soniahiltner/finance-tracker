@@ -22,7 +22,7 @@ const TransactionList = ({
 
   if (transactions.length === 0) {
     return (
-      <div className='card'>
+      <section className='card'>
         <div className='text-center py-12'>
           {allTransactions.length === 0 ? (
             <>
@@ -42,12 +42,12 @@ const TransactionList = ({
             </p>
           )}
         </div>
-      </div>
+      </section>
     )
   }
 
   return (
-    <div className='card'>
+    <section className='card'>
       <div className='space-y-2'>
         {transactions.map((transaction) => (
           <TransactionItem
@@ -58,7 +58,7 @@ const TransactionList = ({
           />
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 

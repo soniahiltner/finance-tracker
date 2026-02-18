@@ -13,7 +13,7 @@ export const ExamplesCard = React.memo(() => {
   ]
 
   return (
-    <div className='card bg-gray-50 dark:bg-gray-800/50'>
+    <section className='card bg-gray-50 dark:bg-gray-800/50'>
       <h2 className='font-semibold text-gray-900 dark:text-gray-100 mb-3'>
         {t.examplesOfQuestions}
       </h2>
@@ -30,7 +30,7 @@ export const ExamplesCard = React.memo(() => {
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   )
 })
 

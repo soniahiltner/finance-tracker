@@ -110,7 +110,7 @@ export default function SavingsGoalsPage() {
   }
 
   return (
-    <div className='space-y-6'>
+    <main className='space-y-6'>
       <div className='flex justify-between items-center'>
         <div>
           <h1 className='text-3xl font-bold mb-2 dark:text-gray-100'>
@@ -139,7 +139,7 @@ export default function SavingsGoalsPage() {
       />
 
       {/* Lista de metas */}
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+      <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {goals.length === 0 ? (
           <div className='col-span-full card text-center py-12'>
             <Target className='w-16 h-16 text-gray-400 mx-auto mb-4' />
@@ -169,7 +169,7 @@ export default function SavingsGoalsPage() {
             />
           ))
         )}
-      </div>
+      </section>
 
       {/* Modal Crear/Editar */}
       <GoalModal
@@ -202,6 +202,6 @@ export default function SavingsGoalsPage() {
           setGoalToDelete(null)
         }}
       />
-    </div>
+    </main>
   )
 }

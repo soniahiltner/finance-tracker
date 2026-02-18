@@ -85,7 +85,7 @@ export default function TransactionFilters({
 
   return (
     <>
-      <div className='card space-y-4'>
+      <section className='card space-y-4'>
         {/* Header con contador */}
         <div className='flex items-center justify-between gap-1 max-xs:flex-wrap'>
           <div className='flex items-center space-x-2'>
@@ -502,7 +502,7 @@ export default function TransactionFilters({
             )}
           </div>
         )}
-      </div>
+      </section>
 
       {/* Modal de gestión de categorías */}
       <CategoryManagementModal

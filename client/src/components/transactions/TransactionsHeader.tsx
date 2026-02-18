@@ -21,7 +21,7 @@ const TransactionsHeader = ({
 
   const { t } = useTranslation()
   return (
-    <div className='flex justify-between items-center max-sm:flex-col max-sm:items-start'>
+    <section className='flex justify-between items-center max-sm:flex-col max-sm:items-start'>
       <div>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
           {t.transactions}
@@ -55,7 +55,7 @@ const TransactionsHeader = ({
           <span className='sm:hidden'>{t.new}</span>
         </button>
       </div>
-    </div>
+    </section>
   )
 }
 

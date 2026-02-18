@@ -25,9 +25,9 @@ const AIAssistantPage = () => {
   const { t } = useTranslation()
 
   return (
-    <div className='space-y-6'>
+    <main className='space-y-6'>
       {/* Header */}
-      <div className='flex items-center justify-between'>
+      <section className='flex items-center justify-between'>
         <div className='flex items-center space-x-3'>
           <div className='bg-linear-to-br from-primary-500 to-purple-600 p-3 rounded-xl'>
             <Bot className='w-8 h-8 text-white' />
@@ -52,10 +52,10 @@ const AIAssistantPage = () => {
             <span className='text-sm'>{t.resetChat}</span>
           </button>
         )}
-      </div>
+      </section>
 
       {/* Chat Container */}
-      <div className='card p-0  flex flex-col'>
+      <section className='card p-0  flex flex-col'>
         {retryAfterSeconds > 0 && (
           <div className='mx-4 mt-4 p-3 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 text-sm'>
             {retryAfterMessage}
@@ -91,14 +91,14 @@ const AIAssistantPage = () => {
           loading={loading || retryAfterSeconds > 0}
           onSubmit={handleSubmit}
         />
-      </div>
+      </section>
 
       {/* Info Cards */}
       <InfoCards />
 
       {/* Examples */}
       <ExamplesCard />
-    </div>
+    </main>
   )
 }
 

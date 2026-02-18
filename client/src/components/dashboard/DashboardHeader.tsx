@@ -16,7 +16,7 @@ const DashboardHeader = ({
 }: DashboardHeaderProps) => {
   const { t } = useTranslation()
   return (
-    <div className='flex justify-between flex-col items-start sm:flex-row sm:items-center'>
+    <section className='flex justify-between flex-col items-start sm:flex-row sm:items-center'>
       <div>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-gray-100'>
           {t.dashboard}
@@ -37,7 +37,7 @@ const DashboardHeader = ({
           onMonthChange={onMonthChange}
         />
       </div>
-    </div>
+    </section>
   )
 }
 

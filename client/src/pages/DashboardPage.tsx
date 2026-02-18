@@ -48,7 +48,7 @@ const DashboardPage = () => {
   if (!summary) return null
 
   return (
-    <div className='space-y-6'>
+    <main className='space-y-6'>
       {/* Header */}
       <DashboardHeader
         selectedMonth={selectedMonth}
@@ -57,7 +57,7 @@ const DashboardPage = () => {
       />
 
       {/* Cards de resumen */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+      <section className='grid grid-cols-1 md:grid-cols-3 gap-6'>
         <StatCard
           title={t.balance}
           value={formatCurrency(summary.balance)}
@@ -79,10 +79,10 @@ const DashboardPage = () => {
           icon={TrendingDown}
           variant='expense'
         />
-      </div>
+      </section>
 
       {/* Gráficos */}
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+      <section className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         <CategoryPieChart
           data={categoryData}
           formatCurrency={formatCurrency}
@@ -91,7 +91,7 @@ const DashboardPage = () => {
           data={summary.byMonth}
           formatCurrency={formatCurrency}
         />
-      </div>
+      </section>
 
       {/* Lista de categorías */}
       <CategoryList
@@ -107,7 +107,7 @@ const DashboardPage = () => {
         data={summary.byMonth}
         formatCurrency={formatCurrency}
       />
-    </div>
+    </main>
   )
 }
 

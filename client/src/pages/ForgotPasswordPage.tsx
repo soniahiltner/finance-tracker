@@ -47,16 +47,16 @@ const ForgotPasswordPage = () => {
       </div>
 
       <div className='max-w-md w-full'>
-        <div className='text-center mb-8'>
+        <header className='text-center mb-8'>
           <h1 className='text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2'>
             FinanceTracker
           </h1>
           <p className='text-gray-600 dark:text-gray-400'>
             {t.regainAccessToYourAccount}
           </p>
-        </div>
+        </header>
 
-        <div className='card'>
+        <main className='card'>
           <div className='flex items-center justify-center mb-6'>
             <div className='bg-primary-100 dark:bg-primary-900/30 p-3 rounded-full'>
               <Mail className='w-8 h-8 text-primary-600 dark:text-primary-400' />
@@ -113,12 +113,12 @@ const ForgotPasswordPage = () => {
           <p className='mt-6 text-center text-sm text-gray-600 dark:text-gray-400'>
             <Link
               to='/login'
-              className='text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300'
+              className='text-primary-750 dark:text-primary-400 font-medium hover:text-primary-950 dark:hover:text-primary-300'
             >
               {t.backToLogin}
             </Link>
           </p>
-        </div>
+        </main>
       </div>
     </div>
   )
