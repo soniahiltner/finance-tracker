@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import type { SavingsGoal } from '../../types'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useCurrencyFormatter } from '../../hooks/useCurrency'
+import Modal from '../Modal'
 
 interface ProgressModalProps {
   isOpen: boolean
@@ -39,19 +40,28 @@ const ProgressModal = ({
     }
   }
 
-  if (!isOpen || !goal) return null
+  if (!goal) return null
 
   return (
-    <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      labelledBy='progress-modal-title'
+      closeOnEsc={!submitting}
+      closeOnBackdrop={!submitting}
+    >
       <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full max-xs:p-2 xs:p-4 sm:p-6'>
         <div className='flex items-center justify-between mb-6'>
-          <h2 className='text-2xl font-bold dark:text-gray-100'>
+          <h2
+            id='progress-modal-title'
+            className='text-2xl font-bold dark:text-gray-100'
+          >
             {t.addProgress}
           </h2>
           <button
             onClick={onClose}
             className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'
-            aria-label='close'
+            aria-label={t.close}
             disabled={submitting}
           >
             <X className='w-5 h-5 dark:text-gray-400' />
@@ -87,6 +97,7 @@ const ProgressModal = ({
               id='progressAmount'
               type='number'
               step='0.01'
+              data-autofocus
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className='input-field'
@@ -116,7 +127,7 @@ const ProgressModal = ({
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   )
 }
 

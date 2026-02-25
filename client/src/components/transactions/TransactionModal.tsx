@@ -3,6 +3,7 @@ import { X, TrendingUp, TrendingDown, Plus } from 'lucide-react'
 import { format } from 'date-fns'
 import { useQueryClient } from '@tanstack/react-query'
 import { VoiceInput } from './VoiceInput'
+import Modal from '../Modal'
 import { categoryService } from '../../services/categoryService'
 import type { Transaction, Category } from '../../types'
 import { useLanguage } from '../../hooks/useLanguage'
@@ -30,7 +31,6 @@ const TransactionModal = ({
   transaction,
   categories
 }: TransactionModalProps) => {
-
   const { language } = useLanguage()
   const { t } = useTranslation()
 
@@ -135,19 +135,27 @@ const TransactionModal = ({
 
   const formCategories = categories.filter((cat) => cat.type === formData.type)
 
-  if (!isOpen) return null
-
   return (
-    <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      labelledBy='transaction-modal-title'
+      closeOnEsc={!submitting}
+      closeOnBackdrop={!submitting}
+    >
       <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full max-xs:p-2 xs:p-4 sm:p-6'>
         <div className='flex items-center justify-between mb-6'>
-          <h2 className='text-2xl font-bold dark:text-gray-100'>
+          <h2
+            id='transaction-modal-title'
+            className='text-2xl font-bold dark:text-gray-100'
+          >
             {transaction ? t.edit : t.new} {t.transaction}
           </h2>
           <button
             onClick={onClose}
             className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors'
             disabled={submitting}
+            aria-label={t.close}
           >
             <X className='w-5 h-5 dark:text-gray-400' />
           </button>
@@ -233,6 +241,7 @@ const TransactionModal = ({
               id='amount'
               type='number'
               step='0.01'
+              data-autofocus
               value={formData.amount}
               onChange={(e) =>
                 setFormData({ ...formData, amount: e.target.value })
@@ -382,7 +391,7 @@ const TransactionModal = ({
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   )
 }
 

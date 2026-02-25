@@ -12,6 +12,7 @@ import { transactionService } from '../../services/transactionService'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useCurrencyFormatter } from '../../hooks/useCurrency'
+import Modal from '../Modal'
 
 interface ImportDocumentModalProps {
   isOpen: boolean
@@ -223,14 +224,21 @@ export const ImportDocumentModal = ({
     }
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      labelledBy='import-document-title'
+      closeOnEsc={!isProcessing && !isImporting}
+      closeOnBackdrop={!isProcessing && !isImporting}
+    >
       <div className='relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl m-4'>
         {/* Header */}
         <div className='sticky top-0 z-10 flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'>
-          <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
+          <h2
+            id='import-document-title'
+            className='text-2xl font-bold text-gray-900 dark:text-white'
+          >
             {t.import} {t.transactions}
           </h2>
           <button
@@ -294,7 +302,14 @@ export const ImportDocumentModal = ({
               />
               <label
                 htmlFor='file-upload'
-                className='inline-block px-6 py-3 mt-4 text-white bg-blue-600 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors'
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    document.getElementById('file-upload')?.click()
+                  }
+                }}
+                className='inline-block px-6 py-3 mt-4 text-white bg-blue-600 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
               >
                 {t.selectFile}
               </label>
@@ -486,6 +501,6 @@ export const ImportDocumentModal = ({
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

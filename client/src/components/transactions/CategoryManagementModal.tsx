@@ -11,6 +11,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import { categoryService } from '../../services/categoryService'
 import ConfirmModal from '../ConfirmModal'
+import Modal from '../Modal'
 import type { Category } from '../../types'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateCategory } from '../../constants/categoryTranslations'
@@ -48,8 +49,6 @@ export default function CategoryManagementModal({
       setEditingName('')
     }
   }, [isOpen])
-
-  if (!isOpen) return null
 
   const handleEdit = (category: Category) => {
     setEditingId(category._id)
@@ -112,125 +111,135 @@ export default function CategoryManagementModal({
   const expenseCategories = categories.filter((cat) => cat.type === 'expense')
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'>
-      <div className='bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col'>
-        {/* Header */}
-        <div className='flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700'>
-          <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-            Gestionar Categorías
-          </h2>
-          <button
-            onClick={onClose}
-            className='text-gray-400 hover:text-gray-500 dark:hover:text-gray-300'
-          >
-            <X className='w-6 h-6' />
-          </button>
-        </div>
-
-        {/* Error Alert */}
-        {deleteError && (
-          <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
-            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5' />
-            <div className='flex-1'>
-              <p className='text-sm text-red-600 dark:text-red-400'>
-                {deleteError}
-              </p>
-            </div>
-            <button
-              onClick={() => setDeleteError('')}
-              className='text-red-400 hover:text-red-600 dark:hover:text-red-300'
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        labelledBy='category-management-title'
+      >
+        <div className='bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col'>
+          {/* Header */}
+          <div className='flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700'>
+            <h2
+              id='category-management-title'
+              className='text-xl font-semibold text-gray-900 dark:text-white'
             >
-              <X className='w-4 h-4' />
+              Gestionar Categorías
+            </h2>
+            <button
+              onClick={onClose}
+              className='text-gray-400 hover:text-gray-500 dark:hover:text-gray-300'
+              aria-label='Cerrar'
+            >
+              <X className='w-6 h-6' />
             </button>
           </div>
-        )}
 
-        {editError && (
-          <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
-            <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5' />
-            <div className='flex-1'>
-              <p className='text-sm text-red-600 dark:text-red-400'>
-                {editError}
-              </p>
+          {/* Error Alert */}
+          {deleteError && (
+            <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
+              <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5' />
+              <div className='flex-1'>
+                <p className='text-sm text-red-600 dark:text-red-400'>
+                  {deleteError}
+                </p>
+              </div>
+              <button
+                onClick={() => setDeleteError('')}
+                className='text-red-400 hover:text-red-600 dark:hover:text-red-300'
+              >
+                <X className='w-4 h-4' />
+              </button>
             </div>
-            <button
-              onClick={() => setEditError('')}
-              className='text-red-400 hover:text-red-600 dark:hover:text-red-300'
-            >
-              <X className='w-4 h-4' />
-            </button>
-          </div>
-        )}
+          )}
 
-        {/* Content */}
-        <div
-          className='flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:w-3
+          {editError && (
+            <div className='m-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3'>
+              <AlertCircle className='w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5' />
+              <div className='flex-1'>
+                <p className='text-sm text-red-600 dark:text-red-400'>
+                  {editError}
+                </p>
+              </div>
+              <button
+                onClick={() => setEditError('')}
+                className='text-red-400 hover:text-red-600 dark:hover:text-red-300'
+              >
+                <X className='w-4 h-4' />
+              </button>
+            </div>
+          )}
+
+          {/* Content */}
+          <div
+            className='flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:w-3
  [&::-webkit-scrollbar-track]:rounded
   [&::-webkit-scrollbar-track]:bg-slate-200
   [&::-webkit-scrollbar-thumb]:rounded
   [&::-webkit-scrollbar-thumb]:bg-slate-400
   dark:[&::-webkit-scrollbar-track]:bg-gray-800
   dark:[&::-webkit-scrollbar-thumb]:bg-gray-600'
-        >
-          {/* Categorías de Ingresos */}
-          <div>
-            <h3 className='text-lg font-medium text-green-600 dark:text-green-400 mb-3'>
-              Ingresos
-            </h3>
-            <div className='space-y-2'>
-              {incomeCategories.map((category) => (
-                <CategoryItem
-                  key={category._id}
-                  category={category}
-                  editingId={editingId}
-                  editingName={editingName}
-                  handleEdit={handleEdit}
-                  handleSave={handleSave}
-                  handleCancelEdit={handleCancelEdit}
-                  handleDelete={handleDelete}
-                  deleting={deleting}
-                  setEditingName={setEditingName}
-                  language={language}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Categorías de Gastos */}
-          <div>
-            <h3 className='text-lg font-medium text-red-600 dark:text-red-400 mb-3'>
-              Gastos
-            </h3>
-            <div className='space-y-2'>
-              {expenseCategories.map((category) => (
-                <CategoryItem
-                  key={category._id}
-                  category={category}
-                  editingId={editingId}
-                  editingName={editingName}
-                  handleEdit={handleEdit}
-                  handleSave={handleSave}
-                  handleCancelEdit={handleCancelEdit}
-                  handleDelete={handleDelete}
-                  deleting={deleting}
-                  setEditingName={setEditingName}
-                  language={language}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className='flex justify-end p-6 border-t border-gray-200 dark:border-gray-700'>
-          <button
-            onClick={onClose}
-            className='btn-secondary'
           >
-            Cerrar
-          </button>
+            {/* Categorías de Ingresos */}
+            <div>
+              <h3 className='text-lg font-medium text-green-600 dark:text-green-400 mb-3'>
+                Ingresos
+              </h3>
+              <div className='space-y-2'>
+                {incomeCategories.map((category) => (
+                  <CategoryItem
+                    key={category._id}
+                    category={category}
+                    editingId={editingId}
+                    editingName={editingName}
+                    handleEdit={handleEdit}
+                    handleSave={handleSave}
+                    handleCancelEdit={handleCancelEdit}
+                    handleDelete={handleDelete}
+                    deleting={deleting}
+                    setEditingName={setEditingName}
+                    language={language}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Categorías de Gastos */}
+            <div>
+              <h3 className='text-lg font-medium text-red-600 dark:text-red-400 mb-3'>
+                Gastos
+              </h3>
+              <div className='space-y-2'>
+                {expenseCategories.map((category) => (
+                  <CategoryItem
+                    key={category._id}
+                    category={category}
+                    editingId={editingId}
+                    editingName={editingName}
+                    handleEdit={handleEdit}
+                    handleSave={handleSave}
+                    handleCancelEdit={handleCancelEdit}
+                    handleDelete={handleDelete}
+                    deleting={deleting}
+                    setEditingName={setEditingName}
+                    language={language}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className='flex justify-end p-6 border-t border-gray-200 dark:border-gray-700'>
+            <button
+              onClick={onClose}
+              className='btn-secondary'
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
-      </div>
+      </Modal>
 
       {/* Modal de confirmación */}
       <ConfirmModal
@@ -244,7 +253,7 @@ export default function CategoryManagementModal({
         onConfirm={handleConfirmDelete}
         onClose={handleCancelDelete}
       />
-    </div>
+    </>
   )
 }
 

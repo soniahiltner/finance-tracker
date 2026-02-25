@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
 import { X, AlertTriangle, Info, AlertCircle } from 'lucide-react'
+import Modal from './Modal'
 
 type ConfirmModalVariant = 'danger' | 'warning' | 'info'
 
@@ -26,19 +26,6 @@ const ConfirmModal = ({
   onConfirm,
   onClose
 }: ConfirmModalProps) => {
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen && !loading) {
-        onClose()
-      }
-    }
-
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [isOpen, loading, onClose])
-
-  if (!isOpen) return null
-
   const variantStyles = {
     danger: {
       icon: AlertTriangle,
@@ -70,7 +57,15 @@ const ConfirmModal = ({
   }
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      role='alertdialog'
+      labelledBy='confirm-modal-title'
+      describedBy='confirm-modal-message'
+      closeOnEsc={!loading}
+      closeOnBackdrop={!loading}
+    >
       <div className='bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full overflow-hidden'>
         {/* Header con icono */}
         <div className='p-6 pb-4'>
@@ -79,10 +74,16 @@ const ConfirmModal = ({
               <Icon className={`w-6 h-6 ${iconColor}`} />
             </div>
             <div className='flex-1 min-w-0'>
-              <h3 className='text-lg font-semibold text-gray-900 dark:text-white mb-2'>
+              <h3
+                id='confirm-modal-title'
+                className='text-lg font-semibold text-gray-900 dark:text-white mb-2'
+              >
                 {title}
               </h3>
-              <p className='text-sm text-gray-600 dark:text-gray-300'>
+              <p
+                id='confirm-modal-message'
+                className='text-sm text-gray-600 dark:text-gray-300'
+              >
                 {message}
               </p>
             </div>
@@ -90,6 +91,7 @@ const ConfirmModal = ({
               onClick={onClose}
               disabled={loading}
               className='shrink-0 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed'
+              aria-label='Cerrar'
             >
               <X className='w-5 h-5' />
             </button>
@@ -101,6 +103,7 @@ const ConfirmModal = ({
           <button
             onClick={onClose}
             disabled={loading}
+            data-autofocus
             className='btn-secondary w-full sm:w-auto'
           >
             {cancelText}
@@ -114,7 +117,7 @@ const ConfirmModal = ({
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }
 

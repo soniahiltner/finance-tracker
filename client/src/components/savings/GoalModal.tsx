@@ -7,6 +7,7 @@ import { useLanguage } from '../../hooks/useLanguage'
 import { translateGoalCategory } from '../../constants/categoryTranslations'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useCurrencyFormatter } from '../../hooks/useCurrency'
+import Modal from '../Modal'
 
 interface GoalModalProps {
   isOpen: boolean
@@ -80,13 +81,20 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
     }
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      labelledBy='goal-modal-title'
+      closeOnEsc={!submitting}
+      closeOnBackdrop={!submitting}
+    >
       <div className='bg-white dark:bg-gray-800 rounded-xl max-w-md w-full max-xs:p-2 xs:p-4 sm:p-6 max-h-[90vh] overflow-y-auto'>
         <div className='flex items-center justify-between mb-6'>
-          <h2 className='text-2xl font-bold dark:text-gray-100'>
+          <h2
+            id='goal-modal-title'
+            className='text-2xl font-bold dark:text-gray-100'
+          >
             {goal ? t.edit : t.new} {t.savingsGoal}
           </h2>
           <button
@@ -113,6 +121,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
             <input
               id='name'
               type='text'
+              data-autofocus
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -245,7 +254,7 @@ const GoalModal = ({ isOpen, onClose, onSubmit, goal }: GoalModalProps) => {
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   )
 }
 
