@@ -41,3 +41,41 @@
 
 - Smoke test en produccion.
 - Revisar dashboards de errores y performance.
+
+## 8) Verificacion rapida (cambios 2026-02)
+
+### Headers y cache (produccion)
+
+- Verificar `Content-Security-Policy`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Content-Type-Options`:
+
+```powershell
+$u='https://finance-tracker-client-6p02.onrender.com/'; $r=Invoke-WebRequest -Uri $u -UseBasicParsing; $h=$r.Headers; 'content-security-policy','x-frame-options','referrer-policy','permissions-policy','x-content-type-options' | ForEach-Object { '{0}: {1}' -f $_, ($h[$_] ?? '(missing)') }
+```
+
+- Verificar cache largo en assets versionados:
+
+```powershell
+$u='https://finance-tracker-client-6p02.onrender.com/assets/index-D430d77h.js'; (Invoke-WebRequest -Uri $u -UseBasicParsing -Method Head).Headers['Cache-Control']
+```
+
+### Smoke funcional (transacciones)
+
+- Login con usuario de pruebas.
+- Ir a `/app/transactions` y validar:
+	- Carga de lista sin errores visibles.
+	- Busqueda por descripcion y boton `Clean All`.
+	- Apertura/cierre de `New Transaction` e `Import`.
+	- Botones de fila `Edit/Delete` con labels contextuales (a11y).
+
+### Performance minima esperada
+
+- Ejecutar un trace rapido de carga en `/app/transactions`.
+- Confirmar que no empeora frente a baseline:
+	- LCP objetivo: <= 2.8s (sin throttling).
+	- CLS objetivo: 0.00.
+
+### Rollback rapido
+
+- Si fallan headers/cache o rompe flujo de transacciones:
+	- Revertir el ultimo commit de `render.yaml` y `client/src/pages/TransactionsPage.tsx`.
+	- Re-desplegar y repetir verificaciones del bloque 8.
