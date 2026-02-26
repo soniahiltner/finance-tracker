@@ -18,7 +18,6 @@ const TransactionsHeader = ({
   onNewTransaction,
   onImportDocument
 }: TransactionsHeaderProps) => {
-
   const { t } = useTranslation()
   return (
     <section className='flex justify-between items-center max-sm:flex-col max-sm:items-start'>
@@ -41,6 +40,7 @@ const TransactionsHeader = ({
             onClick={onImportDocument}
             className='btn-secondary flex items-center max-sm:px-2 max-sm:text-sm'
             title={t.importDocument}
+            aria-label={t.importDocument}
           >
             <FileUp className='w-5 h-5 mr-2' />
             <span className='max-sm:hidden'>{t.import}</span>

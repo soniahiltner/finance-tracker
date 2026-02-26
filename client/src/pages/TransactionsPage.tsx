@@ -1,14 +1,22 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { useTransactions } from '../hooks/useTransactions'
 import TransactionFilters from '../components/transactions/TransactionFilters'
 import TransactionsHeader from '../components/transactions/TransactionsHeader'
 import TransactionList from '../components/transactions/TransactionList'
-import TransactionModal from '../components/transactions/TransactionModal'
-import { ImportDocumentModal } from '../components/transactions/ImportDocumentModal'
 import ConfirmModal from '../components/ConfirmModal'
 import type { Transaction } from '../types'
 import { useTranslation } from '../hooks/useTranslation'
 import { useCurrencyFormatter } from '../hooks/useCurrency'
+
+const TransactionModal = lazy(
+  () => import('../components/transactions/TransactionModal')
+)
+
+const ImportDocumentModal = lazy(() =>
+  import('../components/transactions/ImportDocumentModal').then((module) => ({
+    default: module.ImportDocumentModal
+  }))
+)
 
 export default function TransactionsPage() {
   const { t } = useTranslation()
@@ -114,27 +122,35 @@ export default function TransactionsPage() {
       />
 
       {/* Modal de crear/editar */}
-      <TransactionModal
-        isOpen={showModal}
-        onClose={closeModal}
-        onSubmit={handleSubmit}
-        transaction={editingTransaction}
-        categories={categories}
-      />
+      {showModal && (
+        <Suspense fallback={null}>
+          <TransactionModal
+            isOpen={showModal}
+            onClose={closeModal}
+            onSubmit={handleSubmit}
+            transaction={editingTransaction}
+            categories={categories}
+          />
+        </Suspense>
+      )}
 
       {/* Modal de importación de documentos */}
-      <ImportDocumentModal
-        isOpen={showImportModal}
-        onClose={() => setShowImportModal(false)}
-      />
+      {showImportModal && (
+        <Suspense fallback={null}>
+          <ImportDocumentModal
+            isOpen={showImportModal}
+            onClose={() => setShowImportModal(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Modal de confirmación de eliminación */}
       <ConfirmModal
         isOpen={!!transactionToDelete}
-        title='Eliminar transacción'
-        message={`¿Estás seguro de que quieres eliminar esta transacción de ${transactionToDelete?.category} por ${formatCurrency(transactionToDelete?.amount || 0)}?`}
-        confirmText='Eliminar'
-        cancelText='Cancelar'
+        title={t.deleteTransaction}
+        message={`${t.deleteConfirmation} ${transactionToDelete ? `${transactionToDelete.category} • ${formatCurrency(transactionToDelete.amount)}` : ''}`.trim()}
+        confirmText={t.delete}
+        cancelText={t.cancel}
         variant='danger'
         onConfirm={handleConfirmDelete}
         onClose={handleCancelDelete}
