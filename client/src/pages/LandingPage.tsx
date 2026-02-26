@@ -8,33 +8,46 @@ import {
   UserPlus
 } from 'lucide-react'
 import ThemeToggle from '../components/ThemeToggle'
+import { useTranslation } from '../hooks/useTranslation'
 
 const LandingPage = () => {
+  const { language, t } = useTranslation()
 
   const features = [
     {
       icon: Wallet,
-      title: 'Gestión de Transacciones',
+      title:
+        language === 'en'
+          ? 'Transaction Management'
+          : 'Gestión de Transacciones',
       description:
-        'Registra y organiza tus ingresos y gastos de manera sencilla y eficiente.'
+        language === 'en'
+          ? 'Track and organize your income and expenses in a simple, efficient way.'
+          : 'Registra y organiza tus ingresos y gastos de manera sencilla y eficiente.'
     },
     {
       icon: PiggyBank,
-      title: 'Objetivos de Ahorro',
+      title: language === 'en' ? 'Savings Goals' : 'Objetivos de Ahorro',
       description:
-        'Establece metas financieras y realiza un seguimiento de tu progreso hacia ellas.'
+        language === 'en'
+          ? 'Set financial goals and track your progress toward them.'
+          : 'Establece metas financieras y realiza un seguimiento de tu progreso hacia ellas.'
     },
     {
       icon: BarChart3,
-      title: 'Dashboards Inteligentes',
+      title: language === 'en' ? 'Smart Dashboards' : 'Dashboards Inteligentes',
       description:
-        'Visualiza tus finanzas con gráficos y estadísticas detalladas en tiempo real.'
+        language === 'en'
+          ? 'Visualize your finances with detailed real-time charts and insights.'
+          : 'Visualiza tus finanzas con gráficos y estadísticas detalladas en tiempo real.'
     },
     {
       icon: TrendingUp,
-      title: 'Asistente con IA',
+      title: language === 'en' ? 'AI Assistant' : 'Asistente con IA',
       description:
-        'Obtén insights personalizados y recomendaciones para mejorar tu salud financiera.'
+        language === 'en'
+          ? 'Get personalized insights and recommendations to improve your financial health.'
+          : 'Obtén insights personalizados y recomendaciones para mejorar tu salud financiera.'
     }
   ]
 
@@ -54,8 +67,7 @@ const LandingPage = () => {
               FinanceTracker
             </h1>
             <p className='text-xl font-medium md:text-2xl text-gray-700 dark:text-gray-400 mb-8'>
-              Toma el control de tus finanzas personales con inteligencia
-              artificial
+              {t.manageYourFinancesWithAI}
             </p>
 
             {/* CTA Buttons */}
@@ -65,14 +77,14 @@ const LandingPage = () => {
                 className='btn-primary inline-flex items-center gap-2 px-8 py-3 text-lg bg-white text-primary-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 rounded-lg font-semibold transition-colors shadow-lg'
               >
                 <LogIn className='h-5 w-5' />
-                Iniciar Sesión
+                {t.login}
               </Link>
               <Link
                 to='/register'
                 className='inline-flex items-center gap-2 px-8 py-3 text-lg bg-primary-750 text-white hover:bg-primary-700 dark:bg-primary-750 dark:hover:bg-primary-900 rounded-lg font-semibold transition-colors shadow-lg'
               >
                 <UserPlus className='h-5 w-5' />
-                Crear Cuenta
+                {t.createAccount}
               </Link>
             </div>
           </div>
@@ -105,8 +117,10 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className='bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm border-t border-white/20 dark:border-gray-700/50 py-8 text-center'>
         <p className='text-white/80 dark:text-gray-400 text-sm font-medium'>
-          © {new Date().getFullYear()} FinanceTracker. Todos los derechos
-          reservados.
+          © {new Date().getFullYear()} FinanceTracker.{' '}
+          {language === 'en'
+            ? 'All rights reserved.'
+            : 'Todos los derechos reservados.'}
         </p>
       </footer>
     </div>

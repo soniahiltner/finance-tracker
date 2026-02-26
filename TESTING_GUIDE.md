@@ -34,7 +34,6 @@ Abrir navegador en: `http://localhost:4173`
 ### ✅ Qué verificar:
 
 1. **Network Tab (Chrome DevTools)**:
-
    - Filtrar por JS
    - Ver que se cargan múltiples chunks pequeños
    - Solo cargan chunks adicionales al navegar
@@ -258,6 +257,23 @@ Performance tab → CPU: 4x slowdown
 ```
 Toggle device toolbar → iPhone 12 Pro
 ```
+
+---
+
+## Smoke E2E rápido (UI + Accesibilidad)
+
+Para validar rápidamente comportamiento clave de modales y menú móvil:
+
+```bash
+cd client
+npm run test:e2e:smoke:ui
+```
+
+Incluye:
+
+- Cierre automático del menú móvil al cambiar tema/idioma/moneda.
+- Accesibilidad de modales de transacciones (focus trap, ESC, backdrop, restore focus).
+- Accesibilidad de modales de metas (ESC y restore focus).
 
 **Verificar**: Layout responsive, chunks optimizados para móvil
 

@@ -3,6 +3,7 @@
 ## 1) Tests y calidad
 
 - Ejecutar unit tests de client y server.
+- Ejecutar smoke E2E UI: `cd client && npm run test:e2e:smoke:ui`.
 - Ejecutar E2E (Playwright) completo.
 - Smoke manual en preprod: login, dashboard, transactions, savings, AI assistant.
 

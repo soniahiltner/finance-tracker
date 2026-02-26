@@ -232,7 +232,7 @@ export const ImportDocumentModal = ({
       closeOnEsc={!isProcessing && !isImporting}
       closeOnBackdrop={!isProcessing && !isImporting}
     >
-      <div className='relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl m-4'>
+      <div className='relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl '>
         {/* Header */}
         <div className='sticky top-0 z-10 flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'>
           <h2

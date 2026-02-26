@@ -133,19 +133,19 @@ const Layout = () => {
                 <span className='text-sm text-gray-600 dark:text-gray-300'>
                   {t.theme}
                 </span>
-                <ThemeToggle />
+                <ThemeToggle onToggle={() => setMobileMenuOpen(false)} />
               </div>
               <div className='flex items-center justify-between px-3 py-2'>
                 <span className='text-sm text-gray-600 dark:text-gray-300'>
                   {t.language}
                 </span>
-                <LanguageSelector />
+                <LanguageSelector onSelect={() => setMobileMenuOpen(false)} />
               </div>
               <div className='flex items-center justify-between px-3 py-2'>
                 <span className='text-sm text-gray-600 dark:text-gray-300'>
                   {t.currency}
                 </span>
-                <CurrencySelector />
+                <CurrencySelector onSelect={() => setMobileMenuOpen(false)} />
               </div>
               <button
                 onClick={handleLogout}

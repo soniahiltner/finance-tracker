@@ -48,6 +48,13 @@ cd client
 npm run test:smoke
 ```
 
+Smoke UI de accesibilidad/navegación móvil:
+
+```bash
+cd client
+npm run test:e2e:smoke:ui
+```
+
 Incluye:
 
 - test de integración de login (Vitest)
@@ -74,6 +81,4 @@ npm test
 - Frontend (Static Site con React Router): en Render agrega un rewrite `/* -> /index.html` (Action: `Rewrite`) para evitar `404` en rutas como `/login`.
 - Configuración versionada: [render.yaml](render.yaml) (incluye rewrite SPA para el cliente).
 
-
-[Live site]:(https://finance-tracker-client-6p02.onrender.com/)
-
+[Live site]: (https://finance-tracker-client-6p02.onrender.com/)

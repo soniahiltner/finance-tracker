@@ -16,6 +16,7 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:login": "playwright test e2e/login.spec.ts --project=chromium --project=firefox --project=webkit --reporter=list",
+    "test:e2e:smoke:ui": "playwright test e2e/layout-mobile-menu.spec.ts e2e/modal-accessibility.transactions.spec.ts e2e/modal-accessibility.savings.spec.ts --project=chromium --project=firefox --project=webkit --reporter=list",
     "test:smoke": "vitest run src/pages/LoginPage.test.tsx && playwright test e2e/login.spec.ts --project=chromium --project=firefox --project=webkit --reporter=list",
     "test:e2e:ui": "playwright test --ui"
   },

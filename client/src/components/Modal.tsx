@@ -161,7 +161,7 @@ const Modal = ({
   if (!isOpen || !portalTarget) return null
 
   return createPortal(
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4'>
       <button
         type='button'
         className='absolute inset-0 cursor-default'

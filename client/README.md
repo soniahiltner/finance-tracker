@@ -33,6 +33,7 @@ La app se levanta por defecto en `http://localhost:5173`.
 - `npm run test:unit`: ejecutar tests unit/integration con Vitest
 - `npm run test:e2e`: ejecutar suite Playwright
 - `npm run test:e2e:login`: ejecutar e2e de login en Chromium/Firefox/WebKit
+- `npm run test:e2e:smoke:ui`: smoke E2E de UI (modales accesibles + menú móvil)
 - `npm run test:smoke`: ejecutar smoke completo (Vitest login + e2e login)
 
 ## Testing
@@ -53,6 +54,12 @@ Smoke rápido de autenticación:
 
 ```bash
 npm run test:smoke
+```
+
+Smoke rápido de UI (accesibilidad y mobile menu):
+
+```bash
+npm run test:e2e:smoke:ui
 ```
 
 ## Estructura relevante
