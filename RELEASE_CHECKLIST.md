@@ -1,4 +1,4 @@
-# Release Checklist
+﻿# Release Checklist
 
 ## 1) Tests y calidad
 
@@ -62,20 +62,56 @@ $u='https://finance-tracker-client-6p02.onrender.com/assets/index-D430d77h.js'; 
 
 - Login con usuario de pruebas.
 - Ir a `/app/transactions` y validar:
-	- Carga de lista sin errores visibles.
-	- Busqueda por descripcion y boton `Clean All`.
-	- Apertura/cierre de `New Transaction` e `Import`.
-	- Botones de fila `Edit/Delete` con labels contextuales (a11y).
+  - Carga de lista sin errores visibles.
+  - Busqueda por descripcion y boton `Clean All`.
+  - Apertura/cierre de `New Transaction` e `Import`.
+  - Botones de fila `Edit/Delete` con labels contextuales (a11y).
 
 ### Performance minima esperada
 
 - Ejecutar un trace rapido de carga en `/app/transactions`.
 - Confirmar que no empeora frente a baseline:
-	- LCP objetivo: <= 2.8s (sin throttling).
-	- CLS objetivo: 0.00.
+  - LCP objetivo: <= 2.8s (sin throttling).
+  - CLS objetivo: 0.00.
 
 ### Rollback rapido
 
 - Si fallan headers/cache o rompe flujo de transacciones:
-	- Revertir el ultimo commit de `render.yaml` y `client/src/pages/TransactionsPage.tsx`.
-	- Re-desplegar y repetir verificaciones del bloque 8.
+  - Revertir el ultimo commit de `render.yaml` y `client/src/pages/TransactionsPage.tsx`.
+  - Re-desplegar y repetir verificaciones del bloque 8.
+
+### Expected Output (OK/FALLO)
+
+- **Headers**
+  - `content-security-policy`: **OK** (no `(missing)`).
+  - `x-frame-options`: **OK** (`DENY`).
+  - `referrer-policy`: **OK** (`strict-origin-when-cross-origin`).
+  - `permissions-policy`: **OK** (`geolocation=(), microphone=(), camera=()`).
+  - `x-content-type-options`: **OK** (`nosniff`).
+
+- **Cache de assets**
+  - `Cache-Control`: **OK** si contiene `max-age=31536000` e `immutable`.
+
+- **Smoke transacciones**
+  - **OK** si aparece `Search by Description...`, abre `New Transaction` y responde `Clean All`.
+  - **OK** si acciones por fila muestran labels contextuales (`Edit: ...`, `Delete: ...`).
+
+- **Performance**
+  - **OK** si `LCP <= 2.8s` y `CLS = 0.00` (sin throttling).
+
+## 9) Registro de verificacion (plantilla)
+
+Completar una fila por release en produccion.
+
+Generacion automatica de fila (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\record-release-verification.ps1 -CommitTag "<sha o tag>" -SmokeTransactions OK -LCPms 1868ms -CLS 0.00 -Responsible "Sonia" -Notes "Validacion post-deploy"
+```
+
+| Fecha      | Commit/Tag    | Entorno | Headers  | Cache assets | Smoke transacciones | LCP    | CLS       | Resultado | Responsable | Notas                                |
+| ---------- | ------------- | ------- | -------- | ------------ | ------------------- | ------ | --------- | --------- | ----------- | ------------------------------------ |
+| 2026-02-27 | manual-run | prod | OK | OK | OK | 1868ms | 0.00 | OK | Sonia | Validacion post-deploy desde VS Code |
+| 2026-02-27 | auto-verify   | prod    | OK       | OK           | OK                  | 1868ms | 0.00      | OK        | Sonia       | Ejecucion automatica de prueba       |
+| 2026-02-27 | `<sha o tag>` | prod    | OK/FALLO | OK/FALLO     | OK/FALLO            | `<ms>` | `<valor>` | OK/FALLO  | `<nombre>`  | `<incidencias/acciones>`             |
+| 2026-02-27 | `post-deploy` | prod    | OK       | OK           | OK                  | 1868ms | 0.00      | OK        | Sonia       | Headers/cache/a11y validados en live |

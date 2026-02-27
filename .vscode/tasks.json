@@ -1,0 +1,94 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Release: Record Verification",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\scripts\\record-release-verification.ps1",
+        "-CommitTag",
+        "${input:releaseCommitTag}",
+        "-SmokeTransactions",
+        "${input:releaseSmoke}",
+        "-LCPms",
+        "${input:releaseLcp}",
+        "-CLS",
+        "${input:releaseCls}",
+        "-Responsible",
+        "${input:releaseResponsible}",
+        "-Notes",
+        "${input:releaseNotes}"
+      ],
+      "isBackground": false,
+      "group": "none"
+    },
+    {
+      "label": "Release: Record Verification (Quick)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\scripts\\record-release-verification.ps1",
+        "-CommitTag",
+        "post-deploy",
+        "-SmokeTransactions",
+        "OK",
+        "-LCPms",
+        "1868ms",
+        "-CLS",
+        "0.00",
+        "-Responsible",
+        "Sonia",
+        "-Notes",
+        "Validacion post-deploy rapida"
+      ],
+      "isBackground": false,
+      "group": "none"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "releaseCommitTag",
+      "type": "promptString",
+      "description": "Commit SHA, tag o identificador del release",
+      "default": "post-deploy"
+    },
+    {
+      "id": "releaseSmoke",
+      "type": "pickString",
+      "description": "Resultado del smoke de transacciones",
+      "options": ["OK", "FALLO", "PENDIENTE"],
+      "default": "OK"
+    },
+    {
+      "id": "releaseLcp",
+      "type": "promptString",
+      "description": "LCP en ms (ej: 1868ms)",
+      "default": "1868ms"
+    },
+    {
+      "id": "releaseCls",
+      "type": "promptString",
+      "description": "CLS (ej: 0.00)",
+      "default": "0.00"
+    },
+    {
+      "id": "releaseResponsible",
+      "type": "promptString",
+      "description": "Responsable de la verificación",
+      "default": "Sonia"
+    },
+    {
+      "id": "releaseNotes",
+      "type": "promptString",
+      "description": "Notas del release",
+      "default": "Validacion post-deploy desde VS Code"
+    }
+  ]
+}
