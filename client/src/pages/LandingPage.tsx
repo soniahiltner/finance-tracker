@@ -71,7 +71,7 @@ const LandingPage = () => {
             </p>
 
             {/* CTA Buttons */}
-            <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
+            <div className='flex flex-col sm:flex-row gap-6 justify-center items-center'>
               <Link
                 to='/login'
                 className='btn-primary inline-flex items-center gap-2 px-8 py-3 text-lg bg-white text-primary-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 rounded-lg font-semibold transition-colors shadow-lg'
